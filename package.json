@@ -1,0 +1,10 @@
+{
+  "name": "pwa-utils",
+  "private": true,
+  "scripts": {
+    "build": "node tools/build.js",
+    "shots": "node tools/screenshots.js",
+    "test": "node --test tests/unit.test.js && node tests/e2e.js"
+  },
+  "devDependencies": { "playwright": "1.47.2" }
+}
