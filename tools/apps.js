@@ -1,6 +1,6 @@
 /* Single source of truth for each app's manifest, icon and service-worker asset list. */
 module.exports = {
-  version: '1.0.1',
+  version: '1.0.2',
   publisher: { commonName: 'CN=8129DE1D-E375-4EC4-9809-6CF037A07B8F', displayName: 'catalonec' },
   baseUrl: 'https://catalonec1.github.io/pwa-utils/',
   apps: [
@@ -37,7 +37,7 @@ module.exports = {
       id: 'text-toolbox',
       name: 'Stelar Text Toolbox',
       short_name: 'Text Tools',
-      description: 'Offline text tools: word and character count, change case, sort and deduplicate lines, trim spaces, remove diacritics, slugs. In English, Romanian and Russian. Pro adds regex find and replace, Base64, URL encoding and JSON formatting.',
+      description: 'Offline text tools: word and character count, change case, sort and deduplicate lines, trim spaces, remove diacritics, slugs. In English, Romanian and Russian. Pro adds regex find and replace, Base64, URL encoding, JSON formatting, email and link extraction and word frequency.',
       categories: ['productivity', 'utilities', 'developer tools'],
       color: '#0b7a75',
       glyph: 'Aa',

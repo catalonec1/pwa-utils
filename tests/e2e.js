@@ -258,6 +258,9 @@ async function newPage(browser, base, opts = {}) {
     await page.click('[data-op="jsonFormat"]');
     assert.match(await page.textContent('#err'), /^Error: /);
     assert.equal(await page.inputValue('#txt'), 'id N, id N');
+    await page.fill('#txt', 'mail a@b.ro, a@b.ro');
+    await page.click('[data-op="extractEmails"]');
+    assert.equal(await page.inputValue('#txt'), 'a@b.ro');
     await page.fill('#txt', '{"a":1}');
     await page.click('[data-op="jsonFormat"]');
     assert.equal(await page.inputValue('#txt'), '{\n  "a": 1\n}');

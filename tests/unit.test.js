@@ -118,6 +118,8 @@ test('text: line operations', () => {
   assert.equal(T.ops.removeEmpty('a\n\n  \nb'), 'a\nb');
   assert.equal(T.ops.numberLines('x\ny'), '1. x\n2. y');
   assert.equal(T.ops.dedupe('a\r\nb\r\na'), 'a\nb');
+  assert.equal(T.ops.joinLines('  a \n\nb\r\n c'), 'a b c');
+  assert.equal(T.ops.stripHtml('<p>Hi &amp; <b>bye</b></p><script>x()</script>&lt;3'), 'Hi & bye<3');
 });
 
 test('text: diacritics and slug', () => {
@@ -138,5 +140,9 @@ test('text: pro tools', () => {
   assert.equal(T.pro.urlDecode('a+b%26c'), 'a b&c');
   assert.equal(T.pro.jsonFormat('{"a":[1,2]}'), '{\n  "a": [\n    1,\n    2\n  ]\n}');
   assert.equal(T.pro.jsonMinify('{ "a" : 1 }'), '{"a":1}');
+  assert.equal(T.pro.extractEmails('Scrie la ana.pop@ex.ro sau ANA@x.com; ana.pop@ex.ro'), 'ana.pop@ex.ro\nANA@x.com');
+  assert.equal(T.pro.extractUrls('Vezi https://a.ro/x?y=1, apoi (http://b.com/p).'), 'https://a.ro/x?y=1\nhttp://b.com/p');
+  assert.equal(T.pro.wordFreq('Ana are mere. ana ARE pere, mere'), 'ana: 2\nare: 2\nmere: 2\npere: 1');
+  assert.equal(T.pro.wordFreq(''), '');
   assert.throws(() => T.pro.jsonFormat('{bad'));
 });
