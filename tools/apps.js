@@ -37,7 +37,7 @@ module.exports = {
       id: 'text-toolbox',
       name: 'Stelar Text Toolbox',
       short_name: 'Text Tools',
-      description: 'Offline text tools: word and character count, change case, sort and deduplicate lines, trim spaces, remove diacritics, slugs. In English, Romanian and Russian. Pro adds regex find and replace, Base64, URL encoding and JSON formatting.',
+      description: 'Offline text tools: word and character count, change case, sort and deduplicate lines, trim spaces, remove diacritics, slugs. In English, Romanian and Russian. Pro adds regex find and replace, Base64, URL encoding, JSON formatting, email and link extraction and word frequency.',
       categories: ['productivity', 'utilities', 'developer tools'],
       color: '#0b7a75',
       glyph: 'Aa',

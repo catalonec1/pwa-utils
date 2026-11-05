@@ -33,7 +33,10 @@
     removeDiacritics: t => t.normalize('NFD').replace(/[̀-ͯ]/g, '').normalize('NFC'),
     slug: t => ops.removeDiacritics(String(t).toLowerCase().replace(/[а-яё]/g, c => RU[c]))
       .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''),
-    numberLines: t => lines(t).map((l, i) => `${i + 1}. ${l}`).join('\n')
+    numberLines: t => lines(t).map((l, i) => `${i + 1}. ${l}`).join('\n'),
+    joinLines: t => lines(t).map(l => l.trim()).filter(Boolean).join(' '),
+    stripHtml: t => String(t).replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/gi, '').replace(/<[^>]+>/g, '')
+      .replace(/&nbsp;/g, ' ').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&')
   };
   const FREE = Object.keys(ops);
 
@@ -41,6 +44,7 @@
     const f = Array.from(new Set(String(flags || 'g').replace(/[^gimsuy]/g, ''))).join('');
     return String(t).replace(new RegExp(pattern, f), repl == null ? '' : repl);
   }
+  const uniq = a => [...new Set(a)];
   function b64encode(t) {
     const bytes = new TextEncoder().encode(String(t));
     let bin = ''; bytes.forEach(b => { bin += String.fromCharCode(b); });
@@ -55,7 +59,14 @@
     urlEncode: t => encodeURIComponent(t),
     urlDecode: t => decodeURIComponent(String(t).replace(/\+/g, ' ')),
     jsonFormat: t => JSON.stringify(JSON.parse(t), null, 2),
-    jsonMinify: t => JSON.stringify(JSON.parse(t))
+    jsonMinify: t => JSON.stringify(JSON.parse(t)),
+    extractEmails: t => uniq(String(t).match(/[\p{L}\p{N}._%+\-]+@[\p{L}\p{N}.\-]+\.[\p{L}]{2,}/gu) || []).join('\n'),
+    extractUrls: t => uniq((String(t).match(/https?:\/\/[^\s<>"'()]+/g) || []).map(u => u.replace(/[.,;:!?]+$/, ''))).join('\n'),
+    wordFreq: t => {
+      const m = new Map();
+      (String(t).toLocaleLowerCase().match(/[\p{L}\p{N}]+(?:['’\-][\p{L}\p{N}]+)*/gu) || []).forEach(w => m.set(w, (m.get(w) || 0) + 1));
+      return [...m].sort((a, b) => b[1] - a[1] || collator.compare(a[0], b[0])).map(([w, n]) => `${w}: ${n}`).join('\n');
+    }
   };
 
   const api = { stats, ops, FREE, pro, PRO: Object.keys(pro), regexReplace };
