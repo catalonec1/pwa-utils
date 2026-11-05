@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Stelar Unit Converter",
   "short_name": "Converter",
-  "description": "Fast offline unit converter in English, Romanian and Russian: length, mass, temperature, volume, area, speed, time and data. Pro adds pressure, energy, power, angle, fuel economy and history.",
+  "description": "Fast offline unit converter in English, Romanian and Russian: length, mass, temperature, volume, area, speed, time and data. Pro adds pressure, energy, power, angle, fuel economy, frequency, torque and history.",
   "lang": "en",
   "dir": "ltr",
   "start_url": "./",

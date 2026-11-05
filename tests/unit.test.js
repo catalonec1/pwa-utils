@@ -27,6 +27,15 @@ test('converter: temperature', () => {
   close(U.convert('temperature', 'C', 'K', 25), 298.15);
 });
 
+test('converter: frequency and torque (Pro)', () => {
+  close(U.convert('frequency', 'rpm', 'Hz', 3000), 50);
+  close(U.convert('frequency', 'GHz', 'MHz', 2.4), 2400);
+  close(U.convert('torque', 'lbfft', 'Nm', 100), 135.58179483314);
+  close(U.convert('torque', 'kgfm', 'Nm', 1), 9.80665);
+  assert.equal(U.categories(false).includes('torque'), false);
+  assert.equal(U.categories(true).includes('frequency'), true);
+});
+
 test('converter: fuel economy is reciprocal', () => {
   close(U.convert('fuel', 'l100', 'kml', 5), 20);
   close(U.convert('fuel', 'mpgUS', 'l100', 30), 7.84048610, 1e-7);
