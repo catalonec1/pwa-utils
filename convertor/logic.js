@@ -14,7 +14,9 @@
     energy: { pro: true, base: 'J', units: { J: 1, kJ: 1000, cal: 4.184, kcal: 4184, Wh: 3600, kWh: 3.6e6, BTU: 1055.05585262 } },
     power: { pro: true, base: 'W', units: { W: 1, kW: 1000, hp: 745.69987158227, PS: 735.49875 } },
     angle: { pro: true, base: 'deg', units: { deg: 1, rad: 180 / Math.PI, grad: 0.9, turn: 360 } },
-    fuel: { pro: true, base: 'l100', units: { l100: null, kml: null, mpgUS: null, mpgUK: null } }
+    fuel: { pro: true, base: 'l100', units: { l100: null, kml: null, mpgUS: null, mpgUK: null } },
+    frequency: { pro: true, base: 'Hz', units: { Hz: 1, kHz: 1e3, MHz: 1e6, GHz: 1e9, rpm: 1 / 60 } },
+    torque: { pro: true, base: 'Nm', units: { Nm: 1, kNm: 1000, kgfm: 9.80665, lbfft: 1.3558179483314004, lbfin: 0.1129848290276167 } }
   };
 
   function toBase(cat, unit, v) {
