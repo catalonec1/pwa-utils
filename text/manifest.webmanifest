@@ -1,6 +1,6 @@
 {
   "id": "./",
-  "name": "Text Toolbox",
+  "name": "Stelar Text Toolbox",
   "short_name": "Text Tools",
   "description": "Offline text tools: word and character count, change case, sort and deduplicate lines, trim spaces, remove diacritics, slugs. In English, Romanian and Russian. Pro adds regex find and replace, Base64, URL encoding and JSON formatting.",
   "lang": "en",
@@ -49,14 +49,14 @@
       "sizes": "1366x768",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Text Toolbox"
+      "label": "Stelar Text Toolbox"
     },
     {
       "src": "icons/screenshot-narrow.png",
       "sizes": "412x915",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Text Toolbox"
+      "label": "Stelar Text Toolbox"
     }
   ]
 }

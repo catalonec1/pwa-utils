@@ -11,9 +11,9 @@ Common to all three apps
 
 ---
 
-## 1. Quick Unit Converter (`convertor/`)
+## 1. Stelar Unit Converter (`convertor/`)
 
-Reserved name candidates (first that is free): Quick Unit Converter · Quick Unit Converter Offline · Unit Converter – Quick & Offline
+Reserved name: **Stelar Unit Converter** (Store ID 9NKDXSGJXFS8). "Quick Unit Converter" and "Quick Unit Converter Offline" were taken.
 
 **EN — short description:** Fast offline unit converter: length, mass, temperature, volume and more.
 **EN — description:**
@@ -48,9 +48,9 @@ Pro (разовая покупка): давление, энергия, мощн�
 
 ---
 
-## 2. Focus Timer – Pomodoro (`focus/`)
+## 2. Stelar Focus Timer (`focus/`)
 
-Name candidates: Focus Timer – Pomodoro · Pomodoro Focus Timer Offline · Simple Focus Timer
+Reserved name: **Stelar Focus Timer** (Store ID 9P8JPQ1HQM9M).
 
 **EN — short description:** A simple Pomodoro timer that works offline.
 **EN — description:**
@@ -85,9 +85,9 @@ Pro (разовая покупка): свои длительности, граф
 
 ---
 
-## 3. Text Toolbox (`text/`)
+## 3. Stelar Text Toolbox (`text/`)
 
-Name candidates: Text Toolbox · Text Toolbox Offline · Handy Text Tools
+Reserved name: **Stelar Text Toolbox** (Store ID 9PKZ9VZS4TNS).
 
 **EN — short description:** Offline text tools: count, change case, sort, clean and convert.
 **EN — description:**

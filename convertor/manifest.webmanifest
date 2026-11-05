@@ -1,6 +1,6 @@
 {
   "id": "./",
-  "name": "Quick Unit Converter",
+  "name": "Stelar Unit Converter",
   "short_name": "Converter",
   "description": "Fast offline unit converter in English, Romanian and Russian: length, mass, temperature, volume, area, speed, time and data. Pro adds pressure, energy, power, angle, fuel economy and history.",
   "lang": "en",
@@ -49,14 +49,14 @@
       "sizes": "1366x768",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Quick Unit Converter"
+      "label": "Stelar Unit Converter"
     },
     {
       "src": "icons/screenshot-narrow.png",
       "sizes": "412x915",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Quick Unit Converter"
+      "label": "Stelar Unit Converter"
     }
   ]
 }

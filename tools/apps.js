@@ -1,11 +1,15 @@
 /* Single source of truth for each app's manifest, icon and service-worker asset list. */
 module.exports = {
-  version: '1.0.0',
+  version: '1.0.1',
+  publisher: { commonName: 'CN=8129DE1D-E375-4EC4-9809-6CF037A07B8F', displayName: 'catalonec' },
+  baseUrl: 'https://catalonec1.github.io/pwa-utils/',
   apps: [
     {
       dir: 'convertor',
+      storeId: '9NKDXSGJXFS8',
+      packageId: 'catalonec.StelarUnitConverter',
       id: 'quick-unit-converter',
-      name: 'Quick Unit Converter',
+      name: 'Stelar Unit Converter',
       short_name: 'Converter',
       description: 'Fast offline unit converter in English, Romanian and Russian: length, mass, temperature, volume, area, speed, time and data. Pro adds pressure, energy, power, angle, fuel economy and history.',
       categories: ['utilities', 'productivity', 'education'],
@@ -15,8 +19,10 @@ module.exports = {
     },
     {
       dir: 'focus',
+      storeId: '9P8JPQ1HQM9M',
+      packageId: 'catalonec.StelarFocusTimer',
       id: 'focus-timer-pomodoro',
-      name: 'Focus Timer – Pomodoro',
+      name: 'Stelar Focus Timer',
       short_name: 'Focus',
       description: 'Simple offline Pomodoro focus timer with work and break cycles, sounds and daily focus count. In English, Romanian and Russian. Pro adds custom durations, 7-day statistics and CSV export.',
       categories: ['productivity', 'utilities', 'education'],
@@ -26,8 +32,10 @@ module.exports = {
     },
     {
       dir: 'text',
+      storeId: '9PKZ9VZS4TNS',
+      packageId: 'catalonec.StelarTextToolbox',
       id: 'text-toolbox',
-      name: 'Text Toolbox',
+      name: 'Stelar Text Toolbox',
       short_name: 'Text Tools',
       description: 'Offline text tools: word and character count, change case, sort and deduplicate lines, trim spaces, remove diacritics, slugs. In English, Romanian and Russian. Pro adds regex find and replace, Base64, URL encoding and JSON formatting.',
       categories: ['productivity', 'utilities', 'developer tools'],

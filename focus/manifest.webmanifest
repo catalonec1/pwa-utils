@@ -1,6 +1,6 @@
 {
   "id": "./",
-  "name": "Focus Timer – Pomodoro",
+  "name": "Stelar Focus Timer",
   "short_name": "Focus",
   "description": "Simple offline Pomodoro focus timer with work and break cycles, sounds and daily focus count. In English, Romanian and Russian. Pro adds custom durations, 7-day statistics and CSV export.",
   "lang": "en",
@@ -49,14 +49,14 @@
       "sizes": "1366x768",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Focus Timer – Pomodoro"
+      "label": "Stelar Focus Timer"
     },
     {
       "src": "icons/screenshot-narrow.png",
       "sizes": "412x915",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Focus Timer – Pomodoro"
+      "label": "Stelar Focus Timer"
     }
   ]
 }

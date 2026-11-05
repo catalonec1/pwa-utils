@@ -1,0 +1,36 @@
+name: Build Store packages
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['tools/apps.js', 'tools/msix.js', '*/manifest.webmanifest', '.github/workflows/msix.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  msix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Wait for Pages to serve the current manifests
+        run: sleep 90
+      - run: node tools/msix.js
+      - run: cd msix && for z in *.zip; do echo "== $z"; unzip -l "$z"; done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: store-packages
+          path: msix/*.zip
+      - name: Publish packages to the msix branch
+        run: |
+          cd msix
+          git init -q -b msix
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -qm "Store packages for ${GITHUB_SHA}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" msix
