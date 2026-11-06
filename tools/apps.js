@@ -1,6 +1,6 @@
 /* Single source of truth for each app's manifest, icon and service-worker asset list. */
 module.exports = {
-  version: '1.0.2',
+  version: '1.0.3',
   publisher: { commonName: 'CN=8129DE1D-E375-4EC4-9809-6CF037A07B8F', displayName: 'catalonec' },
   baseUrl: 'https://catalonec1.github.io/pwa-utils/',
   apps: [
@@ -11,7 +11,7 @@ module.exports = {
       id: 'quick-unit-converter',
       name: 'Stelar Unit Converter',
       short_name: 'Converter',
-      description: 'Fast offline unit converter in English, Romanian and Russian: length, mass, temperature, volume, area, speed, time and data. Pro adds pressure, energy, power, angle, fuel economy, frequency, torque and history.',
+      description: 'Fast offline unit converter in English, Romanian and Russian: length, mass, temperature, volume, area, speed, time and data. Pro adds pressure, energy, power, angle, fuel economy, frequency, torque, density, flow rate and history.',
       categories: ['utilities', 'productivity', 'education'],
       color: '#3d5afe',
       glyph: '⇄',
