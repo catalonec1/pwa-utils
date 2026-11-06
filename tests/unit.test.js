@@ -27,6 +27,17 @@ test('converter: temperature', () => {
   close(U.convert('temperature', 'C', 'K', 25), 298.15);
 });
 
+test('converter: density and flow rate (Pro)', () => {
+  close(U.convert('density', 'gcm3', 'kgm3', 1), 1000);
+  close(U.convert('density', 'lbft3', 'kgm3', 62.428), 1000, 1e-3);
+  close(U.convert('density', 'gml', 'gl', 0.8), 800);
+  close(U.convert('flow', 'm3h', 'ls', 3.6), 1);
+  close(U.convert('flow', 'galUSmin', 'lmin', 1), 3.785411784);
+  close(U.convert('flow', 'cfm', 'm3h', 1), 1.6990107955);
+  assert.equal(U.categories(false).includes('density'), false);
+  assert.equal(U.categories(true).includes('flow'), true);
+});
+
 test('converter: frequency and torque (Pro)', () => {
   close(U.convert('frequency', 'rpm', 'Hz', 3000), 50);
   close(U.convert('frequency', 'GHz', 'MHz', 2.4), 2400);
