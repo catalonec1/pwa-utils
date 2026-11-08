@@ -166,3 +166,13 @@ test('text: pro tools', () => {
   assert.equal(T.pro.wordFreq(''), '');
   assert.throws(() => T.pro.jsonFormat('{bad'));
 });
+
+test('text v1.0.4: camelCase / snake_case / kebab-case / transliterare (Pro)', () => {
+  assert.equal(T.pro.camelCase('Hello world\nuser_id field'), 'helloWorld\nuserIdField');
+  assert.equal(T.pro.snakeCase('myVariableName\nȘir de text'), 'my_variable_name\nsir_de_text');
+  assert.equal(T.pro.kebabCase('Total Price (USD)'), 'total-price-usd');
+  assert.equal(T.pro.camelCase(''), '');
+  assert.equal(T.pro.translit('Привет, Мир! Ёж и Щука'), 'Privet, Mir! Ezh i Schuka');
+  assert.equal(T.pro.translit('abc 123'), 'abc 123');
+  assert.ok(!T.FREE.includes('camelCase') && T.PRO.includes('translit'));
+});
