@@ -1,6 +1,6 @@
 /* Single source of truth for each app's manifest, icon and service-worker asset list. */
 module.exports = {
-  version: '1.0.3',
+  version: '1.0.4',
   publisher: { commonName: 'CN=8129DE1D-E375-4EC4-9809-6CF037A07B8F', displayName: 'catalonec' },
   baseUrl: 'https://catalonec1.github.io/pwa-utils/',
   apps: [
