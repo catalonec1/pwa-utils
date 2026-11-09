@@ -1,6 +1,6 @@
 /* Single source of truth for each app's manifest, icon and service-worker asset list. */
 module.exports = {
-  version: '1.0.4',
+  version: '1.0.5',
   publisher: { commonName: 'CN=8129DE1D-E375-4EC4-9809-6CF037A07B8F', displayName: 'catalonec' },
   baseUrl: 'https://catalonec1.github.io/pwa-utils/',
   apps: [
@@ -24,7 +24,7 @@ module.exports = {
       id: 'focus-timer-pomodoro',
       name: 'Stelar Focus Timer',
       short_name: 'Focus',
-      description: 'Simple offline Pomodoro focus timer with work and break cycles, sounds and daily focus count. In English, Romanian and Russian. Pro adds custom durations, 7-day statistics and CSV export.',
+      description: 'Simple offline Pomodoro focus timer with work and break cycles, sounds, daily goal and streak. In English, Romanian and Russian. Pro adds custom durations, 7-day statistics and CSV export.',
       categories: ['productivity', 'utilities', 'education'],
       color: '#e8590c',
       glyph: '◔',

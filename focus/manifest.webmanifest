@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Stelar Focus Timer",
   "short_name": "Focus",
-  "description": "Simple offline Pomodoro focus timer with work and break cycles, sounds and daily focus count. In English, Romanian and Russian. Pro adds custom durations, 7-day statistics and CSV export.",
+  "description": "Simple offline Pomodoro focus timer with work and break cycles, sounds, daily goal and streak. In English, Romanian and Russian. Pro adds custom durations, 7-day statistics and CSV export.",
   "lang": "en",
   "dir": "ltr",
   "start_url": "./",
