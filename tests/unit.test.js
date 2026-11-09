@@ -110,6 +110,19 @@ test('focus: stats, last days and csv', () => {
   assert.equal(F.toCSV(s), 'date,sessions,minutes\n2026-11-03,1,25\n2026-11-04,2,75\n');
 });
 
+test('focus: daily goal and streak', () => {
+  assert.equal(F.sanitizeGoal('x'), F.GOAL_DEFAULT);
+  assert.equal(F.sanitizeGoal(0), 1);
+  assert.equal(F.sanitizeGoal(99), 16);
+  const s = { '2026-11-05': { sessions: 4, minutes: 100 }, '2026-11-06': { sessions: 5, minutes: 125 },
+    '2026-11-07': { sessions: 4, minutes: 100 }, '2026-11-08': { sessions: 1, minutes: 25 } };
+  assert.equal(F.streak(s, new Date(2026, 10, 7, 20), 4), 3);
+  assert.equal(F.streak(s, new Date(2026, 10, 8, 9), 4), 3);
+  assert.equal(F.streak(s, new Date(2026, 10, 9, 9), 4), 0);
+  assert.equal(F.streak(s, new Date(2026, 10, 8, 9), 1), 4);
+  assert.equal(F.streak({}, new Date(2026, 10, 8), 4), 0);
+});
+
 test('text: stats in three languages', () => {
   const s = T.stats('Salut, lume! Ce faci?\n\nПривет мир. Hello world');
   assert.equal(s.words, 8);
