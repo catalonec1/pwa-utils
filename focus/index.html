@@ -18,6 +18,10 @@
   .phase { text-align: center; font-weight: 600; color: var(--accent); }
   .controls { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
   .controls button { min-width: 110px; }
+  .goal { display: flex; gap: 10px; align-items: center; justify-content: center; }
+  .goal label { margin: 0; }
+  .goal input { width: 5.5em; }
+  progress#goalBar { display: block; width: 100%; height: 10px; accent-color: var(--accent); }
   .bars { display: flex; gap: 6px; align-items: end; height: 120px; padding-top: 8px; }
   .bars div { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: end; height: 100%; font-size: .72rem; color: var(--muted); }
   .bars span.b { width: 100%; background: var(--accent); border-radius: 6px 6px 0 0; min-height: 2px; }
@@ -41,6 +45,9 @@
       <button id="skip" data-i18n="skip">Skip</button>
     </div>
     <p class="muted" style="text-align:center" id="today"></p>
+    <div class="goal"><label for="goal" data-i18n="goal">Daily goal (sessions)</label><input id="goal" type="number" min="1" max="16"></div>
+    <progress id="goalBar" value="0" max="4" aria-labelledby="streak"></progress>
+    <p class="muted" style="text-align:center;margin-top:4px" id="streak"></p>
     <label style="display:flex;gap:8px;align-items:center;justify-content:center;color:var(--text)"><input type="checkbox" id="sound" style="width:auto" checked> <span data-i18n="sound">Sound</span></label>
   </section>
   <section class="card">

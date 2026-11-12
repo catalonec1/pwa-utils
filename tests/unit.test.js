@@ -27,6 +27,17 @@ test('converter: temperature', () => {
   close(U.convert('temperature', 'C', 'K', 25), 298.15);
 });
 
+test('converter: density and flow rate (Pro)', () => {
+  close(U.convert('density', 'gcm3', 'kgm3', 1), 1000);
+  close(U.convert('density', 'lbft3', 'kgm3', 62.428), 1000, 1e-3);
+  close(U.convert('density', 'gml', 'gl', 0.8), 800);
+  close(U.convert('flow', 'm3h', 'ls', 3.6), 1);
+  close(U.convert('flow', 'galUSmin', 'lmin', 1), 3.785411784);
+  close(U.convert('flow', 'cfm', 'm3h', 1), 1.6990107955);
+  assert.equal(U.categories(false).includes('density'), false);
+  assert.equal(U.categories(true).includes('flow'), true);
+});
+
 test('converter: frequency and torque (Pro)', () => {
   close(U.convert('frequency', 'rpm', 'Hz', 3000), 50);
   close(U.convert('frequency', 'GHz', 'MHz', 2.4), 2400);
@@ -99,6 +110,19 @@ test('focus: stats, last days and csv', () => {
   assert.equal(F.toCSV(s), 'date,sessions,minutes\n2026-11-03,1,25\n2026-11-04,2,75\n');
 });
 
+test('focus: daily goal and streak', () => {
+  assert.equal(F.sanitizeGoal('x'), F.GOAL_DEFAULT);
+  assert.equal(F.sanitizeGoal(0), 1);
+  assert.equal(F.sanitizeGoal(99), 16);
+  const s = { '2026-11-05': { sessions: 4, minutes: 100 }, '2026-11-06': { sessions: 5, minutes: 125 },
+    '2026-11-07': { sessions: 4, minutes: 100 }, '2026-11-08': { sessions: 1, minutes: 25 } };
+  assert.equal(F.streak(s, new Date(2026, 10, 7, 20), 4), 3);
+  assert.equal(F.streak(s, new Date(2026, 10, 8, 9), 4), 3);
+  assert.equal(F.streak(s, new Date(2026, 10, 9, 9), 4), 0);
+  assert.equal(F.streak(s, new Date(2026, 10, 8, 9), 1), 4);
+  assert.equal(F.streak({}, new Date(2026, 10, 8), 4), 0);
+});
+
 test('text: stats in three languages', () => {
   const s = T.stats('Salut, lume! Ce faci?\n\nПривет мир. Hello world');
   assert.equal(s.words, 8);
@@ -127,6 +151,8 @@ test('text: line operations', () => {
   assert.equal(T.ops.removeEmpty('a\n\n  \nb'), 'a\nb');
   assert.equal(T.ops.numberLines('x\ny'), '1. x\n2. y');
   assert.equal(T.ops.dedupe('a\r\nb\r\na'), 'a\nb');
+  assert.equal(T.ops.joinLines('  a \n\nb\r\n c'), 'a b c');
+  assert.equal(T.ops.stripHtml('<p>Hi &amp; <b>bye</b></p><script>x()</script>&lt;3'), 'Hi & bye<3');
 });
 
 test('text: diacritics and slug', () => {
@@ -147,5 +173,19 @@ test('text: pro tools', () => {
   assert.equal(T.pro.urlDecode('a+b%26c'), 'a b&c');
   assert.equal(T.pro.jsonFormat('{"a":[1,2]}'), '{\n  "a": [\n    1,\n    2\n  ]\n}');
   assert.equal(T.pro.jsonMinify('{ "a" : 1 }'), '{"a":1}');
+  assert.equal(T.pro.extractEmails('Scrie la ana.pop@ex.ro sau ANA@x.com; ana.pop@ex.ro'), 'ana.pop@ex.ro\nANA@x.com');
+  assert.equal(T.pro.extractUrls('Vezi https://a.ro/x?y=1, apoi (http://b.com/p).'), 'https://a.ro/x?y=1\nhttp://b.com/p');
+  assert.equal(T.pro.wordFreq('Ana are mere. ana ARE pere, mere'), 'ana: 2\nare: 2\nmere: 2\npere: 1');
+  assert.equal(T.pro.wordFreq(''), '');
   assert.throws(() => T.pro.jsonFormat('{bad'));
+});
+
+test('text v1.0.4: camelCase / snake_case / kebab-case / transliterare (Pro)', () => {
+  assert.equal(T.pro.camelCase('Hello world\nuser_id field'), 'helloWorld\nuserIdField');
+  assert.equal(T.pro.snakeCase('myVariableName\nȘir de text'), 'my_variable_name\nsir_de_text');
+  assert.equal(T.pro.kebabCase('Total Price (USD)'), 'total-price-usd');
+  assert.equal(T.pro.camelCase(''), '');
+  assert.equal(T.pro.translit('Привет, Мир! Ёж и Щука'), 'Privet, Mir! Ezh i Schuka');
+  assert.equal(T.pro.translit('abc 123'), 'abc 123');
+  assert.ok(!T.FREE.includes('camelCase') && T.PRO.includes('translit'));
 });

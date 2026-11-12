@@ -191,6 +191,22 @@ async function newPage(browser, base, opts = {}) {
     await ctx.close();
   });
 
+  await check('focus: free daily goal, progress and streak', async () => {
+    const { ctx, page } = await newPage(browser, base);
+    await page.clock.install({ time: new Date('2026-11-04T10:00:00') });
+    await page.goto(base + 'focus/');
+    assert.equal(await page.inputValue('#goal'), '4');
+    assert.equal(await page.textContent('#streak'), 'Streak: 0 days in a row');
+    await page.fill('#goal', '1'); await page.press('#goal', 'Tab');
+    await page.click('#start');
+    await page.clock.runFor(25 * 60 * 1000 + 500);
+    assert.equal(await page.textContent('#streak'), "Streak: 1 days in a row · Today's goal reached!");
+    assert.equal(await page.getAttribute('#goalBar', 'max'), '1');
+    await page.reload();
+    assert.equal(await page.inputValue('#goal'), '1');
+    await ctx.close();
+  });
+
   await check('focus: state survives reload while running', async () => {
     const { ctx, page } = await newPage(browser, base);
     await page.clock.install({ time: new Date('2026-11-04T10:00:00') });
@@ -258,6 +274,9 @@ async function newPage(browser, base, opts = {}) {
     await page.click('[data-op="jsonFormat"]');
     assert.match(await page.textContent('#err'), /^Error: /);
     assert.equal(await page.inputValue('#txt'), 'id N, id N');
+    await page.fill('#txt', 'mail a@b.ro, a@b.ro');
+    await page.click('[data-op="extractEmails"]');
+    assert.equal(await page.inputValue('#txt'), 'a@b.ro');
     await page.fill('#txt', '{"a":1}');
     await page.click('[data-op="jsonFormat"]');
     assert.equal(await page.inputValue('#txt'), '{\n  "a": 1\n}');
