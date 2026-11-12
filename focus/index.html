@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Focus Timer – Pomodoro</title>
+<meta name="description" content="Simple offline Pomodoro focus timer with work and break cycles.">
+<meta name="theme-color" content="#e8590c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+  :root { --accent: #c2410c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --accent: #fb923c; } }
+  :root[data-theme="dark"] { --accent: #fb923c; }
+  .clock { font-size: clamp(3.5rem, 18vw, 6.5rem); font-weight: 700; text-align: center; font-variant-numeric: tabular-nums; margin: 6px 0; }
+  .phase { text-align: center; font-weight: 600; color: var(--accent); }
+  .controls { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .controls button { min-width: 110px; }
+  .goal { display: flex; gap: 10px; align-items: center; justify-content: center; }
+  .goal label { margin: 0; }
+  .goal input { width: 5.5em; }
+  progress#goalBar { display: block; width: 100%; height: 10px; accent-color: var(--accent); }
+  .bars { display: flex; gap: 6px; align-items: end; height: 120px; padding-top: 8px; }
+  .bars div { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: end; height: 100%; font-size: .72rem; color: var(--muted); }
+  .bars span.b { width: 100%; background: var(--accent); border-radius: 6px 6px 0 0; min-height: 2px; }
+</style>
+</head>
+<body>
+<header class="bar">
+  <h1 data-i18n="appName">Focus Timer</h1>
+  <select id="lang" data-i18n-aria="language" aria-label="Language">
+    <option value="ro">RO</option><option value="en">EN</option><option value="ru">RU</option>
+  </select>
+  <button id="theme" data-i18n-aria="theme" aria-label="Theme">◐</button>
+</header>
+<main>
+  <section class="card">
+    <p class="phase" id="phase"></p>
+    <p class="clock" id="clock" aria-live="off">25:00</p>
+    <div class="controls">
+      <button class="primary" id="start" data-i18n="start">Start</button>
+      <button id="reset" data-i18n="reset">Reset</button>
+      <button id="skip" data-i18n="skip">Skip</button>
+    </div>
+    <p class="muted" style="text-align:center" id="today"></p>
+    <div class="goal"><label for="goal" data-i18n="goal">Daily goal (sessions)</label><input id="goal" type="number" min="1" max="16"></div>
+    <progress id="goalBar" value="0" max="4" aria-labelledby="streak"></progress>
+    <p class="muted" style="text-align:center;margin-top:4px" id="streak"></p>
+    <label style="display:flex;gap:8px;align-items:center;justify-content:center;color:var(--text)"><input type="checkbox" id="sound" style="width:auto" checked> <span data-i18n="sound">Sound</span></label>
+  </section>
+  <section class="card">
+    <h2 style="font-size:1rem;margin:0 0 8px"><span data-i18n="settings">Durations (minutes)</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row">
+      <div><label for="cfg-work" data-i18n="work">Focus</label><input id="cfg-work" type="number" min="1" max="180"></div>
+      <div><label for="cfg-short" data-i18n="short">Short break</label><input id="cfg-short" type="number" min="1" max="60"></div>
+      <div><label for="cfg-long" data-i18n="long">Long break</label><input id="cfg-long" type="number" min="1" max="90"></div>
+      <div><label for="cfg-every" data-i18n="every">Long break every</label><input id="cfg-every" type="number" min="2" max="12"></div>
+    </div>
+  </section>
+  <section class="card">
+    <h2 style="font-size:1rem;margin:0 0 8px"><span data-i18n="stats">Last 7 days</span> <span class="pro-badge">PRO</span></h2>
+    <div class="bars" id="bars"></div>
+    <p><button id="csv" data-i18n="csv">Export CSV</button></p>
+  </section>
+  <section class="card pro-box hidden" id="proBox">
+    <h2 style="font-size:1rem;margin:0 0 6px" data-i18n="proTitle">Pro version</h2>
+    <p class="muted" data-i18n="proPitch">Custom durations, 7-day statistics and CSV export.</p>
+    <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
+    <p class="muted" id="proStatus"></p>
+  </section>
+  <p class="muted" style="text-align:center" data-i18n="offline">Works offline too.</p>
+</main>
+<footer><a href="../privacy.html" data-i18n="privacy">Privacy</a></footer>
+<script src="../shared/core.js"></script>
+<script src="logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
