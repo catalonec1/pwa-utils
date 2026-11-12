@@ -1,0 +1,43 @@
+name: WordPress plugin
+
+on:
+  push:
+    paths: ['wordpress/**', '.github/workflows/wordpress-plugin.yml']
+  pull_request:
+    paths: ['wordpress/**', '.github/workflows/wordpress-plugin.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+      - name: Lint (PHP 7.4)
+        run: find wordpress -name '*.php' -print0 | xargs -0 -n1 php -l
+      - name: Tests
+        run: UF_PRO=1 php wordpress/tests/run.php
+      - name: Build zips
+        run: |
+          mkdir dist
+          cd wordpress
+          zip -qr ../dist/unit-flip.zip unit-flip
+          zip -qr ../dist/unit-flip-pro.zip unit-flip-pro
+      - uses: actions/upload-artifact@v4
+        with:
+          name: unit-flip-zips
+          path: dist/*.zip
+
+  plugin-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: WordPress Plugin Check (free plugin)
+        uses: wordpress/plugin-check-action@v1
+        with:
+          build-dir: wordpress/unit-flip

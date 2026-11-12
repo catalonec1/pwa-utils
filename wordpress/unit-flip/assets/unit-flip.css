@@ -1,0 +1,10 @@
+.unit-flip { white-space: nowrap; }
+.unit-flip__alt { opacity: .75; }
+.unit-flip[title] { border-bottom: 1px dotted currentColor; cursor: help; }
+.unit-flip-converter { border: 1px solid rgba(127,127,127,.35); border-radius: 8px; padding: 1em; margin: 1em 0; max-width: 32em; }
+.unit-flip-converter__title { font-weight: 600; margin-bottom: .5em; }
+.unit-flip-converter__row { display: flex; flex-wrap: wrap; gap: .5em; align-items: center; }
+.unit-flip-converter__value { width: 8em; max-width: 100%; }
+.unit-flip-converter__swap { cursor: pointer; padding: .2em .6em; }
+.unit-flip-converter__result { display: block; font-size: 1.4em; font-weight: 600; margin-top: .5em; word-break: break-word; }
+.unit-flip-converter .screen-reader-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

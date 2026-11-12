@@ -1,0 +1,18 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "unit-flip/converter",
+	"title": "Unit Converter",
+	"category": "widgets",
+	"icon": "image-flip-horizontal",
+	"description": "An interactive metric/imperial unit converter.",
+	"keywords": [ "units", "metric", "imperial", "convert" ],
+	"textdomain": "unit-flip",
+	"attributes": {
+		"category": { "type": "string", "default": "length" }
+	},
+	"supports": { "html": false, "align": [ "wide" ], "spacing": { "margin": true, "padding": true } },
+	"editorScript": "unit-flip-block-editor",
+	"style": "unit-flip",
+	"viewScript": "unit-flip-converter"
+}

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit Flip for WordPress</title>
+<meta name="description" content="Unit Flip shows metric and imperial side by side in WordPress posts. Free plugin plus an optional Pro add-on for automatic conversions, a visitor unit switch and cups-to-grams.">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+  main { max-width: 46rem; margin: 0 auto; padding: 1.5rem 1rem 3rem; line-height: 1.6; }
+  .demo { border: 1px solid rgba(127,127,127,.35); border-radius: 10px; padding: 1rem 1.2rem; }
+  .alt { opacity: .7; }
+  .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; }
+  .card { border: 1px solid rgba(127,127,127,.35); border-radius: 10px; padding: 1rem 1.2rem; }
+  .price { font-size: 1.6rem; font-weight: 700; }
+  .btn { display: inline-block; padding: .6rem 1.2rem; border-radius: 8px; background: #2563eb; color: #fff; text-decoration: none; font-weight: 600; }
+  .btn[aria-disabled="true"] { background: #888; pointer-events: none; }
+  ul { padding-left: 1.2rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Unit Flip for WordPress</h1>
+  <p>Half of your readers think in grams and Celsius, the other half in cups and Fahrenheit. Unit Flip shows both.</p>
+
+  <div class="demo">
+    <p>Preheat the oven to 350 °F <span class="alt">(177 °C)</span>. Whisk 2 cups flour <span class="alt">(240 g)</span> with ½ cup sugar <span class="alt">(100 g)</span>.</p>
+  </div>
+
+  <h2>Choose your version</h2>
+  <div class="cols">
+    <section class="card">
+      <h3>Unit Flip (free)</h3>
+      <p class="price">$0</p>
+      <ul>
+        <li><code>[unitflip value="350" from="F"]</code> shortcode</li>
+        <li>Interactive Unit Converter block</li>
+        <li>11 categories: length, weight, temperature, volume, area, speed, pressure, energy, power, fuel economy, data</li>
+        <li>No tracking, no external requests</li>
+      </ul>
+      <p><a class="btn" href="https://wordpress.org/plugins/unit-flip/" id="free-link">Get it on WordPress.org</a></p>
+    </section>
+    <section class="card">
+      <h3>Unit Flip Pro add-on</h3>
+      <p class="price">$1.99 <small>one-time</small></p>
+      <ul>
+        <li>Converts measurements already written in your posts automatically, no shortcodes</li>
+        <li>Metric / US switch for visitors, remembered per browser</li>
+        <li>Cups and spoons of 25+ baking ingredients shown in grams</li>
+        <li>Skips code blocks, links and shortcodes</li>
+        <li>Unlimited sites, free updates</li>
+      </ul>
+      <p><a class="btn" id="buy" href="#" aria-disabled="true">Coming soon</a></p>
+    </section>
+  </div>
+
+  <h2>Install Pro</h2>
+  <p>Install and activate the free Unit Flip plugin first. Then go to Plugins → Add New → Upload Plugin, choose <code>unit-flip-pro.zip</code> and activate it. Options are in Settings → Unit Flip Pro.</p>
+
+  <h2>Support</h2>
+  <p>Questions or a unit you miss: <a href="https://github.com/catalonec1/pwa-utils/issues">open an issue</a>. Ingredient weights are typical published baking values and can be adjusted with a filter.</p>
+</main>
+<script>
+  // Set when the Pro add-on is listed for sale.
+  var BUY_URL = '';
+  if (BUY_URL) { var b = document.getElementById('buy'); b.href = BUY_URL; b.textContent = 'Buy Pro – $1.99'; b.removeAttribute('aria-disabled'); }
+</script>
+</body>
+</html>
