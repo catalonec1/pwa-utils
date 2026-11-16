@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const U = require('../convertor/logic.js');
 const F = require('../focus/logic.js');
 const T = require('../text/logic.js');
+const P = require('../pass/logic.js');
 
 const close = (a, b, eps = 1e-9) => assert.ok(Math.abs(a - b) <= eps * Math.max(1, Math.abs(b)), `${a} != ${b}`);
 
@@ -188,4 +189,48 @@ test('text v1.0.4: camelCase / snake_case / kebab-case / transliterare (Pro)', (
   assert.equal(T.pro.translit('Привет, Мир! Ёж и Щука'), 'Privet, Mir! Ezh i Schuka');
   assert.equal(T.pro.translit('abc 123'), 'abc 123');
   assert.ok(!T.FREE.includes('camelCase') && T.PRO.includes('translit'));
+});
+
+test('pass: generator respects length, sets and look-alikes', () => {
+  for (let i = 0; i < 200; i++) {
+    const p = P.generate({ length: 12, lower: true, upper: true, digits: true, symbols: true, noSimilar: true });
+    assert.equal(p.length, 12);
+    assert.match(p, /[a-z]/); assert.match(p, /[A-Z]/); assert.match(p, /[0-9]/); assert.match(p, /[^a-zA-Z0-9]/);
+    assert.doesNotMatch(p, /[Il1O0o|]/);
+  }
+  assert.match(P.generate({ length: 8, digits: true }), /^\d{8}$/);
+  assert.equal(P.generate({ length: 2, lower: true }).length, 4);
+  assert.throws(() => P.generate({ length: 10 }));
+});
+test('pass: entropy and levels', () => {
+  assert.equal(P.bits(16, 94), 105);
+  assert.equal(P.poolSize({ lower: true, upper: true, digits: true, symbols: true }), 26 + 26 + 10 + P.SETS.symbols.length);
+  assert.equal(P.level(30), 'weak'); assert.equal(P.level(50), 'fair'); assert.equal(P.level(70), 'strong'); assert.equal(P.level(90), 'veryStrong');
+  assert.ok(P.estimate('password123') <= 20);
+  assert.ok(P.estimate('aaaaaaaaaaaa') <= 20);
+  assert.ok(P.estimate('xK9#mQ2$vL7!pR4') > 80);
+  assert.equal(P.estimate(''), 0);
+});
+test('pass: randInt is uniform enough', () => {
+  const c = [0, 0, 0];
+  for (let i = 0; i < 30000; i++) c[P.randInt(3)]++;
+  for (const n of c) assert.ok(n > 9300 && n < 10700, String(c));
+});
+test('pass: passphrase, PIN, pronounceable, word lists', () => {
+  for (const lang of ['en', 'ro', 'ru']) {
+    const list = P.WORDS[lang];
+    assert.ok(list.length >= 120); assert.equal(new Set(list).size, list.length);
+    const ph = P.passphrase({ words: 5, sep: ' ', lang });
+    assert.equal(ph.split(' ').length, 5);
+    for (const w of ph.split(' ')) assert.ok(list.includes(w));
+  }
+  assert.doesNotMatch(P.WORDS.ro.join(''), /[ăâîșțşţ]/);
+  assert.match(P.passphrase({ words: 3, capitalize: true, number: true, lang: 'en' }), /^[A-Z][a-z]+\d*-[A-Z][a-z]+\d*-[A-Z][a-z]+\d*$/);
+  assert.match(P.pin(6), /^\d{6}$/);
+  assert.match(P.pronounceable(10), /^[A-Z][a-z]{7}\d\d$/);
+  assert.equal(P.bulk('pin', { length: 4 }, 7).length, 7);
+  assert.ok(P.passphraseBits({ words: 6, lang: 'en' }) >= 42);
+});
+test('pass: CSV guards formulas and quotes', () => {
+  assert.equal(P.toCsv(['=1+2', 'a,b', 'ok']), 'password\r\n"\'=1+2"\r\n"a,b"\r\nok\r\n');
 });
