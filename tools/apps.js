@@ -45,7 +45,7 @@ module.exports = {
     },
     {
       dir: 'pass',
-      storeId: '',
+      storeId: '9PL4BH4S7XD8',
       packageId: 'catalonec.StelarPasswordGenerator',
       id: 'password-generator',
       name: 'Stelar Password Generator',

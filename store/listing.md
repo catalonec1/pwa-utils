@@ -124,7 +124,7 @@ Pro (разовая покупка): поиск и замена по regex, Base
 
 ## 4. Stelar Password Generator (`pass/`)
 
-Reserved name: **Stelar Password Generator**. Category: Security (fallback Utilities & tools).
+Reserved name: **Stelar Password Generator** (Store ID 9PL4BH4S7XD8). Category: Security (fallback Utilities & tools).
 **EN — short description:** Strong passwords in one click, works offline. Nothing is sent or saved.
 **EN — description:**
 Create strong passwords right on your device.
