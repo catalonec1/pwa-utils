@@ -119,3 +119,41 @@ Pro (cumpărare unică): căutare și înlocuire cu regex, Base64 (UTF-8), codar
 • Удаление диакритики, URL-слаги (кириллица транслитерируется)
 • Отмена, текст сохраняется. Русский, английский и румынский. Без аккаунта, рекламы и слежки
 Pro (разовая покупка): поиск и замена по regex, Base64 (UTF-8), URL-кодирование, форматирование и сжатие JSON.
+
+---
+
+## 4. Stelar Password Generator (`pass/`)
+
+Reserved name: **Stelar Password Generator**. Category: Security (fallback Utilities & tools).
+**EN — short description:** Strong passwords in one click, works offline. Nothing is sent or saved.
+**EN — description:**
+Create strong passwords right on your device.
+• Random passwords from 6 to 64 characters with lowercase, uppercase, digits and symbols
+• Option to skip look-alike characters (I, l, 1, O, 0)
+• Strength meter with the real entropy in bits
+• Check how strong one of your own passwords is, privately, on your device
+• Light and dark theme, English, Romanian and Russian. No account, no ads, no tracking, works offline
+Pro (one-time add-on): passphrases from English, Romanian or Russian words, PIN codes, easy-to-say passwords, lists of up to 500 and CSV export.
+**Keywords:** password, generator, passphrase, pin, strong password, security, offline, privacy
+
+**RO — descriere scurtă:** Parole puternice dintr-un clic, funcționează fără internet. Nimic nu e trimis sau salvat.
+**RO — descriere:**
+Creează parole puternice direct pe dispozitivul tău.
+• Parole aleatorii de 6–64 de caractere cu litere mici, majuscule, cifre și simboluri
+• Opțiune fără caractere asemănătoare (I, l, 1, O, 0)
+• Indicator de putere cu entropia reală în biți
+• Verifici cât de puternică e o parolă de-a ta, privat, pe dispozitiv
+• Temă luminoasă și întunecată, română, engleză și rusă. Fără cont, reclame sau urmărire, funcționează offline
+Pro (cumpărare unică): fraze din cuvinte românești, englezești sau rusești, coduri PIN, parole ușor de pronunțat, liste de până la 500 și export CSV.
+
+**RU — краткое описание:** Надёжные пароли в один клик, работает без интернета. Ничего не отправляется и не сохраняется.
+**RU — описание:**
+Создавайте надёжные пароли прямо на своём устройстве.
+• Случайные пароли от 6 до 64 символов: строчные, заглавные, цифры и символы
+• Без похожих символов (I, l, 1, O, 0) по желанию
+• Индикатор надёжности с реальной энтропией в битах
+• Проверка надёжности своего пароля, конфиденциально, на устройстве
+• Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, работает офлайн
+Pro (разовая покупка): фразы из русских, английских или румынских слов, PIN-коды, легко произносимые пароли, списки до 500 и экспорт CSV.
+
+**Pro add-on listing:** name „Password Generator Pro”; EN: One-time purchase: passphrases, PINs, easy-to-say passwords, lists of up to 500 and CSV export. RO: Cumpărare unică: fraze din cuvinte, PIN-uri, parole ușor de pronunțat, liste de până la 500 și export CSV. RU: Разовая покупка: фразы из слов, PIN-коды, легко произносимые пароли, списки до 500 и экспорт CSV.

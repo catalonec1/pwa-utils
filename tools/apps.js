@@ -42,6 +42,19 @@ module.exports = {
       color: '#0b7a75',
       glyph: 'Aa',
       assets: ['./', 'index.html', 'app.js', 'logic.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
+    },
+    {
+      dir: 'pass',
+      storeId: '',
+      packageId: 'catalonec.StelarPasswordGenerator',
+      id: 'password-generator',
+      name: 'Stelar Password Generator',
+      short_name: 'Passwords',
+      description: 'Offline password generator: strong random passwords, strength meter and a private password check. In English, Romanian and Russian. Pro adds passphrases, PINs, easy-to-say passwords, lists of up to 500 and CSV export.',
+      categories: ['security', 'utilities', 'productivity'],
+      color: '#7048e8',
+      glyph: '•••',
+      assets: ['./', 'index.html', 'app.js', 'logic.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
     }
   ]
 };
