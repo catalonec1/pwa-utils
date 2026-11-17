@@ -1,10 +1,10 @@
-=== Unit Flip – Metric & Imperial Converter ===
+=== Catalonec Unit Converter – Metric & Imperial ===
 Contributors: catalonec
 Tags: unit converter, metric, imperial, recipe, conversion
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Show every measurement in both metric and imperial, and add an interactive unit 
 
 == Description ==
 
-Half of your readers think in grams and Celsius, the other half in cups and Fahrenheit. Unit Flip shows both.
+Half of your readers think in grams and Celsius, the other half in cups and Fahrenheit. Catalonec Unit Converter shows both.
 
 **Inline conversions with a shortcode**
 
@@ -20,7 +20,7 @@ Half of your readers think in grams and Celsius, the other half in cups and Fahr
 
 `[unitflip value="2" from="cups" to="ml"]` shows **2 cups (473.2 ml)**.
 
-If you leave out `to`, Unit Flip picks the usual metric or imperial counterpart (°F → °C, lb → kg, mi → km, cups → ml, and so on).
+If you leave out `to`, Catalonec Unit Converter picks the usual metric or imperial counterpart (°F → °C, lb → kg, mi → km, cups → ml, and so on).
 
 **Interactive converter block**
 
@@ -38,7 +38,7 @@ Choose the number of decimals and the display style: `350 °F (177 °C)`, `350 �
 
 No external requests, no tracking, no cookies, no database tables. The script loads only on pages that contain a converter.
 
-**Unit Flip Pro add-on**
+**Catalonec Unit Converter Pro add-on**
 
 A separate, optional add-on is available that converts measurements already written in your posts automatically (no shortcodes needed), adds a metric/imperial switch for visitors, and converts cups of common baking ingredients to grams. Everything described above stays free in this plugin.
 
@@ -48,9 +48,9 @@ Filters: `unit_flip_units` (add categories or units), `unit_flip_symbols`, `unit
 
 == Installation ==
 
-1. Install the plugin from Plugins → Add New, or upload the `unit-flip` folder to `/wp-content/plugins/`.
+1. Install the plugin from Plugins → Add New, or upload the `catalonec-unit-converter` folder to `/wp-content/plugins/`.
 2. Activate it.
-3. Use the `[unitflip]` shortcode in your text or add the "Unit Converter" block. Options are in Settings → Unit Flip.
+3. Use the `[unitflip]` shortcode in your text or add the "Unit Converter" block. Options are in Settings → Catalonec Unit Converter.
 
 == Frequently Asked Questions ==
 
@@ -77,6 +77,9 @@ Cups to grams depends on the ingredient, so this plugin converts volume to volum
 3. Settings page.
 
 == Changelog ==
+
+= 1.0.1 =
+* Renamed to Catalonec Unit Converter (new slug and text domain).
 
 = 1.0.0 =
 * First release.

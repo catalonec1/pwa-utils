@@ -26,11 +26,11 @@ jobs:
         run: |
           mkdir dist
           cd wordpress
-          zip -qr ../dist/unit-flip.zip unit-flip
-          zip -qr ../dist/unit-flip-pro.zip unit-flip-pro
+          zip -qr ../dist/catalonec-unit-converter.zip catalonec-unit-converter
+          zip -qr ../dist/catalonec-unit-converter-pro.zip catalonec-unit-converter-pro
       - uses: actions/upload-artifact@v4
         with:
-          name: unit-flip-zips
+          name: catalonec-unit-converter-zips
           path: dist/*.zip
 
   plugin-check:
@@ -40,4 +40,4 @@ jobs:
       - name: WordPress Plugin Check (free plugin)
         uses: wordpress/plugin-check-action@v1
         with:
-          build-dir: wordpress/unit-flip
+          build-dir: wordpress/catalonec-unit-converter

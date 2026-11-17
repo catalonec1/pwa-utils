@@ -1,4 +1,4 @@
-/* Unit Flip converter widget. Builds controls inside each .unit-flip-converter element. */
+/* Catalonec Unit Converter converter widget. Builds controls inside each .unit-flip-converter element. */
 (function () {
 	'use strict';
 	var data = window.unitFlipData;

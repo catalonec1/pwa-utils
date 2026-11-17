@@ -1,4 +1,4 @@
-/* Unit Flip Pro: lets visitors choose metric, US or both. The choice is kept in localStorage. */
+/* Catalonec Unit Converter Pro: lets visitors choose metric, US or both. The choice is kept in localStorage. */
 (function () {
 	'use strict';
 	var KEY = 'unitFlipSystem';
