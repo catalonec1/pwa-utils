@@ -7,12 +7,12 @@
 	"icon": "image-flip-horizontal",
 	"description": "An interactive metric/imperial unit converter.",
 	"keywords": [ "units", "metric", "imperial", "convert" ],
-	"textdomain": "unit-flip",
+	"textdomain": "catalonec-unit-converter",
 	"attributes": {
 		"category": { "type": "string", "default": "length" }
 	},
 	"supports": { "html": false, "align": [ "wide" ], "spacing": { "margin": true, "padding": true } },
 	"editorScript": "unit-flip-block-editor",
-	"style": "unit-flip",
+	"style": "catalonec-unit-converter",
 	"viewScript": "unit-flip-converter"
 }

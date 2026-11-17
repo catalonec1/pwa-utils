@@ -24,10 +24,10 @@ class Unit_Flip_Admin {
 	}
 
 	/**
-	 * Adds Settings > Unit Flip.
+	 * Adds Settings > Catalonec Unit Converter.
 	 */
 	public static function menu() {
-		add_options_page( __( 'Unit Flip', 'unit-flip' ), __( 'Unit Flip', 'unit-flip' ), 'manage_options', 'unit-flip', array( __CLASS__, 'page' ) );
+		add_options_page( __( 'Catalonec Unit Converter', 'catalonec-unit-converter' ), __( 'Catalonec Unit Converter', 'catalonec-unit-converter' ), 'manage_options', 'catalonec-unit-converter', array( __CLASS__, 'page' ) );
 	}
 
 	/**
@@ -37,7 +37,7 @@ class Unit_Flip_Admin {
 	 * @return array
 	 */
 	public static function action_links( $links ) {
-		array_unshift( $links, '<a href="' . esc_url( admin_url( 'options-general.php?page=unit-flip' ) ) . '">' . esc_html__( 'Settings', 'unit-flip' ) . '</a>' );
+		array_unshift( $links, '<a href="' . esc_url( admin_url( 'options-general.php?page=catalonec-unit-converter' ) ) . '">' . esc_html__( 'Settings', 'catalonec-unit-converter' ) . '</a>' );
 		return $links;
 	}
 
@@ -85,20 +85,20 @@ class Unit_Flip_Admin {
 		$styles = array(
 			'parentheses' => '350 °F (177 °C)',
 			'slash'       => '350 °F / 177 °C',
-			'result'      => __( '177 °C (original shown on hover)', 'unit-flip' ),
+			'result'      => __( '177 °C (original shown on hover)', 'catalonec-unit-converter' ),
 		);
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'Unit Flip', 'unit-flip' ); ?></h1>
+			<h1><?php esc_html_e( 'Catalonec Unit Converter', 'catalonec-unit-converter' ); ?></h1>
 			<form method="post" action="options.php">
 				<?php settings_fields( 'unit_flip' ); ?>
 				<table class="form-table" role="presentation">
 					<tr>
-						<th scope="row"><label for="unit-flip-decimals"><?php esc_html_e( 'Decimals', 'unit-flip' ); ?></label></th>
+						<th scope="row"><label for="unit-flip-decimals"><?php esc_html_e( 'Decimals', 'catalonec-unit-converter' ); ?></label></th>
 						<td><input type="number" min="0" max="6" id="unit-flip-decimals" name="<?php echo esc_attr( Unit_Flip::OPTION ); ?>[decimals]" value="<?php echo esc_attr( $s['decimals'] ); ?>" class="small-text"></td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Display style', 'unit-flip' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'Display style', 'catalonec-unit-converter' ); ?></th>
 						<td>
 							<?php foreach ( $styles as $key => $label ) : ?>
 								<label><input type="radio" name="<?php echo esc_attr( Unit_Flip::OPTION ); ?>[style]" value="<?php echo esc_attr( $key ); ?>" <?php checked( $s['style'], $key ); ?>> <?php echo esc_html( $label ); ?></label><br>
@@ -109,17 +109,17 @@ class Unit_Flip_Admin {
 				<?php submit_button(); ?>
 			</form>
 
-			<h2><?php esc_html_e( 'How to use', 'unit-flip' ); ?></h2>
+			<h2><?php esc_html_e( 'How to use', 'catalonec-unit-converter' ); ?></h2>
 			<p><code>[unitflip value="350" from="F"]</code> → <?php echo wp_kses_post( (string) Unit_Flip::render_value( 350, 'F', 'C', $s['decimals'], $s['style'] ) ); ?></p>
 			<p><code>[unitflip value="2" from="cups" to="ml"]</code> → <?php echo wp_kses_post( (string) Unit_Flip::render_value( 2, 'cup', 'ml', $s['decimals'], $s['style'] ) ); ?></p>
-			<p><code>[unitflip_converter category="temperature"]</code> — <?php esc_html_e( 'interactive converter. Also available as the "Unit Converter" block.', 'unit-flip' ); ?></p>
-			<p><?php esc_html_e( 'Categories:', 'unit-flip' ); ?> <code><?php echo esc_html( implode( ', ', array_keys( Unit_Flip::category_labels() ) ) ); ?></code></p>
+			<p><code>[unitflip_converter category="temperature"]</code> — <?php esc_html_e( 'interactive converter. Also available as the "Unit Converter" block.', 'catalonec-unit-converter' ); ?></p>
+			<p><?php esc_html_e( 'Categories:', 'catalonec-unit-converter' ); ?> <code><?php echo esc_html( implode( ', ', array_keys( Unit_Flip::category_labels() ) ) ); ?></code></p>
 
 			<?php if ( ! defined( 'UNIT_FLIP_PRO_VERSION' ) ) : ?>
 			<div class="card">
-				<h2><?php esc_html_e( 'Unit Flip Pro add-on', 'unit-flip' ); ?></h2>
-				<p><?php esc_html_e( 'A separate add-on that converts measurements already written in your posts automatically (no shortcodes), adds a metric/imperial switch for visitors, and converts cups of common baking ingredients to grams.', 'unit-flip' ); ?></p>
-				<p><a href="<?php echo esc_url( UNIT_FLIP_PRO_URL ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Learn more', 'unit-flip' ); ?></a></p>
+				<h2><?php esc_html_e( 'Catalonec Unit Converter Pro add-on', 'catalonec-unit-converter' ); ?></h2>
+				<p><?php esc_html_e( 'A separate add-on that converts measurements already written in your posts automatically (no shortcodes), adds a metric/imperial switch for visitors, and converts cups of common baking ingredients to grams.', 'catalonec-unit-converter' ); ?></p>
+				<p><a href="<?php echo esc_url( UNIT_FLIP_PRO_URL ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Learn more', 'catalonec-unit-converter' ); ?></a></p>
 			</div>
 			<?php endif; ?>
 		</div>

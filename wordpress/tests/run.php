@@ -1,6 +1,6 @@
 <?php
 /**
- * Minimal tests for Unit Flip without a WordPress install (stubs the few WP functions used).
+ * Minimal tests for Catalonec Unit Converter without a WordPress install (stubs the few WP functions used).
  * Run: php wordpress/tests/run.php
  */
 define( 'ABSPATH', __DIR__ );
@@ -25,11 +25,11 @@ function sanitize_key( $k ) { return preg_replace( '/[^a-z0-9_\-]/', '', strtolo
 define( 'UNIT_FLIP_URL', '' );
 define( 'UNIT_FLIP_PRO_URL_BASE', '' );
 define( 'UNIT_FLIP_PRO_VERSION', 'test' );
-define( 'UNIT_FLIP_DIR', dirname( __DIR__ ) . '/unit-flip/' );
+define( 'UNIT_FLIP_DIR', dirname( __DIR__ ) . '/catalonec-unit-converter/' );
 require UNIT_FLIP_DIR . 'includes/class-unit-flip-units.php';
 require UNIT_FLIP_DIR . 'includes/class-unit-flip.php';
 if ( getenv( 'UF_PRO' ) ) {
-	require dirname( __DIR__ ) . '/unit-flip-pro/includes/class-unit-flip-pro.php';
+	require dirname( __DIR__ ) . '/catalonec-unit-converter-pro/includes/class-unit-flip-pro.php';
 }
 
 $fails = 0; $n = 0;

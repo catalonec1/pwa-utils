@@ -106,7 +106,7 @@ class Unit_Flip {
 		add_shortcode( 'unitflip', array( __CLASS__, 'shortcode_value' ) );
 		add_shortcode( 'unitflip_converter', array( __CLASS__, 'shortcode_converter' ) );
 
-		wp_register_style( 'unit-flip', UNIT_FLIP_URL . 'assets/unit-flip.css', array(), UNIT_FLIP_VERSION );
+		wp_register_style( 'catalonec-unit-converter', UNIT_FLIP_URL . 'assets/unit-flip.css', array(), UNIT_FLIP_VERSION );
 		wp_register_script( 'unit-flip-converter', UNIT_FLIP_URL . 'assets/converter.js', array(), UNIT_FLIP_VERSION, true );
 
 		$table   = Unit_Flip_Units::table();
@@ -124,10 +124,10 @@ class Unit_Flip {
 					'symbols' => $symbols,
 					'labels'  => self::category_labels(),
 					'i18n'    => array(
-						'value' => __( 'Value', 'unit-flip' ),
-						'from'  => __( 'From', 'unit-flip' ),
-						'to'    => __( 'To', 'unit-flip' ),
-						'swap'  => __( 'Swap units', 'unit-flip' ),
+						'value' => __( 'Value', 'catalonec-unit-converter' ),
+						'from'  => __( 'From', 'catalonec-unit-converter' ),
+						'to'    => __( 'To', 'catalonec-unit-converter' ),
+						'swap'  => __( 'Swap units', 'catalonec-unit-converter' ),
 					),
 				)
 			) . ';',
@@ -146,7 +146,7 @@ class Unit_Flip {
 			'window.unitFlipCategories = ' . wp_json_encode( self::category_labels() ) . ';',
 			'before'
 		);
-		wp_set_script_translations( 'unit-flip-block-editor', 'unit-flip' );
+		wp_set_script_translations( 'unit-flip-block-editor', 'catalonec-unit-converter' );
 
 		register_block_type(
 			UNIT_FLIP_DIR . 'blocks/converter',
@@ -161,17 +161,17 @@ class Unit_Flip {
 	 */
 	public static function category_labels() {
 		$labels = array(
-			'length'      => __( 'Length', 'unit-flip' ),
-			'mass'        => __( 'Weight', 'unit-flip' ),
-			'temperature' => __( 'Temperature', 'unit-flip' ),
-			'volume'      => __( 'Volume', 'unit-flip' ),
-			'area'        => __( 'Area', 'unit-flip' ),
-			'speed'       => __( 'Speed', 'unit-flip' ),
-			'pressure'    => __( 'Pressure', 'unit-flip' ),
-			'energy'      => __( 'Energy', 'unit-flip' ),
-			'power'       => __( 'Power', 'unit-flip' ),
-			'fuel'        => __( 'Fuel economy', 'unit-flip' ),
-			'data'        => __( 'Data size', 'unit-flip' ),
+			'length'      => __( 'Length', 'catalonec-unit-converter' ),
+			'mass'        => __( 'Weight', 'catalonec-unit-converter' ),
+			'temperature' => __( 'Temperature', 'catalonec-unit-converter' ),
+			'volume'      => __( 'Volume', 'catalonec-unit-converter' ),
+			'area'        => __( 'Area', 'catalonec-unit-converter' ),
+			'speed'       => __( 'Speed', 'catalonec-unit-converter' ),
+			'pressure'    => __( 'Pressure', 'catalonec-unit-converter' ),
+			'energy'      => __( 'Energy', 'catalonec-unit-converter' ),
+			'power'       => __( 'Power', 'catalonec-unit-converter' ),
+			'fuel'        => __( 'Fuel economy', 'catalonec-unit-converter' ),
+			'data'        => __( 'Data size', 'catalonec-unit-converter' ),
 		);
 		$labels = apply_filters( 'unit_flip_category_labels', $labels );
 		return array_intersect_key( $labels, Unit_Flip_Units::table() );
@@ -235,7 +235,7 @@ class Unit_Flip {
 			// Invalid input: show the original text so the post still reads correctly.
 			return esc_html( trim( $atts['value'] . ' ' . $atts['from'] ) );
 		}
-		wp_enqueue_style( 'unit-flip' );
+		wp_enqueue_style( 'catalonec-unit-converter' );
 		return $html;
 	}
 
@@ -299,7 +299,7 @@ class Unit_Flip {
 		$value = is_numeric( $atts['value'] ) ? $atts['value'] : '1';
 		$labels = self::category_labels();
 
-		wp_enqueue_style( 'unit-flip' );
+		wp_enqueue_style( 'catalonec-unit-converter' );
 		wp_enqueue_script( 'unit-flip-converter' );
 
 		return sprintf(
@@ -311,7 +311,7 @@ class Unit_Flip {
 			esc_html(
 				sprintf(
 					/* translators: %s: category name such as Length. */
-					__( '%s converter (needs JavaScript).', 'unit-flip' ),
+					__( '%s converter (needs JavaScript).', 'catalonec-unit-converter' ),
 					isset( $labels[ $category ] ) ? $labels[ $category ] : $category
 				)
 			)

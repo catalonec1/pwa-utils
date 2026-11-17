@@ -118,8 +118,8 @@ class Unit_Flip_Pro {
 	 * Registers assets and the switch shortcode.
 	 */
 	public static function register() {
-		wp_register_script( 'unit-flip-pro', UNIT_FLIP_PRO_URL_BASE . 'assets/switch.js', array(), UNIT_FLIP_PRO_VERSION, true );
-		wp_register_style( 'unit-flip-pro', UNIT_FLIP_PRO_URL_BASE . 'assets/switch.css', array( 'unit-flip' ), UNIT_FLIP_PRO_VERSION );
+		wp_register_script( 'catalonec-unit-converter-pro', UNIT_FLIP_PRO_URL_BASE . 'assets/switch.js', array(), UNIT_FLIP_PRO_VERSION, true );
+		wp_register_style( 'catalonec-unit-converter-pro', UNIT_FLIP_PRO_URL_BASE . 'assets/switch.css', array( 'catalonec-unit-converter' ), UNIT_FLIP_PRO_VERSION );
 		add_shortcode( 'unitflip_switch', array( __CLASS__, 'switch_html' ) );
 	}
 
@@ -129,12 +129,12 @@ class Unit_Flip_Pro {
 	 * @return string
 	 */
 	public static function switch_html() {
-		wp_enqueue_script( 'unit-flip-pro' );
-		wp_enqueue_style( 'unit-flip-pro' );
-		return '<div class="unit-flip-switch" role="group" aria-label="' . esc_attr__( 'Units', 'unit-flip-pro' ) . '">'
-			. '<button type="button" data-uf-pick="both" aria-pressed="true">' . esc_html__( 'Both', 'unit-flip-pro' ) . '</button>'
-			. '<button type="button" data-uf-pick="metric" aria-pressed="false">' . esc_html__( 'Metric', 'unit-flip-pro' ) . '</button>'
-			. '<button type="button" data-uf-pick="imperial" aria-pressed="false">' . esc_html__( 'US', 'unit-flip-pro' ) . '</button>'
+		wp_enqueue_script( 'catalonec-unit-converter-pro' );
+		wp_enqueue_style( 'catalonec-unit-converter-pro' );
+		return '<div class="unit-flip-switch" role="group" aria-label="' . esc_attr__( 'Units', 'catalonec-unit-converter-pro' ) . '">'
+			. '<button type="button" data-uf-pick="both" aria-pressed="true">' . esc_html__( 'Both', 'catalonec-unit-converter-pro' ) . '</button>'
+			. '<button type="button" data-uf-pick="metric" aria-pressed="false">' . esc_html__( 'Metric', 'catalonec-unit-converter-pro' ) . '</button>'
+			. '<button type="button" data-uf-pick="imperial" aria-pressed="false">' . esc_html__( 'US', 'catalonec-unit-converter-pro' ) . '</button>'
 			. '</div>';
 	}
 
@@ -237,9 +237,9 @@ class Unit_Flip_Pro {
 			$out .= $new;
 		}
 		if ( $found ) {
-			wp_enqueue_style( 'unit-flip' );
-			wp_enqueue_script( 'unit-flip-pro' );
-			wp_enqueue_style( 'unit-flip-pro' );
+			wp_enqueue_style( 'catalonec-unit-converter' );
+			wp_enqueue_script( 'catalonec-unit-converter-pro' );
+			wp_enqueue_style( 'catalonec-unit-converter-pro' );
 			if ( 'top' === self::settings()['switch'] && false === strpos( $content, '[unitflip_switch' ) ) {
 				$out = self::switch_html() . $out;
 			}
@@ -313,10 +313,10 @@ class Unit_Flip_Pro {
 	}
 
 	/**
-	 * Settings section under Settings > Unit Flip Pro.
+	 * Settings section under Settings > Catalonec Unit Converter Pro.
 	 */
 	public static function menu() {
-		add_options_page( __( 'Unit Flip Pro', 'unit-flip-pro' ), __( 'Unit Flip Pro', 'unit-flip-pro' ), 'manage_options', 'unit-flip-pro', array( __CLASS__, 'page' ) );
+		add_options_page( __( 'Catalonec Unit Converter Pro', 'catalonec-unit-converter-pro' ), __( 'Catalonec Unit Converter Pro', 'catalonec-unit-converter-pro' ), 'manage_options', 'catalonec-unit-converter-pro', array( __CLASS__, 'page' ) );
 	}
 
 	/**
@@ -352,16 +352,16 @@ class Unit_Flip_Pro {
 		$o = self::OPTION;
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'Unit Flip Pro', 'unit-flip-pro' ); ?></h1>
+			<h1><?php esc_html_e( 'Catalonec Unit Converter Pro', 'catalonec-unit-converter-pro' ); ?></h1>
 			<form method="post" action="options.php">
 				<?php settings_fields( 'unit_flip_pro' ); ?>
-				<p><label><input type="checkbox" name="<?php echo esc_attr( $o ); ?>[auto]" value="1" <?php checked( $s['auto'] ); ?>> <?php esc_html_e( 'Convert measurements in posts and pages automatically', 'unit-flip-pro' ); ?></label></p>
-				<p><label><input type="checkbox" name="<?php echo esc_attr( $o ); ?>[ingredients]" value="1" <?php checked( $s['ingredients'] ); ?>> <?php esc_html_e( 'Show grams for cups/spoons of known ingredients (e.g. "2 cups flour (240 g)")', 'unit-flip-pro' ); ?></label></p>
-				<p><label><input type="radio" name="<?php echo esc_attr( $o ); ?>[switch]" value="top" <?php checked( $s['switch'], 'top' ); ?>> <?php esc_html_e( 'Show the Metric/US switch above content that has conversions', 'unit-flip-pro' ); ?></label><br>
-				<label><input type="radio" name="<?php echo esc_attr( $o ); ?>[switch]" value="none" <?php checked( $s['switch'], 'none' ); ?>> <?php esc_html_e( 'Only where I place [unitflip_switch]', 'unit-flip-pro' ); ?></label></p>
+				<p><label><input type="checkbox" name="<?php echo esc_attr( $o ); ?>[auto]" value="1" <?php checked( $s['auto'] ); ?>> <?php esc_html_e( 'Convert measurements in posts and pages automatically', 'catalonec-unit-converter-pro' ); ?></label></p>
+				<p><label><input type="checkbox" name="<?php echo esc_attr( $o ); ?>[ingredients]" value="1" <?php checked( $s['ingredients'] ); ?>> <?php esc_html_e( 'Show grams for cups/spoons of known ingredients (e.g. "2 cups flour (240 g)")', 'catalonec-unit-converter-pro' ); ?></label></p>
+				<p><label><input type="radio" name="<?php echo esc_attr( $o ); ?>[switch]" value="top" <?php checked( $s['switch'], 'top' ); ?>> <?php esc_html_e( 'Show the Metric/US switch above content that has conversions', 'catalonec-unit-converter-pro' ); ?></label><br>
+				<label><input type="radio" name="<?php echo esc_attr( $o ); ?>[switch]" value="none" <?php checked( $s['switch'], 'none' ); ?>> <?php esc_html_e( 'Only where I place [unitflip_switch]', 'catalonec-unit-converter-pro' ); ?></label></p>
 				<?php submit_button(); ?>
 			</form>
-			<p><?php esc_html_e( 'Text inside code blocks, shortcodes and HTML attributes is never changed. Ingredient weights are typical approximate values; adjust them with the unit_flip_pro_densities filter.', 'unit-flip-pro' ); ?></p>
+			<p><?php esc_html_e( 'Text inside code blocks, shortcodes and HTML attributes is never changed. Ingredient weights are typical approximate values; adjust them with the unit_flip_pro_densities filter.', 'catalonec-unit-converter-pro' ); ?></p>
 		</div>
 		<?php
 	}
