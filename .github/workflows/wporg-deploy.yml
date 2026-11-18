@@ -1,0 +1,34 @@
+name: Deploy to WordPress.org
+
+# Manual: publishes wordpress/catalonec-unit-converter to the WordPress.org SVN (trunk + tag) with icon/banner assets.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to tag (must match Stable tag in readme.txt)'
+        required: true
+        default: '1.0.1'
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check secret
+        env:
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        run: |
+          if [ -z "$SVN_PASSWORD" ]; then echo "::error::Add repository secret SVN_PASSWORD (WordPress.org SVN password)"; exit 1; fi
+          grep -q "^Stable tag: ${{ inputs.version }}$" wordpress/catalonec-unit-converter/readme.txt
+      - name: WordPress Plugin Deploy
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_USERNAME: catalonec
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: catalonec-unit-converter
+          VERSION: ${{ inputs.version }}
+          BUILD_DIR: wordpress/catalonec-unit-converter
+          ASSETS_DIR: wordpress/wporg-assets

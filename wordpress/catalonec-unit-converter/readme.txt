@@ -70,12 +70,6 @@ Yes. `value="1,5"` works, and results follow your site's number format.
 
 Cups to grams depends on the ingredient, so this plugin converts volume to volume (cups to ml). Ingredient-aware conversion is part of the Pro add-on.
 
-== Screenshots ==
-
-1. Inline conversions in a recipe.
-2. The interactive converter block.
-3. Settings page.
-
 == Changelog ==
 
 = 1.0.1 =
