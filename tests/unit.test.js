@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const U = require('../convertor/logic.js');
 const F = require('../focus/logic.js');
 const T = require('../text/logic.js');
+const P = require('../pass/logic.js');
 
 const close = (a, b, eps = 1e-9) => assert.ok(Math.abs(a - b) <= eps * Math.max(1, Math.abs(b)), `${a} != ${b}`);
 
@@ -25,6 +26,17 @@ test('converter: temperature', () => {
   close(U.convert('temperature', 'F', 'C', -40), -40);
   close(U.convert('temperature', 'K', 'C', 0), -273.15);
   close(U.convert('temperature', 'C', 'K', 25), 298.15);
+});
+
+test('converter: density and flow rate (Pro)', () => {
+  close(U.convert('density', 'gcm3', 'kgm3', 1), 1000);
+  close(U.convert('density', 'lbft3', 'kgm3', 62.428), 1000, 1e-3);
+  close(U.convert('density', 'gml', 'gl', 0.8), 800);
+  close(U.convert('flow', 'm3h', 'ls', 3.6), 1);
+  close(U.convert('flow', 'galUSmin', 'lmin', 1), 3.785411784);
+  close(U.convert('flow', 'cfm', 'm3h', 1), 1.6990107955);
+  assert.equal(U.categories(false).includes('density'), false);
+  assert.equal(U.categories(true).includes('flow'), true);
 });
 
 test('converter: frequency and torque (Pro)', () => {
@@ -99,6 +111,19 @@ test('focus: stats, last days and csv', () => {
   assert.equal(F.toCSV(s), 'date,sessions,minutes\n2026-11-03,1,25\n2026-11-04,2,75\n');
 });
 
+test('focus: daily goal and streak', () => {
+  assert.equal(F.sanitizeGoal('x'), F.GOAL_DEFAULT);
+  assert.equal(F.sanitizeGoal(0), 1);
+  assert.equal(F.sanitizeGoal(99), 16);
+  const s = { '2026-11-05': { sessions: 4, minutes: 100 }, '2026-11-06': { sessions: 5, minutes: 125 },
+    '2026-11-07': { sessions: 4, minutes: 100 }, '2026-11-08': { sessions: 1, minutes: 25 } };
+  assert.equal(F.streak(s, new Date(2026, 10, 7, 20), 4), 3);
+  assert.equal(F.streak(s, new Date(2026, 10, 8, 9), 4), 3);
+  assert.equal(F.streak(s, new Date(2026, 10, 9, 9), 4), 0);
+  assert.equal(F.streak(s, new Date(2026, 10, 8, 9), 1), 4);
+  assert.equal(F.streak({}, new Date(2026, 10, 8), 4), 0);
+});
+
 test('text: stats in three languages', () => {
   const s = T.stats('Salut, lume! Ce faci?\n\nПривет мир. Hello world');
   assert.equal(s.words, 8);
@@ -127,6 +152,8 @@ test('text: line operations', () => {
   assert.equal(T.ops.removeEmpty('a\n\n  \nb'), 'a\nb');
   assert.equal(T.ops.numberLines('x\ny'), '1. x\n2. y');
   assert.equal(T.ops.dedupe('a\r\nb\r\na'), 'a\nb');
+  assert.equal(T.ops.joinLines('  a \n\nb\r\n c'), 'a b c');
+  assert.equal(T.ops.stripHtml('<p>Hi &amp; <b>bye</b></p><script>x()</script>&lt;3'), 'Hi & bye<3');
 });
 
 test('text: diacritics and slug', () => {
@@ -147,5 +174,63 @@ test('text: pro tools', () => {
   assert.equal(T.pro.urlDecode('a+b%26c'), 'a b&c');
   assert.equal(T.pro.jsonFormat('{"a":[1,2]}'), '{\n  "a": [\n    1,\n    2\n  ]\n}');
   assert.equal(T.pro.jsonMinify('{ "a" : 1 }'), '{"a":1}');
+  assert.equal(T.pro.extractEmails('Scrie la ana.pop@ex.ro sau ANA@x.com; ana.pop@ex.ro'), 'ana.pop@ex.ro\nANA@x.com');
+  assert.equal(T.pro.extractUrls('Vezi https://a.ro/x?y=1, apoi (http://b.com/p).'), 'https://a.ro/x?y=1\nhttp://b.com/p');
+  assert.equal(T.pro.wordFreq('Ana are mere. ana ARE pere, mere'), 'ana: 2\nare: 2\nmere: 2\npere: 1');
+  assert.equal(T.pro.wordFreq(''), '');
   assert.throws(() => T.pro.jsonFormat('{bad'));
+});
+
+test('text v1.0.4: camelCase / snake_case / kebab-case / transliterare (Pro)', () => {
+  assert.equal(T.pro.camelCase('Hello world\nuser_id field'), 'helloWorld\nuserIdField');
+  assert.equal(T.pro.snakeCase('myVariableName\nȘir de text'), 'my_variable_name\nsir_de_text');
+  assert.equal(T.pro.kebabCase('Total Price (USD)'), 'total-price-usd');
+  assert.equal(T.pro.camelCase(''), '');
+  assert.equal(T.pro.translit('Привет, Мир! Ёж и Щука'), 'Privet, Mir! Ezh i Schuka');
+  assert.equal(T.pro.translit('abc 123'), 'abc 123');
+  assert.ok(!T.FREE.includes('camelCase') && T.PRO.includes('translit'));
+});
+
+test('pass: generator respects length, sets and look-alikes', () => {
+  for (let i = 0; i < 200; i++) {
+    const p = P.generate({ length: 12, lower: true, upper: true, digits: true, symbols: true, noSimilar: true });
+    assert.equal(p.length, 12);
+    assert.match(p, /[a-z]/); assert.match(p, /[A-Z]/); assert.match(p, /[0-9]/); assert.match(p, /[^a-zA-Z0-9]/);
+    assert.doesNotMatch(p, /[Il1O0o|]/);
+  }
+  assert.match(P.generate({ length: 8, digits: true }), /^\d{8}$/);
+  assert.equal(P.generate({ length: 2, lower: true }).length, 4);
+  assert.throws(() => P.generate({ length: 10 }));
+});
+test('pass: entropy and levels', () => {
+  assert.equal(P.bits(16, 94), 105);
+  assert.equal(P.poolSize({ lower: true, upper: true, digits: true, symbols: true }), 26 + 26 + 10 + P.SETS.symbols.length);
+  assert.equal(P.level(30), 'weak'); assert.equal(P.level(50), 'fair'); assert.equal(P.level(70), 'strong'); assert.equal(P.level(90), 'veryStrong');
+  assert.ok(P.estimate('password123') <= 20);
+  assert.ok(P.estimate('aaaaaaaaaaaa') <= 20);
+  assert.ok(P.estimate('xK9#mQ2$vL7!pR4') > 80);
+  assert.equal(P.estimate(''), 0);
+});
+test('pass: randInt is uniform enough', () => {
+  const c = [0, 0, 0];
+  for (let i = 0; i < 30000; i++) c[P.randInt(3)]++;
+  for (const n of c) assert.ok(n > 9300 && n < 10700, String(c));
+});
+test('pass: passphrase, PIN, pronounceable, word lists', () => {
+  for (const lang of ['en', 'ro', 'ru']) {
+    const list = P.WORDS[lang];
+    assert.ok(list.length >= 120); assert.equal(new Set(list).size, list.length);
+    const ph = P.passphrase({ words: 5, sep: ' ', lang });
+    assert.equal(ph.split(' ').length, 5);
+    for (const w of ph.split(' ')) assert.ok(list.includes(w));
+  }
+  assert.doesNotMatch(P.WORDS.ro.join(''), /[ăâîșțşţ]/);
+  assert.match(P.passphrase({ words: 3, capitalize: true, number: true, lang: 'en' }), /^[A-Z][a-z]+\d*-[A-Z][a-z]+\d*-[A-Z][a-z]+\d*$/);
+  assert.match(P.pin(6), /^\d{6}$/);
+  assert.match(P.pronounceable(10), /^[A-Z][a-z]{7}\d\d$/);
+  assert.equal(P.bulk('pin', { length: 4 }, 7).length, 7);
+  assert.ok(P.passphraseBits({ words: 6, lang: 'en' }) >= 42);
+});
+test('pass: CSV guards formulas and quotes', () => {
+  assert.equal(P.toCsv(['=1+2', 'a,b', 'ok']), 'password\r\n"\'=1+2"\r\n"a,b"\r\nok\r\n');
 });

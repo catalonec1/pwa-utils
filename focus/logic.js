@@ -50,12 +50,30 @@
     }
     return out;
   }
+  /* Daily goal in work sessions (free feature). */
+  const GOAL_DEFAULT = 4, GOAL_LIMITS = [1, 16];
+  function sanitizeGoal(g) {
+    let v = g === null || g === '' ? NaN : Math.round(Number(g));
+    if (!Number.isFinite(v)) v = GOAL_DEFAULT;
+    return Math.min(GOAL_LIMITS[1], Math.max(GOAL_LIMITS[0], v));
+  }
+  /* Consecutive days (ending today) whose sessions reached the goal. A today that is not
+     reached yet does not break the streak: counting then starts from yesterday. */
+  function streak(stats, today, goal) {
+    const g = sanitizeGoal(goal);
+    const d = new Date(today); d.setHours(12, 0, 0, 0);
+    const met = x => ((stats[dayKey(x)] || {}).sessions || 0) >= g;
+    if (!met(d)) d.setDate(d.getDate() - 1);
+    let n = 0;
+    while (met(d) && n < 3660) { n++; d.setDate(d.getDate() - 1); }
+    return n;
+  }
   function toCSV(stats) {
     const rows = Object.keys(stats).sort().map(k => `${k},${stats[k].sessions},${stats[k].minutes}`);
     return ['date,sessions,minutes'].concat(rows).join('\n') + '\n';
   }
 
-  const api = { DEFAULT_CFG, LIMITS, sanitize, nextPhase, durationSec, fmt, dayKey, record, lastDays, toCSV };
+  const api = { DEFAULT_CFG, LIMITS, GOAL_DEFAULT, GOAL_LIMITS, sanitize, sanitizeGoal, streak, nextPhase, durationSec, fmt, dayKey, record, lastDays, toCSV };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else global.Focus = api;
 })(typeof window !== 'undefined' ? window : globalThis);

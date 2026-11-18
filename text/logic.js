@@ -33,7 +33,10 @@
     removeDiacritics: t => t.normalize('NFD').replace(/[̀-ͯ]/g, '').normalize('NFC'),
     slug: t => ops.removeDiacritics(String(t).toLowerCase().replace(/[а-яё]/g, c => RU[c]))
       .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''),
-    numberLines: t => lines(t).map((l, i) => `${i + 1}. ${l}`).join('\n')
+    numberLines: t => lines(t).map((l, i) => `${i + 1}. ${l}`).join('\n'),
+    joinLines: t => lines(t).map(l => l.trim()).filter(Boolean).join(' '),
+    stripHtml: t => String(t).replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/gi, '').replace(/<[^>]+>/g, '')
+      .replace(/&nbsp;/g, ' ').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&')
   };
   const FREE = Object.keys(ops);
 
@@ -41,6 +44,9 @@
     const f = Array.from(new Set(String(flags || 'g').replace(/[^gimsuy]/g, ''))).join('');
     return String(t).replace(new RegExp(pattern, f), repl == null ? '' : repl);
   }
+  const uniq = a => [...new Set(a)];
+  // cuvinte pentru camel/snake/kebab: separă și la granița myVar → my var, fără diacritice
+  const words = l => ops.removeDiacritics(String(l)).replace(/([a-z0-9])([A-Z])/g, '$1 $2').toLowerCase().match(/[\p{L}\p{N}]+/gu) || [];
   function b64encode(t) {
     const bytes = new TextEncoder().encode(String(t));
     let bin = ''; bytes.forEach(b => { bin += String.fromCharCode(b); });
@@ -55,7 +61,19 @@
     urlEncode: t => encodeURIComponent(t),
     urlDecode: t => decodeURIComponent(String(t).replace(/\+/g, ' ')),
     jsonFormat: t => JSON.stringify(JSON.parse(t), null, 2),
-    jsonMinify: t => JSON.stringify(JSON.parse(t))
+    jsonMinify: t => JSON.stringify(JSON.parse(t)),
+    extractEmails: t => uniq(String(t).match(/[\p{L}\p{N}._%+\-]+@[\p{L}\p{N}.\-]+\.[\p{L}]{2,}/gu) || []).join('\n'),
+    extractUrls: t => uniq((String(t).match(/https?:\/\/[^\s<>"'()]+/g) || []).map(u => u.replace(/[.,;:!?]+$/, ''))).join('\n'),
+    wordFreq: t => {
+      const m = new Map();
+      (String(t).toLocaleLowerCase().match(/[\p{L}\p{N}]+(?:['’\-][\p{L}\p{N}]+)*/gu) || []).forEach(w => m.set(w, (m.get(w) || 0) + 1));
+      return [...m].sort((a, b) => b[1] - a[1] || collator.compare(a[0], b[0])).map(([w, n]) => `${w}: ${n}`).join('\n');
+    },
+    // v1.0.4: stiluri de denumire pentru programatori (pe fiecare rând) și transliterare chirilică → latină
+    camelCase: t => lines(t).map(l => words(l).map((w, i) => i ? w[0].toUpperCase() + w.slice(1) : w).join('')).join('\n'),
+    snakeCase: t => lines(t).map(l => words(l).join('_')).join('\n'),
+    kebabCase: t => lines(t).map(l => words(l).join('-')).join('\n'),
+    translit: t => String(t).replace(/[А-яЁё]/g, c => { const l = c.toLowerCase(), r = RU[l]; return r === undefined ? c : c === l ? r : r.charAt(0).toUpperCase() + r.slice(1); })
   };
 
   const api = { stats, ops, FREE, pro, PRO: Object.keys(pro), regexReplace };

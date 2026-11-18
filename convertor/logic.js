@@ -16,7 +16,9 @@
     angle: { pro: true, base: 'deg', units: { deg: 1, rad: 180 / Math.PI, grad: 0.9, turn: 360 } },
     fuel: { pro: true, base: 'l100', units: { l100: null, kml: null, mpgUS: null, mpgUK: null } },
     frequency: { pro: true, base: 'Hz', units: { Hz: 1, kHz: 1e3, MHz: 1e6, GHz: 1e9, rpm: 1 / 60 } },
-    torque: { pro: true, base: 'Nm', units: { Nm: 1, kNm: 1000, kgfm: 9.80665, lbfft: 1.3558179483314004, lbfin: 0.1129848290276167 } }
+    torque: { pro: true, base: 'Nm', units: { Nm: 1, kNm: 1000, kgfm: 9.80665, lbfft: 1.3558179483314004, lbfin: 0.1129848290276167 } },
+    density: { pro: true, base: 'kgm3', units: { kgm3: 1, gcm3: 1000, gml: 1000, gl: 1, lbft3: 16.01846337396014, lbgalUS: 119.82642731689663 } },
+    flow: { pro: true, base: 'm3s', units: { m3s: 1, m3h: 1 / 3600, ls: 0.001, lmin: 0.001 / 60, galUSmin: 3.785411784e-3 / 60, cfm: 0.028316846592 / 60 } }
   };
 
   function toBase(cat, unit, v) {

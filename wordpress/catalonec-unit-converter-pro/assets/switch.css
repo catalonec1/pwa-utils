@@ -1,0 +1,4 @@
+.unit-flip-switch { display: inline-flex; gap: 0; margin: 0 0 1em; border: 1px solid rgba(127,127,127,.45); border-radius: 999px; overflow: hidden; font-size: .9em; }
+.unit-flip-switch button { background: transparent; color: inherit; border: 0; padding: .35em .9em; cursor: pointer; font: inherit; }
+.unit-flip-switch button[aria-pressed="true"] { background: rgba(127,127,127,.25); font-weight: 600; }
+.unit-flip--auto[title] { border-bottom: 1px dotted currentColor; cursor: help; }

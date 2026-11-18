@@ -2,9 +2,9 @@
   'use strict';
   const SKU = 'pro';
   const DICT = {
-    ro: { appName: 'Cronometru de concentrare', start: 'Start', pause: 'Pauză', resume: 'Continuă', reset: 'Resetează', skip: 'Sari', sound: 'Sunet', settings: 'Durate (minute)', work: 'Concentrare', short: 'Pauză scurtă', long: 'Pauză lungă', every: 'Pauză lungă la fiecare', stats: 'Ultimele 7 zile', csv: 'Exportă CSV', proPitch: 'Durate personalizate, statistici pe 7 zile și export CSV.', today: 'Azi: {n} sesiuni, {m} min', doneWork: 'Sesiune încheiată. Ia o pauză.', doneBreak: 'Pauza s-a terminat. Înapoi la treabă.' },
-    en: { appName: 'Focus Timer – Pomodoro', start: 'Start', pause: 'Pause', resume: 'Resume', reset: 'Reset', skip: 'Skip', sound: 'Sound', settings: 'Durations (minutes)', work: 'Focus', short: 'Short break', long: 'Long break', every: 'Long break every', stats: 'Last 7 days', csv: 'Export CSV', proPitch: 'Custom durations, 7-day statistics and CSV export.', today: 'Today: {n} sessions, {m} min', doneWork: 'Session done. Take a break.', doneBreak: 'Break is over. Back to work.' },
-    ru: { appName: 'Таймер фокуса – Помодоро', start: 'Старт', pause: 'Пауза', resume: 'Продолжить', reset: 'Сброс', skip: 'Пропустить', sound: 'Звук', settings: 'Длительность (минуты)', work: 'Фокус', short: 'Короткий перерыв', long: 'Длинный перерыв', every: 'Длинный перерыв каждые', stats: 'Последние 7 дней', csv: 'Экспорт CSV', proPitch: 'Свои длительности, статистика за 7 дней и экспорт CSV.', today: 'Сегодня: {n} сессий, {m} мин', doneWork: 'Сессия завершена. Отдохните.', doneBreak: 'Перерыв окончен. За работу.' }
+    ro: { appName: 'Cronometru de concentrare', start: 'Start', pause: 'Pauză', resume: 'Continuă', reset: 'Resetează', skip: 'Sari', sound: 'Sunet', settings: 'Durate (minute)', work: 'Concentrare', short: 'Pauză scurtă', long: 'Pauză lungă', every: 'Pauză lungă la fiecare', stats: 'Ultimele 7 zile', csv: 'Exportă CSV', proPitch: 'Durate personalizate, statistici pe 7 zile și export CSV.', today: 'Azi: {n} sesiuni, {m} min', goal: 'Obiectiv zilnic (sesiuni)', streak: 'Serie: {n} zile la rând', goalDone: 'Obiectivul de azi e atins!', doneWork: 'Sesiune încheiată. Ia o pauză.', doneBreak: 'Pauza s-a terminat. Înapoi la treabă.' },
+    en: { appName: 'Focus Timer – Pomodoro', start: 'Start', pause: 'Pause', resume: 'Resume', reset: 'Reset', skip: 'Skip', sound: 'Sound', settings: 'Durations (minutes)', work: 'Focus', short: 'Short break', long: 'Long break', every: 'Long break every', stats: 'Last 7 days', csv: 'Export CSV', proPitch: 'Custom durations, 7-day statistics and CSV export.', today: 'Today: {n} sessions, {m} min', goal: 'Daily goal (sessions)', streak: 'Streak: {n} days in a row', goalDone: 'Today\'s goal reached!', doneWork: 'Session done. Take a break.', doneBreak: 'Break is over. Back to work.' },
+    ru: { appName: 'Таймер фокуса – Помодоро', start: 'Старт', pause: 'Пауза', resume: 'Продолжить', reset: 'Сброс', skip: 'Пропустить', sound: 'Звук', settings: 'Длительность (минуты)', work: 'Фокус', short: 'Короткий перерыв', long: 'Длинный перерыв', every: 'Длинный перерыв каждые', stats: 'Последние 7 дней', csv: 'Экспорт CSV', proPitch: 'Свои длительности, статистика за 7 дней и экспорт CSV.', today: 'Сегодня: {n} сессий, {m} мин', goal: 'Цель на день (сессии)', streak: 'Серия: {n} дн. подряд', goalDone: 'Цель на сегодня выполнена!', doneWork: 'Сессия завершена. Отдохните.', doneBreak: 'Перерыв окончен. За работу.' }
   };
   const $ = id => document.getElementById(id);
   const load = (k, d) => { try { const v = JSON.parse(Core.store(k)); return v == null ? d : v; } catch (e) { return d; } };
@@ -13,6 +13,7 @@
   let isPro = false;
   let cfg = Focus.sanitize(load('cfg', Focus.DEFAULT_CFG));
   let stats = load('stats', {});
+  let goal = Focus.sanitizeGoal(load('goal', Focus.GOAL_DEFAULT));
   let st = load('state', null) || { phase: 'work', workDone: 0, endAt: null, remaining: null };
   const activeCfg = () => (isPro ? cfg : Focus.DEFAULT_CFG);
   if (st.remaining == null) st.remaining = Focus.durationSec(st.phase, activeCfg());
@@ -63,6 +64,9 @@
     document.title = (st.endAt ? Focus.fmt(r) + ' · ' : '') + Core.t('appName');
     const today = stats[Focus.dayKey(Date.now())] || { sessions: 0, minutes: 0 };
     $('today').textContent = Core.t('today', { n: today.sessions, m: today.minutes });
+    if (document.activeElement !== $('goal')) $('goal').value = goal;
+    $('goalBar').value = Math.min(today.sessions, goal); $('goalBar').max = goal;
+    $('streak').textContent = Core.t('streak', { n: Focus.streak(stats, Date.now(), goal) }) + (today.sessions >= goal ? ' · ' + Core.t('goalDone') : '');
     ['work', 'short', 'long', 'every'].forEach(k => { const el = $('cfg-' + k); el.disabled = !isPro; if (document.activeElement !== el) el.value = activeCfg()[k]; });
     $('csv').disabled = !isPro;
     const days = Focus.lastDays(stats, Date.now(), 7);
@@ -101,6 +105,7 @@
     if (!st.endAt) st.remaining = Focus.durationSec(st.phase, cfg);
     save('state', st); render();
   }));
+  $('goal').addEventListener('change', () => { goal = Focus.sanitizeGoal($('goal').value); save('goal', goal); render(); });
   $('csv').addEventListener('click', () => {
     const blob = new Blob([Focus.toCSV(stats)], { type: 'text/csv' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'focus-stats.csv'; a.click();

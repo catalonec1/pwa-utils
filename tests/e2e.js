@@ -191,6 +191,22 @@ async function newPage(browser, base, opts = {}) {
     await ctx.close();
   });
 
+  await check('focus: free daily goal, progress and streak', async () => {
+    const { ctx, page } = await newPage(browser, base);
+    await page.clock.install({ time: new Date('2026-11-04T10:00:00') });
+    await page.goto(base + 'focus/');
+    assert.equal(await page.inputValue('#goal'), '4');
+    assert.equal(await page.textContent('#streak'), 'Streak: 0 days in a row');
+    await page.fill('#goal', '1'); await page.press('#goal', 'Tab');
+    await page.click('#start');
+    await page.clock.runFor(25 * 60 * 1000 + 500);
+    assert.equal(await page.textContent('#streak'), "Streak: 1 days in a row · Today's goal reached!");
+    assert.equal(await page.getAttribute('#goalBar', 'max'), '1');
+    await page.reload();
+    assert.equal(await page.inputValue('#goal'), '1');
+    await ctx.close();
+  });
+
   await check('focus: state survives reload while running', async () => {
     const { ctx, page } = await newPage(browser, base);
     await page.clock.install({ time: new Date('2026-11-04T10:00:00') });
@@ -258,6 +274,9 @@ async function newPage(browser, base, opts = {}) {
     await page.click('[data-op="jsonFormat"]');
     assert.match(await page.textContent('#err'), /^Error: /);
     assert.equal(await page.inputValue('#txt'), 'id N, id N');
+    await page.fill('#txt', 'mail a@b.ro, a@b.ro');
+    await page.click('[data-op="extractEmails"]');
+    assert.equal(await page.inputValue('#txt'), 'a@b.ro');
     await page.fill('#txt', '{"a":1}');
     await page.click('[data-op="jsonFormat"]');
     assert.equal(await page.inputValue('#txt'), '{\n  "a": 1\n}');
@@ -266,10 +285,53 @@ async function newPage(browser, base, opts = {}) {
     await ctx.close();
   });
 
+  await check('pass: generates with chosen sets, strength, check and Pro locked', async () => {
+    const { ctx, page } = await newPage(browser, base);
+    await page.goto(base + 'pass/');
+    const a = await page.textContent('#out');
+    assert.equal(a.length, 16);
+    await page.click('#gen');
+    assert.notEqual(await page.textContent('#out'), a);
+    await page.uncheck('#symbols'); await page.uncheck('#upper'); await page.uncheck('#lower');
+    await page.fill('#len', '30'); await page.dispatchEvent('#len', 'input');
+    assert.match(await page.textContent('#out'), /^[0-9]{30}$/);
+    assert.match(await page.textContent('#strength'), /^100 bits of entropy · very strong$/);
+    await page.uncheck('#digits');
+    assert.match(await page.textContent('#out'), /^[a-z]{30}$/, 'falls back to lowercase');
+    await page.fill('#check', 'password1');
+    assert.match(await page.textContent('#checkOut'), /weak/);
+    await page.reload();
+    assert.equal(await page.inputValue('#len'), '30', 'options not kept');
+    assert.ok(await page.isDisabled('#bulk'));
+    assert.ok(await page.isDisabled('#csv'));
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
+  await check('pass: Pro passphrase list and CSV export', async () => {
+    const { ctx, page } = await newPage(browser, base, { pro: true, locale: 'ro-RO' });
+    await page.goto(base + 'pass/');
+    await page.waitForFunction(() => !document.getElementById('bulk').disabled);
+    await page.fill('#words', '4'); await page.fill('#count', '5');
+    await page.click('#bulk');
+    const list = (await page.inputValue('#list')).split('\n');
+    assert.equal(list.length, 5);
+    for (const l of list) assert.match(l, /^[A-Z][a-z]+\d*(-[A-Z][a-z]+\d*){3}$/);
+    assert.match(await page.textContent('#listInfo'), /^5 parole/);
+    const [dl] = await Promise.all([page.waitForEvent('download'), page.click('#csv')]);
+    const csv = fs.readFileSync(await dl.path(), 'utf8');
+    assert.equal(csv.split('\r\n').length, 7);
+    await page.selectOption('#kind', 'pin'); await page.fill('#words', '6');
+    await page.click('#bulk');
+    assert.match(await page.inputValue('#list'), /^(\d{6}\n){4}\d{6}$/);
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
   await check('hub and privacy pages load', async () => {
     const { ctx, page } = await newPage(browser, base);
     await page.goto(base);
-    assert.equal(await page.locator('.apps a').count(), 3);
+    assert.equal(await page.locator('.apps a').count(), 4);
     for (const img of await page.locator('.apps img').all()) assert.ok(await img.evaluate(i => i.naturalWidth > 0));
     await page.goto(base + 'privacy.html');
     assert.match(await page.textContent('h1'), /Privacy/);
