@@ -24,7 +24,9 @@ jobs:
           node-version: 20
       - name: Wait for Pages to serve the current manifests
         run: sleep 90
-      - run: node tools/msix.js ${{ github.event.inputs.app }}
+      - run: node tools/msix.js "$APP"
+        env:
+          APP: ${{ github.event.inputs.app }}
       - run: cd msix && for z in *.zip; do echo "== $z"; unzip -l "$z"; done
       - uses: actions/upload-artifact@v4
         with:

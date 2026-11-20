@@ -42,6 +42,6 @@ async function build(a) {
 }
 
 (async () => {
-  const only = process.argv[2];
+  const only = process.argv[2] || "";
   for (const a of cfg.apps) if (!only || only === a.dir) await build(a);
 })().catch(e => { console.error(e.message); process.exit(1); });
