@@ -58,7 +58,7 @@ module.exports = {
     },
     {
       dir: 'days',
-      storeId: '',
+      storeId: '9PNQKZ2WFKBL',
       packageId: 'catalonec.StelarDateCalculator',
       id: 'date-calculator',
       name: 'Stelar Date Calculator',

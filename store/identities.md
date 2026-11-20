@@ -9,3 +9,4 @@ Publisher (Package/Identity/Publisher): CN=8129DE1D-E375-4EC4-9809-6CF037A07B8F 
 | Stelar Text Toolbox (text/) | 9PKZ9VZS4TNS | catalonec.StelarTextToolbox | https://apps.microsoft.com/detail/9PKZ9VZS4TNS |
 | Star Garden (game, other repo) | 9PCXQQQGMT9F | catalonec.StarGarden | https://apps.microsoft.com/detail/9PCXQQQGMT9F |
 | Stelar Password Generator (pass/) | 9PL4BH4S7XD8 | catalonec.StelarPasswordGenerator | https://apps.microsoft.com/detail/9PL4BH4S7XD8 |
+| Stelar Date Calculator (days/) | 9PNQKZ2WFKBL | catalonec.StelarDateCalculator | https://apps.microsoft.com/detail/9PNQKZ2WFKBL |
