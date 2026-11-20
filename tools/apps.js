@@ -55,6 +55,19 @@ module.exports = {
       color: '#7048e8',
       glyph: '•••',
       assets: ['./', 'index.html', 'app.js', 'logic.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
+    },
+    {
+      dir: 'days',
+      storeId: '',
+      packageId: 'catalonec.StelarDateCalculator',
+      id: 'date-calculator',
+      name: 'Stelar Date Calculator',
+      short_name: 'Dates',
+      description: 'Offline date calculator: days between two dates, add or subtract days, weeks, months and years, weekday, ISO week and day of year. In English, Romanian and Russian. Pro adds working days with your own days off, adding working days, saved countdowns and CSV export.',
+      categories: ['productivity', 'utilities', 'business'],
+      color: '#1971c2',
+      glyph: '31',
+      assets: ['./', 'index.html', 'app.js', 'logic.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
     }
   ]
 };
