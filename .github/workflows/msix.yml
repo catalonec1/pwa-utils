@@ -2,6 +2,11 @@ name: Build Store packages
 
 on:
   workflow_dispatch:
+    inputs:
+      app:
+        description: 'Build only this app folder (empty = all)'
+        required: false
+        default: ''
   push:
     branches: [main]
     paths: ['tools/apps.js', 'tools/msix.js', '*/manifest.webmanifest', '.github/workflows/msix.yml']
@@ -19,7 +24,9 @@ jobs:
           node-version: 20
       - name: Wait for Pages to serve the current manifests
         run: sleep 90
-      - run: node tools/msix.js
+      - run: node tools/msix.js "$APP"
+        env:
+          APP: ${{ github.event.inputs.app }}
       - run: cd msix && for z in *.zip; do echo "== $z"; unzip -l "$z"; done
       - uses: actions/upload-artifact@v4
         with:

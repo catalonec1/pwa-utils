@@ -26,8 +26,15 @@ async function build(a) {
     manifest,
     images: { baseImage: url + 'icons/icon-512.png', backgroundColor: 'transparent', padding: 0.3 }
   };
-  const res = await fetch(ENDPOINT, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
-  const buf = Buffer.from(await res.arrayBuffer());
+  /* The service and its image generator sometimes answer 500/503 for a few minutes: retry with a pause. */
+  let res, buf;
+  for (let attempt = 1; attempt <= 4; attempt++) {
+    res = await fetch(ENDPOINT, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+    buf = Buffer.from(await res.arrayBuffer());
+    if (res.ok) break;
+    console.log(`${a.dir}: attempt ${attempt} HTTP ${res.status} ${buf.toString('utf8').slice(0, 200)}`);
+    if (attempt < 4) await new Promise(r => setTimeout(r, 60000));
+  }
   if (!res.ok) throw new Error(`${a.dir}: HTTP ${res.status} ${buf.toString('utf8').slice(0, 800)}`);
   fs.mkdirSync(OUT, { recursive: true });
   fs.writeFileSync(path.join(OUT, a.dir + '.zip'), buf);
@@ -35,6 +42,6 @@ async function build(a) {
 }
 
 (async () => {
-  const only = process.argv[2];
+  const only = process.argv[2] || "";
   for (const a of cfg.apps) if (!only || only === a.dir) await build(a);
 })().catch(e => { console.error(e.message); process.exit(1); });

@@ -157,3 +157,35 @@ Pro (cumpărare unică): fraze din cuvinte românești, englezești sau rusești
 Pro (разовая покупка): фразы из русских, английских или румынских слов, PIN-коды, легко произносимые пароли, списки до 500 и экспорт CSV.
 
 **Pro add-on listing:** name „Password Generator Pro”; EN: One-time purchase: passphrases, PINs, easy-to-say passwords, lists of up to 500 and CSV export. RO: Cumpărare unică: fraze din cuvinte, PIN-uri, parole ușor de pronunțat, liste de până la 500 și export CSV. RU: Разовая покупка: фразы из слов, PIN-коды, легко произносимые пароли, списки до 500 и экспорт CSV.
+
+## 5. Stelar Date Calculator
+
+**EN — short description:** Days between dates, add or subtract days and months, week numbers. Works offline.
+**EN — description:**
+A clear, fast date calculator that works on your device.
+• Days between two dates, also as years, months and days and as weeks
+• Add or subtract days, weeks, months or years to any date
+• Weekday, ISO week number, day of the year and leap year for any date
+• Light and dark theme, English, Romanian and Russian. No account, ads or tracking, works offline
+Pro (one-time add-on): working days between dates with your own days off, adding working days, saved countdowns and CSV export.
+**Keywords:** date calculator, days between dates, add days, week number, working days, business days, countdown, calendar
+
+**RO — descriere scurtă:** Zile între date, adună sau scade zile și luni, numărul săptămânii. Funcționează fără internet.
+**RO — descriere:**
+Un calculator de date clar și rapid, direct pe dispozitivul tău.
+• Zile între două date, și ca ani, luni și zile, și ca săptămâni
+• Adună sau scade zile, săptămâni, luni sau ani la orice dată
+• Ziua săptămânii, numărul săptămânii ISO, ziua din an și an bisect pentru orice dată
+• Temă luminoasă și întunecată, română, engleză și rusă. Fără cont, reclame sau urmărire, funcționează offline
+Pro (cumpărare unică): zile lucrătoare între date cu zilele tale libere, adunare de zile lucrătoare, numărători inverse salvate și export CSV.
+
+**RU — краткое описание:** Дни между датами, прибавление дней и месяцев, номер недели. Работает без интернета.
+**RU — описание:**
+Понятный и быстрый калькулятор дат прямо на вашем устройстве.
+• Дни между двумя датами, а также в годах, месяцах и днях и в неделях
+• Прибавление и вычитание дней, недель, месяцев или лет
+• День недели, номер недели ISO, день года и високосный год для любой даты
+• Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, работает офлайн
+Pro (разовая покупка): рабочие дни между датами с вашими выходными, прибавление рабочих дней, сохранённые отсчёты и экспорт CSV.
+
+**Pro add-on listing:** name „Date Calculator Pro”; EN: One-time purchase: working days with your own days off, adding working days, saved countdowns and CSV export. RO: Cumpărare unică: zile lucrătoare cu zilele tale libere, adunare de zile lucrătoare, numărători inverse salvate și export CSV. RU: Разовая покупка: рабочие дни с вашими выходными, прибавление рабочих дней, сохранённые отсчёты и экспорт CSV.
