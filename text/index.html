@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Text Toolbox</title>
+<meta name="description" content="Offline text tools: counts, change case, sort and deduplicate lines, slugs and more.">
+<meta name="theme-color" content="#0b7a75">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+  :root { --accent: #0b7a75; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --accent: #4fd1c5; } }
+  :root[data-theme="dark"] { --accent: #4fd1c5; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; margin-top: 10px; }
+  .stats div { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 8px; }
+  .stats strong { display: block; font-size: 1.2rem; }
+  #err { color: var(--warn); }
+</style>
+</head>
+<body>
+<header class="bar">
+  <h1 data-i18n="appName">Text Toolbox</h1>
+  <select id="lang" data-i18n-aria="language" aria-label="Language">
+    <option value="ro">RO</option><option value="en">EN</option><option value="ru">RU</option>
+  </select>
+  <button id="theme" data-i18n-aria="theme" aria-label="Theme">◐</button>
+</header>
+<main>
+  <section class="card">
+    <label for="txt" data-i18n="input">Text</label>
+    <textarea id="txt" spellcheck="false" data-i18n-ph="placeholder"></textarea>
+    <div class="stats" id="stats"></div>
+    <p class="row" style="margin:10px 0 0">
+      <button id="undo" data-i18n="undo">Undo</button>
+      <button id="copy" data-i18n="copy">Copy</button>
+      <button id="clear" data-i18n="clear">Clear</button>
+    </p>
+  </section>
+  <section class="card">
+    <div class="grid" id="ops"></div>
+  </section>
+  <section class="card">
+    <h2 style="font-size:1rem;margin:0 0 8px"><span data-i18n="proTools">Advanced</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row">
+      <div><label for="find" data-i18n="find">Find (regex)</label><input id="find" autocomplete="off" spellcheck="false"></div>
+      <div><label for="repl" data-i18n="replace">Replace with</label><input id="repl" autocomplete="off" spellcheck="false"></div>
+      <div style="flex:0 0 90px"><label for="flags" data-i18n="flags">Flags</label><input id="flags" value="g" autocomplete="off"></div>
+      <div style="flex:0 0 auto"><button id="doRepl" data-i18n="replaceBtn">Replace</button></div>
+    </div>
+    <div class="grid" id="proOps" style="margin-top:10px"></div>
+    <p id="err" aria-live="polite"></p>
+  </section>
+  <section class="card pro-box hidden" id="proBox">
+    <h2 style="font-size:1rem;margin:0 0 6px" data-i18n="proTitle">Pro version</h2>
+    <p class="muted" data-i18n="proPitch">Regex find and replace, Base64, URL encoding, JSON formatting, email and link extraction, word frequency.</p>
+    <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
+    <p class="muted" id="proStatus"></p>
+  </section>
+  <p class="muted" style="text-align:center" data-i18n="offline">Works offline too.</p>
+</main>
+<footer><a href="../privacy.html" data-i18n="privacy">Privacy</a></footer>
+<script src="../shared/core.js"></script>
+<script src="logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

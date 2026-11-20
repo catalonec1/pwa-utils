@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quick Unit Converter</title>
+<meta name="description" content="Fast offline unit converter: length, mass, temperature, volume, area, speed, time and data.">
+<meta name="theme-color" content="#3d5afe">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="../shared/base.css">
+</head>
+<body>
+<header class="bar">
+  <h1 data-i18n="appName">Quick Unit Converter</h1>
+  <select id="lang" data-i18n-aria="language" aria-label="Language">
+    <option value="ro">RO</option><option value="en">EN</option><option value="ru">RU</option>
+  </select>
+  <button id="theme" data-i18n-aria="theme" aria-label="Theme">◐</button>
+</header>
+<main>
+  <div class="tabs" id="cats" role="tablist"></div>
+  <section class="card">
+    <div class="row">
+      <div><label for="value" data-i18n="value">Value</label><input id="value" type="text" inputmode="decimal" value="1" autocomplete="off"></div>
+      <div><label for="from" data-i18n="from">From</label><select id="from"></select></div>
+      <div style="flex:0 0 auto"><button id="swap" data-i18n-aria="swap" aria-label="Swap">⇄</button></div>
+      <div><label for="to" data-i18n="to">To</label><select id="to"></select></div>
+    </div>
+    <p class="big" id="result" aria-live="polite"></p>
+    <button id="copy" data-i18n="copy">Copy</button>
+  </section>
+  <section class="card">
+    <h2 style="font-size:1rem;margin:0 0 8px" data-i18n="allUnits">All units</h2>
+    <ul class="plain" id="all"></ul>
+  </section>
+  <section class="card" id="historyCard">
+    <h2 style="font-size:1rem;margin:0 0 8px"><span data-i18n="history">History</span> <span class="pro-badge">PRO</span></h2>
+    <ul class="plain" id="history"></ul>
+    <p class="muted" id="historyLocked" data-i18n="historyLocked">Pro keeps your last 30 conversions.</p>
+  </section>
+  <section class="card pro-box hidden" id="proBox">
+    <h2 style="font-size:1rem;margin:0 0 6px" data-i18n="proTitle">Pro version</h2>
+    <p class="muted" data-i18n="proPitch">Unlocks pressure, energy, power, angle, fuel economy, frequency, torque, density and flow rate, plus conversion history.</p>
+    <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
+    <p class="muted" id="proStatus"></p>
+  </section>
+  <p class="muted" style="text-align:center" data-i18n="offline">Works offline too.</p>
+</main>
+<footer><a href="../privacy.html" data-i18n="privacy">Privacy</a></footer>
+<script src="../shared/core.js"></script>
+<script src="logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

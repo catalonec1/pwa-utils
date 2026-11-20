@@ -1,0 +1,62 @@
+{
+  "id": "./",
+  "name": "Stelar Date Calculator",
+  "short_name": "Dates",
+  "description": "Offline date calculator: days between two dates, add or subtract days, weeks, months and years, weekday, ISO week and day of year. In English, Romanian and Russian. Pro adds working days with your own days off, adding working days, saved countdowns and CSV export.",
+  "lang": "en",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "any",
+  "background_color": "#f6f7fb",
+  "theme_color": "#1971c2",
+  "categories": [
+    "productivity",
+    "utilities",
+    "business"
+  ],
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icons/screenshot-wide.png",
+      "sizes": "1366x768",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Stelar Date Calculator"
+    },
+    {
+      "src": "icons/screenshot-narrow.png",
+      "sizes": "412x915",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Stelar Date Calculator"
+    }
+  ]
+}
