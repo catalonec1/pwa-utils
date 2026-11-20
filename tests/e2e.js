@@ -328,10 +328,54 @@ async function newPage(browser, base, opts = {}) {
     await ctx.close();
   });
 
+  await check('days: between, add, about and Pro locked', async () => {
+    const { ctx, page } = await newPage(browser, base);
+    await page.goto(base + 'days/');
+    await page.fill('#from', '2026-01-01'); await page.fill('#to', '2026-12-31');
+    assert.equal(await page.textContent('#diffDays'), '364 days');
+    assert.match(await page.textContent('#diffYmd'), /^0 years, 11 months, 30 days · 52 weeks and 0 days$/);
+    await page.check('#incl');
+    assert.equal(await page.textContent('#diffDays'), '365 days');
+    await page.fill('#base', '2024-01-31'); await page.fill('#amount', '1'); await page.selectOption('#unit', 'm');
+    assert.match(await page.textContent('#addOut'), /February 29, 2024/);
+    await page.fill('#amount', '-10'); await page.selectOption('#unit', 'd');
+    assert.match(await page.textContent('#addOut'), /January 21, 2024/);
+    await page.fill('#info', '2021-01-03');
+    assert.match(await page.textContent('#facts'), /Sunday.*53 \(2020\).*3 \/ 365/);
+    assert.ok(await page.isDisabled('#hol'));
+    assert.ok(await page.isDisabled('#cdAdd'));
+    assert.equal(await page.textContent('#workOut'), '');
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
+  await check('days: Pro working days, countdowns and CSV', async () => {
+    const { ctx, page } = await newPage(browser, base, { pro: true, locale: 'ro-RO' });
+    await page.goto(base + 'days/');
+    await page.waitForFunction(() => !document.getElementById('cdAdd').disabled);
+    await page.fill('#from', '2026-12-21'); await page.fill('#to', '2026-12-28');
+    await page.fill('#hol', '2026-12-25\nabc');
+    assert.equal(await page.textContent('#workOut'), '4 zile lucrătoare');
+    await page.fill('#base', '2026-12-24'); await page.fill('#amount', '1');
+    assert.match(await page.textContent('#workAdd'), /\+1 zile lucrătoare de la 2026-12-24: .*28.*Nu am înțeles: abc/);
+    await page.fill('#cdName', 'Revelion'); await page.fill('#cdDate', '2099-01-01');
+    await page.click('#cdAdd');
+    assert.match(await page.textContent('#cdList'), /Revelion · 2099-01-01 · peste \d+ zile/);
+    const [dl] = await Promise.all([page.waitForEvent('download'), page.click('#cdCsv')]);
+    assert.match(fs.readFileSync(await dl.path(), 'utf8'), /^name,date,days_left\r\nRevelion,2099-01-01,\d+\r\n$/);
+    await page.reload();
+    assert.match(await page.textContent('#cdList'), /Revelion/, 'countdown not kept');
+    assert.equal(await page.inputValue('#hol'), '2026-12-25\nabc');
+    await page.click('#cdList button');
+    assert.match(await page.textContent('#cdList'), /Nicio numărătoare/);
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
   await check('hub and privacy pages load', async () => {
     const { ctx, page } = await newPage(browser, base);
     await page.goto(base);
-    assert.equal(await page.locator('.apps a').count(), 4);
+    assert.equal(await page.locator('.apps a').count(), 5);
     for (const img of await page.locator('.apps img').all()) assert.ok(await img.evaluate(i => i.naturalWidth > 0));
     await page.goto(base + 'privacy.html');
     assert.match(await page.textContent('h1'), /Privacy/);

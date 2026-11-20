@@ -12,6 +12,7 @@ const SAMPLE = {
   focus: {
     state: JSON.stringify({ phase: 'work', workDone: 2, endAt: null, remaining: 1004 })
   },
+  days: { daysCd: JSON.stringify([{ name: 'New Year', date: '2027-01-01' }, { name: 'Vacation', date: '2027-07-15' }]), daysHol: '2026-12-25\n2027-01-01' },
   pass: { passOpts: JSON.stringify({ length: 20, lower: true, upper: true, digits: true, symbols: true, noSimilar: false }) },
   text: { text: 'Grădina de stele — notes\n\nbanana\napple\nbanana\nCherry\nΣ unicode ✓ привет мир\n\nPaste any text here: count words, change case, sort and clean lines.' }
 };

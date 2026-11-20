@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Date Calculator</title>
+<meta name="description" content="Offline date calculator: days between dates, add or subtract days, weeks, months and years, week number, working days and countdowns.">
+<meta name="theme-color" content="#1971c2">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+  :root { --accent: #1971c2; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --accent: #74c0fc; } }
+  :root[data-theme="dark"] { --accent: #74c0fc; }
+  .big { font-size: 1.5rem; font-weight: 700; margin: 8px 0 2px; }
+  .chk { display: flex; gap: 8px; align-items: center; margin: 8px 0 0; color: var(--text); }
+  .chk input { width: auto; }
+  dl.facts { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 10px 0 0; }
+  dl.facts dt { color: var(--muted); } dl.facts dd { margin: 0; font-weight: 600; }
+  ul.cd { list-style: none; padding: 0; margin: 10px 0 0; }
+  ul.cd li { display: flex; justify-content: space-between; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  ul.cd li button { flex: 0 0 auto; padding: 4px 10px; }
+  textarea#hol { min-height: 70px; }
+</style>
+</head>
+<body>
+<header class="bar">
+  <h1 data-i18n="appName">Date Calculator</h1>
+  <select id="lang" data-i18n-aria="language" aria-label="Language">
+    <option value="ro">RO</option><option value="en">EN</option><option value="ru">RU</option>
+  </select>
+  <button id="theme" data-i18n-aria="theme" aria-label="Theme">◐</button>
+</header>
+<main>
+  <section class="card">
+    <h2 style="font-size:1rem;margin:0 0 8px" data-i18n="between">Days between two dates</h2>
+    <div class="row">
+      <div><label for="from" data-i18n="from">From</label><input type="date" id="from"></div>
+      <div><label for="to" data-i18n="to">To</label><input type="date" id="to"></div>
+    </div>
+    <label class="chk"><input type="checkbox" id="incl"> <span data-i18n="includeEnd">Include the end day (+1)</span></label>
+    <p class="big" id="diffDays" aria-live="polite"></p>
+    <p class="muted" id="diffYmd" style="margin:0"></p>
+  </section>
+  <section class="card">
+    <h2 style="font-size:1rem;margin:0 0 8px" data-i18n="addTitle">Add or subtract</h2>
+    <div class="row">
+      <div><label for="base" data-i18n="date">Date</label><input type="date" id="base"></div>
+      <div style="flex:0 0 100px"><label for="amount" data-i18n="amount">Amount</label><input type="number" id="amount" value="30"></div>
+      <div style="flex:0 0 120px"><label for="unit" data-i18n="unit">Unit</label>
+        <select id="unit"><option value="d" data-i18n="days">days</option><option value="w" data-i18n="weeks">weeks</option><option value="m" data-i18n="months">months</option><option value="y" data-i18n="years">years</option></select></div>
+    </div>
+    <p class="big" id="addOut" aria-live="polite"></p>
+    <p class="muted" id="addHint" style="margin:0" data-i18n="negHint">Use a negative amount to go back in time.</p>
+  </section>
+  <section class="card">
+    <h2 style="font-size:1rem;margin:0 0 8px" data-i18n="aboutTitle">About a date</h2>
+    <input type="date" id="info">
+    <dl class="facts" id="facts"></dl>
+  </section>
+  <section class="card">
+    <h2 style="font-size:1rem;margin:0 0 8px"><span data-i18n="workTitle">Working days</span> <span class="pro-badge">PRO</span></h2>
+    <p class="muted" style="margin:0 0 8px" data-i18n="workHint">Uses the dates above. Weekends are skipped; add your own days off below.</p>
+    <label for="hol" data-i18n="holidays">Days off (YYYY-MM-DD, one per line)</label>
+    <textarea id="hol" spellcheck="false" placeholder="2026-12-25"></textarea>
+    <p class="big" id="workOut"></p>
+    <p class="muted" id="workAdd" style="margin:0"></p>
+  </section>
+  <section class="card">
+    <h2 style="font-size:1rem;margin:0 0 8px"><span data-i18n="cdTitle">Countdowns</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row">
+      <div><label for="cdName" data-i18n="event">Event</label><input id="cdName" maxlength="60"></div>
+      <div><label for="cdDate" data-i18n="date">Date</label><input type="date" id="cdDate"></div>
+    </div>
+    <p class="row" style="margin:10px 0 0">
+      <button id="cdAdd" data-i18n="add">Add</button>
+      <button id="cdCsv" data-i18n="csv">Save CSV</button>
+    </p>
+    <ul class="cd" id="cdList"></ul>
+  </section>
+  <section class="card pro-box hidden" id="proBox">
+    <h2 style="font-size:1rem;margin:0 0 6px" data-i18n="proTitle">Pro version</h2>
+    <p class="muted" data-i18n="proPitch">Working days with your own days off, adding working days, saved countdowns and CSV export.</p>
+    <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
+    <p class="muted" id="proStatus"></p>
+  </section>
+  <p class="muted" style="text-align:center" data-i18n="offline">Works offline too.</p>
+</main>
+<footer><a href="../privacy.html" data-i18n="privacy">Privacy</a></footer>
+<script src="../shared/core.js"></script>
+<script src="logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

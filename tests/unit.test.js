@@ -234,3 +234,38 @@ test('pass: passphrase, PIN, pronounceable, word lists', () => {
 test('pass: CSV guards formulas and quotes', () => {
   assert.equal(P.toCsv(['=1+2', 'a,b', 'ok']), 'password\r\n"\'=1+2"\r\n"a,b"\r\nok\r\n');
 });
+
+const DC = require('../days/logic.js');
+test('days: parse, diff, ymd and addMonths', () => {
+  const p = DC.parse;
+  assert.equal(p('2026-02-30'), null);
+  assert.equal(p('x'), null);
+  assert.equal(DC.diffDays(p('2026-03-28'), p('2026-03-30')), 2); /* across DST in most zones */
+  assert.equal(DC.diffDays(p('2026-11-20'), p('2026-01-01')), -323);
+  assert.deepEqual(DC.ymd(p('1994-05-10'), p('2026-11-20')), { years: 32, months: 6, days: 10, sign: 1 });
+  assert.deepEqual(DC.ymd(p('2024-01-31'), p('2024-03-01')), { years: 0, months: 1, days: 1, sign: 1 });
+  assert.equal(DC.fmt(DC.addMonths(p('2024-01-31'), 1)), '2024-02-29');
+  assert.equal(DC.fmt(DC.addMonths(p('2026-01-15'), -2)), '2025-11-15');
+});
+test('days: ISO week, day of year, leap years', () => {
+  const p = DC.parse;
+  assert.deepEqual(DC.isoWeek(p('2026-01-01')), { week: 1, year: 2026 });
+  assert.deepEqual(DC.isoWeek(p('2024-12-30')), { week: 1, year: 2025 });
+  assert.deepEqual(DC.isoWeek(p('2021-01-03')), { week: 53, year: 2020 });
+  assert.equal(DC.dayOfYear(p('2024-12-31')), 366);
+  assert.equal(DC.isLeap(1900), false); assert.equal(DC.isLeap(2000), true);
+});
+test('days: working days, days off, countdowns CSV', () => {
+  const p = DC.parse;
+  assert.equal(DC.workdaysBetween(p('2026-11-16'), p('2026-11-23'), []), 5);
+  assert.equal(DC.workdaysBetween(p('2026-11-16'), p('2026-11-23'), [], true), 6);
+  assert.equal(DC.workdaysBetween(p('2026-12-21'), p('2026-12-28'), ['2026-12-25']), 4);
+  assert.equal(DC.workdaysBetween(p('2026-11-23'), p('2026-11-16'), []), -5);
+  assert.equal(DC.fmt(DC.addWorkdays(p('2026-11-20'), 1, [])), '2026-11-23');
+  assert.equal(DC.fmt(DC.addWorkdays(p('2026-11-23'), -1, [])), '2026-11-20');
+  assert.equal(DC.fmt(DC.addWorkdays(p('2026-12-24'), 1, ['2026-12-25'])), '2026-12-28');
+  assert.deepEqual(DC.parseList('2026-12-25, 2026-12-25\nbad 2027-01-01'), { dates: ['2026-12-25', '2027-01-01'], bad: ['bad'] });
+  const cd = DC.countdowns([{ name: 'B', date: '2026-12-31' }, { name: '=A', date: '2026-11-30' }], p('2026-11-20'));
+  assert.deepEqual(cd.map(e => e.left), [10, 41]);
+  assert.equal(DC.toCsv(cd), 'name,date,days_left\r\n"\'=A",2026-11-30,10\r\nB,2026-12-31,41\r\n');
+});
