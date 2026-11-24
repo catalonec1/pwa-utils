@@ -375,10 +375,56 @@ async function newPage(browser, base, opts = {}) {
   await check('hub and privacy pages load', async () => {
     const { ctx, page } = await newPage(browser, base);
     await page.goto(base);
-    assert.equal(await page.locator('.apps a').count(), 5);
+    assert.equal(await page.locator('.apps a').count(), 6);
     for (const img of await page.locator('.apps img').all()) assert.ok(await img.evaluate(i => i.naturalWidth > 0));
     await page.goto(base + 'privacy.html');
     assert.match(await page.textContent('h1'), /Privacy/);
+    await ctx.close();
+  });
+
+  await check('pct: free calculators and Pro locked', async () => {
+    const { ctx, page } = await newPage(browser, base);
+    await page.goto(base + 'pct/');
+    assert.equal(await page.textContent('#ofOut'), '15% of 80 = 12');
+    await page.fill('#isA', '1'); await page.fill('#isB', '3');
+    assert.equal(await page.textContent('#isOut'), '1 is 33.33% of 3');
+    await page.fill('#chA', '200'); await page.fill('#chB', '150');
+    assert.equal(await page.textContent('#chOut'), '25% decrease');
+    await page.fill('#chA', '0');
+    assert.equal(await page.textContent('#chOut'), '—');
+    await page.fill('#apX', '1,5'); await page.fill('#apP', '10');
+    assert.equal(await page.textContent('#apOut'), '1.5 + 10% = 1.65');
+    await page.fill('#dsPrice', '80'); await page.fill('#dsP', '15');
+    assert.equal(await page.textContent('#dsOut'), 'You pay 68');
+    assert.ok(await page.isDisabled('#vatX'));
+    assert.ok(await page.isDisabled('#histSave'));
+    assert.equal(await page.textContent('#vatOut'), '');
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
+  await check('pct: Pro VAT, tip, margin, compound and history CSV', async () => {
+    const { ctx, page } = await newPage(browser, base, { pro: true, locale: 'ro-RO' });
+    await page.goto(base + 'pct/');
+    await page.waitForFunction(() => !document.getElementById('histSave').disabled);
+    await page.fill('#vatX', '119'); await page.selectOption('#vatMode', 'gross');
+    assert.equal(await page.textContent('#vatOut'), 'Fără taxă 100 · taxă 19 · cu taxă 119');
+    await page.fill('#tipBill', '90'); await page.fill('#tipP', '10'); await page.fill('#tipN', '3');
+    assert.equal(await page.textContent('#tipOut'), 'Bacșiș 9 · total 99 · 33 de persoană');
+    await page.fill('#mgCost', '60'); await page.fill('#mgPrice', '100');
+    assert.equal(await page.textContent('#mgOut'), 'Profit 40 · marjă 40% · adaos 66,67%');
+    await page.fill('#mgPrice', '120');
+    await page.click('#histSave');
+    assert.match(await page.textContent('#histList'), /Profit 60 · marjă 50% · adaos 100%/);
+    await page.fill('#cgP', '1000'); await page.fill('#cgR', '10'); await page.fill('#cgY', '2');
+    assert.match(await page.textContent('#cgTable'), /1\.210/);
+    const [dl] = await Promise.all([page.waitForEvent('download'), page.click('#histCsv')]);
+    assert.match(fs.readFileSync(await dl.path(), 'utf8'), /^time,calculation,result\r\n[\d -:]+,Profit 60 · marjă 50% · adaos 100%,/);
+    await page.reload();
+    assert.match(await page.textContent('#histList'), /Profit 60/, 'history not kept');
+    await page.click('#histClear');
+    assert.match(await page.textContent('#histList'), /Nimic salvat/);
+    assert.deepEqual(page.errors, []);
     await ctx.close();
   });
 
