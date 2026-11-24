@@ -68,6 +68,19 @@ module.exports = {
       color: '#1971c2',
       glyph: '31',
       assets: ['./', 'index.html', 'app.js', 'logic.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
+    },
+    {
+      dir: 'pct',
+      storeId: '9NC4DKKGTSD2',
+      packageId: 'catalonec.StelarPercentageCalculator',
+      id: 'percentage-calculator',
+      name: 'Stelar Percentage Calculator',
+      short_name: 'Percent',
+      description: 'Offline percentage calculator: percent of a number, what percent, percent change, increase or decrease and discounts. In English, Romanian and Russian. Pro adds VAT and sales tax, tip and bill split, margin and markup, compound growth and a history with CSV export.',
+      categories: ['utilities', 'productivity', 'business'],
+      color: '#2b8a3e',
+      glyph: '%',
+      assets: ['./', 'index.html', 'app.js', 'logic.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
     }
   ]
 };

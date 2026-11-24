@@ -269,3 +269,32 @@ test('days: working days, days off, countdowns CSV', () => {
   assert.deepEqual(cd.map(e => e.left), [10, 41]);
   assert.equal(DC.toCsv(cd), 'name,date,days_left\r\n"\'=A",2026-11-30,10\r\nB,2026-12-31,41\r\n');
 });
+
+const PC = require('../pct/logic.js');
+test('pct: basic percentages and parsing', () => {
+  assert.equal(PC.pctOf(15, 80), 12);
+  assert.equal(PC.whatPct(30, 120), 25);
+  assert.ok(Number.isNaN(PC.whatPct(1, 0)));
+  assert.equal(PC.change(80, 100), 25);
+  assert.equal(PC.change(-50, -25), 50);
+  assert.ok(Number.isNaN(PC.change(0, 5)));
+  assert.equal(PC.apply(0.1, 200), 0.3);
+  assert.equal(PC.original(120, 20), 100);
+  assert.ok(Number.isNaN(PC.original(5, -100)));
+  assert.deepEqual(PC.discount(80, 15), { save: 12, final: 68 });
+  assert.equal(PC.num('1 234,5'), 1234.5);
+  assert.ok(Number.isNaN(PC.num('12abc')));
+  assert.ok(Number.isNaN(PC.num('')));
+});
+test('pct: Pro VAT, tip, margin, compound, CSV', () => {
+  assert.deepEqual(PC.vatAdd(100, 19), { net: 100, vat: 19, gross: 119 });
+  assert.deepEqual(PC.vatRemove(119, 19), { net: 100, vat: 19, gross: 119 });
+  assert.deepEqual(PC.tip(90, 10, 3), { tip: 9, total: 99, each: 33 });
+  assert.deepEqual(PC.tip(10, 0, 0), { tip: 0, total: 10, each: 10 });
+  assert.deepEqual(PC.margin(60, 100), { profit: 40, margin: 40, markup: 66.6666666667 });
+  const c = PC.compound(1000, 10, 2, 1);
+  assert.deepEqual(c, [{ year: 1, value: 1100, gain: 100 }, { year: 2, value: 1210, gain: 210 }]);
+  assert.equal(PC.compound(1, 1, 500, 1).length, 100);
+  assert.equal(PC.toCsv([{ time: 't', calc: '=SUM(A1)', result: '-5' }, { time: 't', calc: 'a, b', result: '1' }]), 'time,calculation,result\r\nt,\'=SUM(A1),-5\r\nt,"a, b",1\r\n');
+  assert.equal(PC.toCsv([]), 'time,calculation,result\r\n');
+});
