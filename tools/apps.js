@@ -71,7 +71,7 @@ module.exports = {
     },
     {
       dir: 'pct',
-      storeId: '',
+      storeId: '9NC4DKKGTSD2',
       packageId: 'catalonec.StelarPercentageCalculator',
       id: 'percentage-calculator',
       name: 'Stelar Percentage Calculator',

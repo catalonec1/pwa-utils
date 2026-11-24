@@ -189,3 +189,41 @@ Pro (cumpărare unică): zile lucrătoare între date cu zilele tale libere, adu
 Pro (разовая покупка): рабочие дни между датами с вашими выходными, прибавление рабочих дней, сохранённые отсчёты и экспорт CSV.
 
 **Pro add-on listing:** name „Date Calculator Pro”; EN: One-time purchase: working days with your own days off, adding working days, saved countdowns and CSV export. RO: Cumpărare unică: zile lucrătoare cu zilele tale libere, adunare de zile lucrătoare, numărători inverse salvate și export CSV. RU: Разовая покупка: рабочие дни с вашими выходными, прибавление рабочих дней, сохранённые отсчёты и экспорт CSV.
+
+## 6. Stelar Percentage Calculator
+
+**EN — short description:** Percent of a number, percent change, increase or decrease, discounts. Works offline.
+**EN — description:**
+A clear, fast percentage calculator that works on your device.
+• What is X% of Y, and X is what percent of Y
+• Percent change between an old and a new value
+• Increase or decrease a value by a percent, and find the original value
+• Discounts: what you pay and what you save
+• Light and dark theme, English, Romanian and Russian. No account, ads or tracking, works offline
+Pro (one-time add-on): VAT and sales tax, tip and bill split, margin and markup, compound growth and a history with CSV export.
+**Feature:** Percent of, percent change, discounts, VAT, tips, margin and markup
+**Keywords:** percentage calculator, percent, percent change, discount, VAT, sales tax, tip, margin, markup, compound interest
+
+**RO — descriere scurtă:** Procent dintr-un număr, variație procentuală, creșteri, scăderi și reduceri. Funcționează fără internet.
+**RO — descriere:**
+Un calculator de procente clar și rapid, direct pe dispozitivul tău.
+• Cât este X% din Y și cât la sută este X din Y
+• Variația procentuală între o valoare veche și una nouă
+• Crește sau scade o valoare cu un procent și află valoarea inițială
+• Reduceri: cât plătești și cât economisești
+• Temă luminoasă și întunecată, română, engleză și rusă. Fără cont, reclame sau urmărire, funcționează offline
+Pro (cumpărare unică): TVA și taxe, bacșiș și împărțirea notei, marjă și adaos, creștere compusă și istoric cu export CSV.
+**Funcție:** Procent din, variație procentuală, reduceri, TVA, bacșiș, marjă și adaos
+
+**RU — краткое описание:** Процент от числа, изменение в процентах, рост, снижение и скидки. Работает без интернета.
+**RU — описание:**
+Понятный и быстрый калькулятор процентов прямо на вашем устройстве.
+• Сколько X% от Y и сколько процентов X от Y
+• Изменение в процентах между старым и новым значением
+• Увеличение или уменьшение на процент и исходное значение
+• Скидки: сколько платите и сколько экономите
+• Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, работает офлайн
+Pro (разовая покупка): НДС и налоги, чаевые и деление счёта, маржа и наценка, сложный процент и история с экспортом CSV.
+**Функция:** Процент от числа, изменение в процентах, скидки, НДС, чаевые, маржа и наценка
+
+**Pro add-on listing:** name „Percentage Calculator Pro”; EN: One-time purchase: VAT and sales tax, tip and bill split, margin and markup, compound growth and a history with CSV export. RO: Cumpărare unică: TVA și taxe, bacșiș și împărțirea notei, marjă și adaos, creștere compusă și istoric cu export CSV. RU: Разовая покупка: НДС и налоги, чаевые и деление счёта, маржа и наценка, сложный процент и история с экспортом CSV.
