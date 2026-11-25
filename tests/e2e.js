@@ -375,7 +375,7 @@ async function newPage(browser, base, opts = {}) {
   await check('hub and privacy pages load', async () => {
     const { ctx, page } = await newPage(browser, base);
     await page.goto(base);
-    assert.equal(await page.locator('.apps a').count(), 6);
+    assert.equal(await page.locator('.apps a').count(), 7);
     for (const img of await page.locator('.apps img').all()) assert.ok(await img.evaluate(i => i.naturalWidth > 0));
     await page.goto(base + 'privacy.html');
     assert.match(await page.textContent('h1'), /Privacy/);
@@ -424,6 +424,47 @@ async function newPage(browser, base, opts = {}) {
     assert.match(await page.textContent('#histList'), /Profit 60/, 'history not kept');
     await page.click('#histClear');
     assert.match(await page.textContent('#histList'), /Nimic salvat/);
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
+  await check('ora: search by code, words and pasted stack; Pro locked', async () => {
+    const { ctx, page } = await newPage(browser, base);
+    await page.goto(base + 'ora/');
+    assert.match(await page.textContent('#results'), /Common errors \(free\):.*ORA-00001/s);
+    await page.fill('#q', '942');
+    assert.match(await page.textContent('#results'), /ORA-00942.*Cause:.*Fix:/s);
+    await page.fill('#q', 'PLS-201');
+    assert.match(await page.textContent('#results'), /PLS-00201.*The cause and fix for this error are in Pro\./s);
+    await page.fill('#q', 'ORA-06512: at "HR.P", line 5\nORA-01403: no data found\nORA-99999: x');
+    const t = await page.textContent('#results');
+    assert.ok(t.indexOf('ORA-06512') < t.indexOf('ORA-01403'), 'stack order kept');
+    assert.match(t, /ORA-99999 is not in the catalog yet\./);
+    await page.fill('#q', 'qqzzxx');
+    assert.match(await page.textContent('#results'), /Nothing found/);
+    assert.ok(await page.locator('#results button').count() === 0 || await page.locator('#results button').first().isDisabled());
+    await page.fill('#q', 'deadlock');
+    assert.ok(await page.locator('#results button').first().isDisabled());
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
+  await check('ora: Pro shows all fixes, favorites persist, Markdown copy', async () => {
+    const { ctx, page } = await newPage(browser, base, { pro: true, locale: 'ro-RO' });
+    await ctx.grantPermissions(['clipboard-read', 'clipboard-write']);
+    await page.goto(base + 'ora/');
+    await page.waitForFunction(() => !document.querySelector('#results button').disabled);
+    await page.fill('#q', 'PLS-201');
+    assert.match(await page.textContent('#results'), /PLS-00201.*Cauza:.*Soluția:/s);
+    await page.click('#results .err button:has-text("Favorit")');
+    assert.match(await page.textContent('#favs'), /PLS-00201/);
+    await page.click('#results .err button:has-text("Markdown")');
+    assert.match(await page.evaluate(() => navigator.clipboard.readText()), /^\*\*PLS-00201: .*\*\*\n\nCause: /);
+    await page.reload();
+    await page.waitForFunction(() => document.getElementById('favs').textContent.includes('PLS-00201'));
+    assert.equal(await page.inputValue('#q'), 'PLS-201');
+    await page.click('#favs .err button:has-text("Scoate")');
+    assert.match(await page.textContent('#favs'), /Apasă ☆/);
     assert.deepEqual(page.errors, []);
     await ctx.close();
   });
