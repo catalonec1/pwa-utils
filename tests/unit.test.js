@@ -298,3 +298,26 @@ test('pct: Pro VAT, tip, margin, compound, CSV', () => {
   assert.equal(PC.toCsv([{ time: 't', calc: '=SUM(A1)', result: '-5' }, { time: 't', calc: 'a, b', result: '1' }]), 'time,calculation,result\r\nt,\'=SUM(A1),-5\r\nt,"a, b",1\r\n');
   assert.equal(PC.toCsv([]), 'time,calculation,result\r\n');
 });
+
+const OD = require('../ora/data.js');
+const OL = require('../ora/logic.js');
+test('ora: catalog is well formed', () => {
+  assert.equal(OD.length, 251);
+  assert.equal(OD.filter(r => r[1] === 1).length, 44);
+  assert.equal(new Set(OD.map(r => r[0])).size, OD.length);
+  for (const r of OD) { assert.match(r[0], /^(ORA|PLS)-\d{5}$/); assert.ok(r[2] && r[3] && r[4]); }
+});
+test('ora: code parsing and search', () => {
+  assert.deepEqual(OL.codeOf('ora 1'), { prefix: 'ORA', num: '00001' });
+  assert.deepEqual(OL.codeOf('942'), { prefix: null, num: '00942' });
+  assert.equal(OL.codeOf('deadlock'), null);
+  assert.deepEqual(OL.codesIn('ORA-06512: at line 5 ORA-1403 ora-06512 PLS-201'), ['ORA-06512', 'ORA-01403', 'PLS-00201']);
+  assert.equal(OL.search(OD, 'ORA-00942')[0].code, 'ORA-00942');
+  assert.equal(OL.search(OD, 'pls-201')[0].code, 'PLS-00201');
+  assert.equal(OL.search(OD, 'deadlock')[0].code, 'ORA-00060');
+  assert.equal(OL.search(OD, 'unique constraint')[0].code, 'ORA-00001');
+  assert.deepEqual(OL.search(OD, 'qqzzxx'), []);
+  assert.ok(OL.search(OD, '').every(e => e.free));
+  assert.equal(OL.search(OD, 'the', 5).length, 5);
+  assert.match(OL.toMarkdown(OL.entry(OD[0])), /^\*\*ORA-00001: Unique constraint violated\*\*\n\nCause: .+\n\nFix: .+\n$/);
+});

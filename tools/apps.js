@@ -81,6 +81,19 @@ module.exports = {
       color: '#2b8a3e',
       glyph: '%',
       assets: ['./', 'index.html', 'app.js', 'logic.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
+    },
+    {
+      dir: 'ora',
+      storeId: '',
+      packageId: 'catalonec.ORAErrorHelper',
+      id: 'ora-error-helper',
+      name: 'ORA Error Helper',
+      short_name: 'ORA Errors',
+      description: 'Offline Oracle error lookup: search ORA- and PLS- codes or paste an error stack to see every error in it, with plain-language causes and fixes for common errors. In English, Romanian and Russian. Pro adds causes and fixes for all 251 errors, favorites and copy as Markdown.',
+      categories: ['developer tools', 'utilities', 'productivity'],
+      color: '#c92a2a',
+      glyph: 'ORA',
+      assets: ['./', 'index.html', 'app.js', 'logic.js', 'data.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
     }
   ]
 };

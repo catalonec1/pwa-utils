@@ -1,0 +1,62 @@
+{
+  "id": "./",
+  "name": "ORA Error Helper",
+  "short_name": "ORA Errors",
+  "description": "Offline Oracle error lookup: search ORA- and PLS- codes or paste an error stack to see every error in it, with plain-language causes and fixes for common errors. In English, Romanian and Russian. Pro adds causes and fixes for all 251 errors, favorites and copy as Markdown.",
+  "lang": "en",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "any",
+  "background_color": "#f6f7fb",
+  "theme_color": "#c92a2a",
+  "categories": [
+    "developer tools",
+    "utilities",
+    "productivity"
+  ],
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icons/screenshot-wide.png",
+      "sizes": "1366x768",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "ORA Error Helper"
+    },
+    {
+      "src": "icons/screenshot-narrow.png",
+      "sizes": "412x915",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "ORA Error Helper"
+    }
+  ]
+}

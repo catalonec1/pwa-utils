@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ORA Error Helper</title>
+<meta name="description" content="Offline Oracle error lookup: ORA- and PLS- codes with plain-language causes and fixes. Paste an error stack to see every error in it.">
+<meta name="theme-color" content="#c92a2a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+  :root { --accent: #c92a2a; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --accent: #ff8787; } }
+  :root[data-theme="dark"] { --accent: #ff8787; }
+  textarea#q { min-height: 64px; font-family: ui-monospace, Consolas, monospace; }
+  .err { padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .err:last-child { border-bottom: 0; }
+  .err h3 { font-size: 1rem; margin: 0 0 4px; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+  .err h3 code { color: var(--accent); font-weight: 700; }
+  .err p { margin: 4px 0; overflow-wrap: anywhere; }
+  .err .lbl { font-weight: 600; }
+  .err .tools { display: flex; gap: 8px; margin-top: 6px; }
+  .err .tools button { padding: 4px 10px; }
+  .locked { color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<header class="bar">
+  <h1 data-i18n="appName">ORA Error Helper</h1>
+  <select id="lang" data-i18n-aria="language" aria-label="Language">
+    <option value="ro">RO</option><option value="en">EN</option><option value="ru">RU</option>
+  </select>
+  <button id="theme" data-i18n-aria="theme" aria-label="Theme">◐</button>
+</header>
+<main>
+  <section class="card">
+    <label for="q" data-i18n="qLabel">Error code, words, or a pasted error stack</label>
+    <textarea id="q" spellcheck="false" data-i18n-ph="qPh" placeholder="ORA-00942, 942, deadlock, or paste: ORA-06512: at line 5 ..."></textarea>
+    <p class="muted" id="count" style="margin:6px 0 0" aria-live="polite"></p>
+  </section>
+  <section class="card" id="results"></section>
+  <section class="card">
+    <h2 style="font-size:1rem;margin:0 0 8px"><span data-i18n="favTitle">Favorites</span> <span class="pro-badge">PRO</span></h2>
+    <div id="favs"></div>
+  </section>
+  <section class="card pro-box hidden" id="proBox">
+    <h2 style="font-size:1rem;margin:0 0 6px" data-i18n="proTitle">Pro version</h2>
+    <p class="muted" data-i18n="proPitch">Causes and fixes for all 251 errors (207 more), favorites and copy as Markdown.</p>
+    <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
+    <p class="muted" id="proStatus"></p>
+  </section>
+  <p class="muted" style="text-align:center"><span data-i18n="note">Explanations are in English. Independent tool, not affiliated with Oracle.</span> <span data-i18n="offline">Works offline too.</span></p>
+</main>
+<footer><a href="../privacy.html" data-i18n="privacy">Privacy</a></footer>
+<script src="../shared/core.js"></script>
+<script src="data.js"></script>
+<script src="logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
