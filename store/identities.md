@@ -11,3 +11,4 @@ Publisher (Package/Identity/Publisher): CN=8129DE1D-E375-4EC4-9809-6CF037A07B8F 
 | Stelar Password Generator (pass/) | 9PL4BH4S7XD8 | catalonec.StelarPasswordGenerator | https://apps.microsoft.com/detail/9PL4BH4S7XD8 |
 | Stelar Date Calculator (days/) | 9PNQKZ2WFKBL | catalonec.StelarDateCalculator | https://apps.microsoft.com/detail/9PNQKZ2WFKBL |
 | Stelar Percentage Calculator (pct/) | 9NC4DKKGTSD2 | catalonec.StelarPercentageCalculator | https://apps.microsoft.com/detail/9NC4DKKGTSD2 |
+| ORA Error Helper (ora/) | 9PPJVN0L6MZL | catalonec.ORAErrorHelper | https://apps.microsoft.com/detail/9PPJVN0L6MZL |

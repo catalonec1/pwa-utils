@@ -227,3 +227,44 @@ Pro (разовая покупка): НДС и налоги, чаевые и д�
 **Функция:** Процент от числа, изменение в процентах, скидки, НДС, чаевые, маржа и наценка
 
 **Pro add-on listing:** name „Percentage Calculator Pro”; EN: One-time purchase: VAT and sales tax, tip and bill split, margin and markup, compound growth and a history with CSV export. RO: Cumpărare unică: TVA și taxe, bacșiș și împărțirea notei, marjă și adaos, creștere compusă și istoric cu export CSV. RU: Разовая покупка: НДС и налоги, чаевые и деление счёта, маржа и наценка, сложный процент и история с экспортом CSV.
+
+## 7. ORA Error Helper
+
+**EN — short description:** Look up Oracle ORA- and PLS- errors offline. Paste an error stack to see every error in it.
+**EN — description:**
+A fast, offline helper for Oracle Database error messages.
+• Search by code (942, ORA-00942, pls-201) or by words (deadlock, unique constraint)
+• Paste a whole error stack and see every ORA-/PLS- error in it, in order
+• Plain-language cause and fix for 44 common errors, free
+• Titles for all 251 errors in the catalog
+• Light and dark theme, interface in English, Romanian and Russian (explanations in English). No account, ads or tracking, works offline
+Pro (one-time add-on): causes and fixes for all 251 errors, favorites and copy as Markdown.
+Independent tool, not affiliated with or endorsed by Oracle.
+**Feature:** ORA- and PLS- error causes and fixes, offline, paste a whole error stack
+**Keywords:** ORA error, Oracle error, PL/SQL, PLS error, SQL, database, DBA, developer tools
+
+**RO — descriere scurtă:** Caută offline erorile Oracle ORA- și PLS-. Lipește un mesaj de eroare și vezi fiecare eroare din el.
+**RO — descriere:**
+Un ajutor rapid și offline pentru mesajele de eroare Oracle Database.
+• Caută după cod (942, ORA-00942, pls-201) sau după cuvinte (deadlock, unique constraint)
+• Lipește tot mesajul de eroare și vezi fiecare eroare ORA-/PLS- din el, în ordine
+• Cauza și soluția pe înțeles pentru 44 de erori frecvente, gratuit
+• Titlurile tuturor celor 251 de erori din catalog
+• Temă luminoasă și întunecată, interfață în română, engleză și rusă (explicațiile sunt în engleză). Fără cont, reclame sau urmărire, funcționează offline
+Pro (cumpărare unică): cauze și soluții pentru toate cele 251 de erori, favorite și copiere ca Markdown.
+Unealtă independentă, fără legătură cu Oracle.
+**Funcție:** Cauze și soluții pentru erorile ORA- și PLS-, offline, lipești tot mesajul de eroare
+
+**RU — краткое описание:** Поиск ошибок Oracle ORA- и PLS- без интернета. Вставьте текст ошибки и увидите каждую ошибку в нём.
+**RU — описание:**
+Быстрый офлайн-справочник по сообщениям об ошибках Oracle Database.
+• Поиск по коду (942, ORA-00942, pls-201) или по словам (deadlock, unique constraint)
+• Вставьте весь стек ошибок и увидите каждую ошибку ORA-/PLS- в нём по порядку
+• Причина и решение простым языком для 44 частых ошибок бесплатно
+• Названия всех 251 ошибок каталога
+• Светлая и тёмная тема, интерфейс на русском, английском и румынском (пояснения на английском). Без аккаунта, рекламы и слежки, работает офлайн
+Pro (разовая покупка): причины и решения для всех 251 ошибок, избранное и копирование в Markdown.
+Независимый инструмент, не связан с Oracle.
+**Функция:** Причины и решения ошибок ORA- и PLS-, офлайн, можно вставить весь стек ошибок
+
+**Pro add-on listing:** name „ORA Error Helper Pro”; EN: One-time purchase: causes and fixes for all 251 errors, favorites and copy as Markdown. RO: Cumpărare unică: cauze și soluții pentru toate cele 251 de erori, favorite și copiere ca Markdown. RU: Разовая покупка: причины и решения для всех 251 ошибок, избранное и копирование в Markdown.
