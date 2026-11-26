@@ -334,3 +334,55 @@ test('text v1.1: shuffle, sort by length (free); CSV ↔ JSON, HTML escape (Pro)
   assert.equal(T.pro.csvToJson(T.pro.jsonToCsv('[{"q":"say \\"hi\\"\\nnow"}]')), JSON.stringify([{ q: 'say "hi"\nnow' }], null, 2));
   assert.equal(T.pro.htmlEscape('<a href="x">Tom & \'Jerry\'</a>'), '&lt;a href=&quot;x&quot;&gt;Tom &amp; &#39;Jerry&#39;&lt;/a&gt;');
 });
+
+const LN = require('../loan/logic.js');
+test('loan: annuity, decreasing, zero rate, solving', () => {
+  assert.equal(LN.payment(100000, 6, 360), 599.55);
+  assert.equal(LN.payment(1200, 0, 12), 100);
+  assert.ok(Number.isNaN(LN.payment(0, 5, 10)));
+  assert.ok(Number.isNaN(LN.payment(1000, 5, 1201)));
+  const a = LN.schedule({ principal: 100000, rate: 6, months: 360 });
+  assert.equal(a.months, 360);
+  assert.equal(a.totalInterest, 115838.45);
+  assert.equal(a.totalPaid, 215838.45);
+  assert.equal(a.rows[359].balance, 0);
+  const d = LN.schedule({ principal: 12000, rate: 12, months: 12, type: 'linear' });
+  assert.deepEqual([d.rows[0].payment, d.rows[11].payment, d.totalInterest], [1120, 1010, 780]);
+  const odd = LN.schedule({ principal: 10000, rate: 7, months: 7, type: 'linear' });
+  assert.equal(odd.rows[6].principal, 1428.58);
+  assert.equal(LN.schedule({ principal: 100, rate: 5, months: 0 }), null);
+  assert.equal(LN.termFor(100000, 6, 599.55), 360);
+  assert.equal(LN.termFor(1000, 0, 300), 4);
+  assert.ok(Number.isNaN(LN.termFor(100000, 6, 500)));
+  assert.equal(LN.principalFor(599.55, 6, 360), 99999.91);
+  assert.equal(LN.principalFor(100, 0, 12), 1200);
+  assert.equal(LN.num('1 234,5'), 1234.5);
+  assert.ok(Number.isNaN(LN.num('12abc')));
+  const y = LN.yearly(LN.schedule({ principal: 1000, rate: 12, months: 24 }).rows);
+  assert.equal(y.length, 2);
+  assert.equal(y[1].balance, 0);
+  assert.equal(LN.c2(y[0].principal + y[1].principal), 1000);
+});
+test('loan: Pro extras, rate change, compare, CSV', () => {
+  const base = { principal: 100000, rate: 6, months: 360 };
+  const e = LN.schedule(Object.assign({ recurring: { amount: 100, from: 1 }, extras: [{ month: 12, amount: 5000 }] }, base));
+  assert.ok(e.months < 360 && e.totalInterest < 115838.45);
+  assert.equal(e.rows[11].extra, 5100);
+  assert.equal(e.rows[e.rows.length - 1].balance, 0);
+  const big = LN.schedule(Object.assign({ extras: [{ month: 1, amount: 1e9 }] }, base));
+  assert.equal(big.months, 1);
+  assert.equal(big.totalPaid, LN.c2(100000 + 500));
+  const r = LN.schedule(Object.assign({ rateChange: { month: 60, rate: 8 } }, base));
+  assert.equal(r.months, 360);
+  assert.equal(r.rows[59].payment, 599.55);
+  assert.equal(r.rows[60].rate, 8);
+  assert.ok(r.rows[60].payment > 700 && r.totalInterest > 115838.45);
+  close(LN.effectiveRate(100000, 0, LN.schedule(base).rows), 6.1678, 1e-4);
+  assert.ok(LN.effectiveRate(100000, 2000, LN.schedule(base).rows) > 6.3);
+  const c = LN.compare([base, Object.assign({}, base, { rate: 5.8, fee: 3000 }), Object.assign({}, base, { months: 0 })]);
+  assert.equal(c.best, 1);
+  assert.equal(c.offers[1].totalCost, LN.c2(c.offers[1].totalInterest + 3000));
+  assert.equal(c.offers[2], null);
+  assert.equal(LN.toCsv(LN.schedule({ principal: 1000, rate: 12, months: 2 }).rows),
+    'month,rate_pct,payment,interest,principal,extra,balance\r\n1,12,507.51,10.00,497.51,0.00,502.49\r\n2,12,507.51,5.02,502.49,0.00,0.00\r\n');
+});

@@ -273,3 +273,47 @@ Pro (разовая покупка): причины и решения для в�
 **Функция:** Причины и решения ошибок ORA- и PLS-, офлайн, можно вставить весь стек ошибок
 
 **Pro add-on listing:** name „ORA Error Helper Pro”; EN: One-time purchase: causes and fixes for all 251 errors, favorites and copy as Markdown. RO: Cumpărare unică: cauze și soluții pentru toate cele 251 de erori, favorite și copiere ca Markdown. RU: Разовая покупка: причины и решения для всех 251 ошибок, избранное и копирование в Markdown.
+
+## 8. Stelar Loan Calculator (`loan/`)
+
+**EN — short description:** Loan and mortgage payments, total interest, term and yearly summary. Works offline.
+**EN — description:**
+A clear loan and mortgage calculator that works on your device.
+• Monthly payment for equal (annuity) or decreasing (equal principal) payments
+• Total interest and total amount paid
+• Find the term for a monthly payment, or how much you can borrow for it
+• Summary by year: paid, principal, interest and remaining balance
+• Numbers formatted for your language, with any currency label you type
+• Light and dark theme, English, Romanian and Russian. No account, ads or tracking, works offline
+Pro (one-time add-on): full monthly payment schedule with CSV export, extra payments (one-off and monthly) with interest saved and shorter term, rate change after a chosen month, comparing up to 3 offers including fees, and saved loans.
+Estimates only, not financial advice. Real offers can differ because of fees, insurance, rounding and lender rules.
+**Feature:** Loan and mortgage payments, total interest, extra payments and offer comparison
+**Keywords:** loan calculator, mortgage calculator, monthly payment, amortization, interest, annuity, early repayment, credit, finance, offline
+
+**RO — descriere scurtă:** Rate pentru credite și ipoteci, dobânda totală, termen și rezumat pe ani. Funcționează offline.
+**RO — descriere:**
+Un calculator de credite și ipoteci clar, direct pe dispozitivul tău.
+• Rata lunară pentru rate egale (anuități) sau descrescătoare (principal egal)
+• Dobânda totală și suma totală plătită
+• Află termenul pentru o rată lunară sau cât poți împrumuta cu ea
+• Rezumat pe ani: plătit, principal, dobândă și sold rămas
+• Numere formatate pentru limba ta, cu orice monedă scrii
+• Temă luminoasă și întunecată, română, engleză și rusă. Fără cont, reclame sau urmărire, funcționează offline
+Pro (cumpărare unică): graficul lunar complet cu export CSV, plăți anticipate (unice și lunare) cu dobânda economisită și termenul scurtat, schimbarea dobânzii după o lună aleasă, comparația a până la 3 oferte cu comisioane și credite salvate.
+Doar estimări, nu sunt sfaturi financiare. Ofertele reale pot diferi din cauza comisioanelor, asigurărilor, rotunjirilor și regulilor băncii.
+**Funcție:** Rate pentru credite și ipoteci, dobânda totală, plăți anticipate și comparația ofertelor
+
+**RU — краткое описание:** Платежи по кредиту и ипотеке, переплата, срок и итоги по годам. Работает офлайн.
+**RU — описание:**
+Понятный кредитный и ипотечный калькулятор прямо на вашем устройстве.
+• Ежемесячный платёж: равные (аннуитетные) или убывающие (дифференцированные) платежи
+• Переплата по процентам и общая сумма выплат
+• Срок для заданного платежа или сумма, которую можно занять
+• Итоги по годам: выплачено, основной долг, проценты и остаток
+• Числа в формате вашего языка, с любым обозначением валюты
+• Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, работает офлайн
+Pro (разовая покупка): полный помесячный график с экспортом CSV, досрочные платежи (разовые и ежемесячные) с экономией на процентах и сокращением срока, изменение ставки после выбранного месяца, сравнение до 3 предложений с комиссиями и сохранённые кредиты.
+Только оценка, не финансовая консультация. Реальные условия могут отличаться из-за комиссий, страховок, округлений и правил банка.
+**Функция:** Платежи по кредиту и ипотеке, переплата, досрочные платежи и сравнение предложений
+
+**Pro add-on listing:** name „Stelar Loan Calculator Pro”; EN: One-time purchase: full monthly schedule with CSV export, extra payments, rate changes, comparing up to 3 offers and saved loans. RO: Cumpărare unică: graficul lunar complet cu export CSV, plăți anticipate, schimbarea dobânzii, comparația a până la 3 oferte și credite salvate. RU: Разовая покупка: полный помесячный график с экспортом CSV, досрочные платежи, изменение ставки, сравнение до 3 предложений и сохранённые кредиты.

@@ -94,6 +94,19 @@ module.exports = {
       color: '#c92a2a',
       glyph: 'ORA',
       assets: ['./', 'index.html', 'app.js', 'logic.js', 'data.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
+    },
+    {
+      dir: 'loan',
+      storeId: 'TBD',
+      packageId: 'TBD',
+      id: 'loan-calculator',
+      name: 'Stelar Loan Calculator',
+      short_name: 'Loans',
+      description: 'Offline loan and mortgage calculator: monthly payment, total interest, term and yearly summary. EN, RO, RU. Pro: full schedule with CSV, extra payments, rate changes, offer comparison, saved loans.',
+      categories: ['finance', 'utilities', 'productivity'],
+      color: '#0c8599',
+      glyph: '⌂',
+      assets: ['./', 'index.html', 'app.js', 'logic.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
     }
   ]
 };

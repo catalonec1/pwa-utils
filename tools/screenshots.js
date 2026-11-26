@@ -16,6 +16,10 @@ const SAMPLE = {
   pct: { pctHist: JSON.stringify([{ time: '2026-11-24 10:15', calc: 'Profit 40 · margin 40% · markup 66.67%', result: '66.67%' }]) },
   ora: { oraQ: 'ORA-06512: at "HR.PAYROLL", line 42\nORA-01403: no data found' },
   pass: { passOpts: JSON.stringify({ length: 20, lower: true, upper: true, digits: true, symbols: true, noSimilar: false }) },
+  loan: {
+    loanIn: JSON.stringify({ amt: '250000', rate: '5.9', term: '25', termUnit: 'y', type: 'annuity', cur: '€', solveMode: 'term', solvePay: '2000', ones: [] }),
+    loanSaved: JSON.stringify([{ name: 'Apartment', in: { amt: '250000', rate: '5.9', term: '25', termUnit: 'y', cur: '€' } }, { name: 'Car', in: { amt: '18000', rate: '8.5', term: '60', termUnit: 'm', cur: '€' } }])
+  },
   text: { text: 'Grădina de stele — notes\n\nbanana\napple\nbanana\nCherry\nΣ unicode ✓ привет мир\n\nPaste any text here: count words, change case, sort and clean lines.' }
 };
 
