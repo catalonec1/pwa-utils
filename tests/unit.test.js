@@ -334,3 +334,46 @@ test('text v1.1: shuffle, sort by length (free); CSV ↔ JSON, HTML escape (Pro)
   assert.equal(T.pro.csvToJson(T.pro.jsonToCsv('[{"q":"say \\"hi\\"\\nnow"}]')), JSON.stringify([{ q: 'say "hi"\nnow' }], null, 2));
   assert.equal(T.pro.htmlEscape('<a href="x">Tom & \'Jerry\'</a>'), '&lt;a href=&quot;x&quot;&gt;Tom &amp; &#39;Jerry&#39;&lt;/a&gt;');
 });
+
+const CL = require('../color/logic.js');
+test('color: parse every input format and convert', () => {
+  assert.equal(Object.keys(CL.NAMES).length, 148);
+  const red = { r: 255, g: 0, b: 0 };
+  for (const s of ['#f00', 'FF0000', 'red', 'rgb(255, 0, 0)', 'rgb(100% 0% 0%)', 'rgba(255,0,0,1)', '255 0 0', 'hsl(0, 100%, 50%)', 'hsl(360deg 100% 50% / 100%)', 'hwb(0 0% 0%)', 'cmyk(0%, 100%, 100%, 0%)', 'oklch(62.8% 0.2577 29.23)', 'lab(54.29 80.8 69.88)']) {
+    assert.equal(CL.toHex(CL.parse(s)), '#ff0000', s);
+  }
+  for (const s of ['', 'nope', '#ff00', 'rgb(300, 0, 0)', 'rgba(255, 0, 0, 0.5)', 'hsl(0, 120%, 50%)', 'rgb(1, 2)']) assert.equal(CL.parse(s), null, s);
+  assert.deepEqual(['hex', 'rgb', 'hsl', 'hwb', 'cmyk', 'oklch', 'lab'].map(k => CL.format(red, k)),
+    ['#ff0000', 'rgb(255, 0, 0)', 'hsl(0, 100%, 50%)', 'hwb(0 0% 0%)', 'cmyk(0%, 100%, 100%, 0%)', 'oklch(62.8% 0.2577 29.23)', 'lab(54.29 80.8 69.88)']);
+  const c = CL.parse('#3d5afe');
+  assert.equal(CL.format(c, 'hwb'), 'hwb(231 24% 0%)');
+  assert.equal(CL.format(CL.parse('#808080'), 'oklch'), 'oklch(59.99% 0 0)');
+  assert.equal(CL.format(CL.parse('black'), 'cmyk'), 'cmyk(0%, 0%, 0%, 100%)');
+  assert.equal(CL.toHex(CL.fromHwb({ h: 0, w: 70, b: 70 })), '#808080');
+  for (const k of ['oklch', 'lab']) assert.equal(CL.toHex(CL.parse(CL.format(c, k))), '#3d5afe', k);
+});
+test('color: WCAG contrast', () => {
+  assert.deepEqual(CL.contrast(CL.parse('#000'), CL.parse('#fff')), { ratio: 21, aaNormal: true, aaLarge: true, aaaNormal: true, aaaLarge: true });
+  assert.deepEqual(CL.contrast(CL.parse('#777'), CL.parse('#fff')), { ratio: 4.47, aaNormal: false, aaLarge: true, aaaNormal: false, aaaLarge: false });
+  assert.equal(CL.contrast(CL.parse('#fff'), CL.parse('#fff')).ratio, 1);
+});
+test('color: Pro names, palettes, colorblind simulation, export', () => {
+  assert.deepEqual(CL.nearestName(CL.parse('#ff6347')), { name: 'tomato', hex: '#ff6347', dist: 0, exact: true, deltaE: 0 });
+  const n = CL.nearestName(CL.parse('#3d5afe'));
+  assert.equal(n.name, 'royalblue'); assert.equal(n.exact, false);
+  const c = CL.parse('#3d5afe');
+  assert.deepEqual(CL.palette(c, 'complementary'), ['#3d5afe', '#fee13d']);
+  assert.deepEqual(CL.palette(c, 'triadic'), ['#3d5afe', '#fe3d5a', '#5afe3d']);
+  assert.equal(CL.palette(c, 'analogous').length, 3);
+  assert.equal(CL.palette(c, 'tetradic').length, 4);
+  const t = CL.palette(c, 'tints'); assert.equal(t.length, 9); assert.equal(t[4], '#3d5afe');
+  assert.deepEqual(CL.palette(c, 'x'), []);
+  assert.equal(CL.toHex(CL.simulate(CL.parse('#ff0000'), 'protanopia')), '#6d5f00');
+  assert.equal(CL.toHex(CL.simulate(CL.parse('#ff0000'), 'deuteranopia')), '#a39000');
+  for (const k of CL.CVD) for (const g of ['#000000', '#ffffff']) assert.equal(CL.toHex(CL.simulate(CL.parse(g), k)), g);
+  const pals = [{ name: 'Brand Ăă', colors: ['#3d5afe', '#ffffff'] }, { name: 'Brand Ăă', colors: ['#000000'] }, { name: '!!', colors: ['#111111'] }];
+  assert.equal(CL.exportCss(pals), ':root {\n  --brand-aa-100: #3d5afe;\n  --brand-aa-200: #ffffff;\n  --brand-aa-2-100: #000000;\n  --palette-3-100: #111111;\n}\n');
+  assert.deepEqual(JSON.parse(CL.exportJson(pals)), pals);
+  assert.match(CL.exportTailwind(pals), /colors: \{\n {8}'brand-aa': \{\n {10}100: '#3d5afe',\n {10}200: '#ffffff'\n {8}\},/);
+  assert.equal(CL.exportCss([]), ':root {\n}\n');
+});

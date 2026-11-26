@@ -94,6 +94,19 @@ module.exports = {
       color: '#c92a2a',
       glyph: 'ORA',
       assets: ['./', 'index.html', 'app.js', 'logic.js', 'data.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
+    },
+    {
+      dir: 'color',
+      storeId: 'TBD',
+      packageId: 'TBD',
+      id: 'color-converter',
+      name: 'Stelar Color Converter',
+      short_name: 'Colors',
+      description: 'Offline color converter: HEX, RGB, HSL, HWB, CMYK, color picker and WCAG contrast checker. Pro adds palettes, OKLCH and LAB, CSS color names, saved palettes with export and colorblind previews.',
+      categories: ['developer tools', 'utilities', 'productivity'],
+      color: '#c2255c',
+      glyph: 'RGB',
+      assets: ['./', 'index.html', 'app.js', 'logic.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
     }
   ]
 };

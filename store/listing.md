@@ -273,3 +273,41 @@ Pro (разовая покупка): причины и решения для в�
 **Функция:** Причины и решения ошибок ORA- и PLS-, офлайн, можно вставить весь стек ошибок
 
 **Pro add-on listing:** name „ORA Error Helper Pro”; EN: One-time purchase: causes and fixes for all 251 errors, favorites and copy as Markdown. RO: Cumpărare unică: cauze și soluții pentru toate cele 251 de erori, favorite și copiere ca Markdown. RU: Разовая покупка: причины и решения для всех 251 ошибок, избранное и копирование в Markdown.
+
+## 8. Stelar Color Converter
+
+**EN — short description:** Convert HEX, RGB, HSL, HWB and CMYK colors and check WCAG contrast. Works offline.
+**EN — description:**
+A fast, offline color tool for designers and developers.
+• Type a color in any format (HEX, rgb(), hsl(), hwb(), cmyk(), oklch(), lab() or a CSS name) or use the color picker
+• See it as HEX, RGB, HSL, HWB and CMYK at once, with a live swatch and copy buttons
+• WCAG contrast checker: contrast ratio and AA / AAA results for normal and large text, with a live preview
+• Light and dark theme, English, Romanian and Russian. No account, ads or tracking, works offline
+Pro (one-time add-on): palette generator (complementary, analogous, triadic, tetradic, tints and shades), nearest of the 148 CSS named colors, OKLCH and LAB output, saved palettes with export as CSS variables, JSON or Tailwind config, and colorblindness previews (protanopia, deuteranopia, tritanopia).
+Colorblindness previews are simulations and only approximate how colors may look.
+**Feature:** HEX, RGB, HSL, HWB and CMYK conversion, WCAG contrast checker, palettes and CSS color names
+**Keywords:** color converter, hex to rgb, rgb to hex, hsl, cmyk, color picker, contrast checker, WCAG, color palette, oklch
+
+**RO — descriere scurtă:** Convertește culori HEX, RGB, HSL, HWB și CMYK și verifică contrastul WCAG. Fără internet.
+**RO — descriere:**
+O unealtă de culori rapidă și offline pentru designeri și programatori.
+• Scrie o culoare în orice format (HEX, rgb(), hsl(), hwb(), cmyk(), oklch(), lab() sau un nume CSS) ori folosește selectorul de culoare
+• Vezi-o simultan ca HEX, RGB, HSL, HWB și CMYK, cu mostră live și butoane de copiere
+• Verificare contrast WCAG: raportul de contrast și rezultatele AA / AAA pentru text normal și mare, cu previzualizare
+• Temă luminoasă și întunecată, română, engleză și rusă. Fără cont, reclame sau urmărire, funcționează offline
+Pro (cumpărare unică): generator de palete (complementară, analogă, triadică, tetradică, nuanțe deschise și închise), cea mai apropiată dintre cele 148 de culori CSS numite, OKLCH și LAB, palete salvate cu export ca variabile CSS, JSON sau configurație Tailwind și previzualizare pentru daltonism (protanopie, deuteranopie, tritanopie).
+Previzualizările pentru daltonism sunt simulări și arată doar aproximativ cum pot fi văzute culorile.
+**Funcție:** Conversie HEX, RGB, HSL, HWB și CMYK, verificare contrast WCAG, palete și nume de culori CSS
+
+**RU — краткое описание:** Конвертация цветов HEX, RGB, HSL, HWB и CMYK и проверка контраста WCAG. Офлайн.
+**RU — описание:**
+Быстрый офлайн-инструмент для работы с цветом для дизайнеров и разработчиков.
+• Введите цвет в любом формате (HEX, rgb(), hsl(), hwb(), cmyk(), oklch(), lab() или имя CSS) или выберите его в окне выбора цвета
+• Сразу видно HEX, RGB, HSL, HWB и CMYK, образец цвета и кнопки копирования
+• Проверка контраста WCAG: коэффициент контраста и результаты AA / AAA для обычного и крупного текста с предпросмотром
+• Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, работает офлайн
+Pro (разовая покупка): генератор палитр (комплементарная, аналоговая, триада, тетрада, светлые и тёмные оттенки), ближайший из 148 именованных цветов CSS, OKLCH и LAB, сохранённые палитры с экспортом в CSS-переменные, JSON или конфигурацию Tailwind и просмотр для дальтонизма (протанопия, дейтеранопия, тританопия).
+Просмотр для дальтонизма — это симуляция, она лишь приблизительно показывает, как могут выглядеть цвета.
+**Функция:** Конвертация HEX, RGB, HSL, HWB и CMYK, проверка контраста WCAG, палитры и имена цветов CSS
+
+**Pro add-on listing:** name „Color Converter Pro”; EN: One-time purchase: palette generator, nearest CSS color name, OKLCH and LAB, saved palettes with CSS, JSON and Tailwind export, and colorblindness previews. RO: Cumpărare unică: generator de palete, cel mai apropiat nume de culoare CSS, OKLCH și LAB, palete salvate cu export CSS, JSON și Tailwind și previzualizare pentru daltonism. RU: Разовая покупка: генератор палитр, ближайшее имя цвета CSS, OKLCH и LAB, сохранённые палитры с экспортом в CSS, JSON и Tailwind и просмотр для дальтонизма.

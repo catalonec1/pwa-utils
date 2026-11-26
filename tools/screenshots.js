@@ -16,6 +16,7 @@ const SAMPLE = {
   pct: { pctHist: JSON.stringify([{ time: '2026-11-24 10:15', calc: 'Profit 40 · margin 40% · markup 66.67%', result: '66.67%' }]) },
   ora: { oraQ: 'ORA-06512: at "HR.PAYROLL", line 42\nORA-01403: no data found' },
   pass: { passOpts: JSON.stringify({ length: 20, lower: true, upper: true, digits: true, symbols: true, noSimilar: false }) },
+  color: { colorCur: 'rgb(214, 51, 108)', colorFg: '#ffffff', colorBg: '#1864ab', colorScheme: 'tints' },
   text: { text: 'Grădina de stele — notes\n\nbanana\napple\nbanana\nCherry\nΣ unicode ✓ привет мир\n\nPaste any text here: count words, change case, sort and clean lines.' }
 };
 
