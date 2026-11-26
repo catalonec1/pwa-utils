@@ -334,3 +334,54 @@ test('text v1.1: shuffle, sort by length (free); CSV ↔ JSON, HTML escape (Pro)
   assert.equal(T.pro.csvToJson(T.pro.jsonToCsv('[{"q":"say \\"hi\\"\\nnow"}]')), JSON.stringify([{ q: 'say "hi"\nnow' }], null, 2));
   assert.equal(T.pro.htmlEscape('<a href="x">Tom & \'Jerry\'</a>'), '&lt;a href=&quot;x&quot;&gt;Tom &amp; &#39;Jerry&#39;&lt;/a&gt;');
 });
+
+const RX = require('../regex/logic.js');
+test('regex: compile, flags, matches with numbered and named groups', () => {
+  assert.equal(RX.cleanFlags('yggix'), 'giy');
+  assert.match(RX.compile('(', 'g').error, /Invalid regular expression/);
+  const re = RX.compile('(?<y>\\d{4})-(\\d{2})(x)?', 'gd').re;
+  const r = RX.findMatches(re, 'a 2026-11 b 2027-01x');
+  assert.equal(r.matches.length, 2);
+  assert.deepEqual(r.matches[0], { i: 2, t: '2026-11', g: ['2026', '11', null], n: { y: '2026' }, gi: [[2, 6], [7, 9], null] });
+  assert.equal(r.matches[1].g[2], 'x');
+  assert.equal(RX.findMatches(RX.compile('\\d', '').re, 'a1b2').matches.length, 1, 'no g: first match only');
+  assert.equal(RX.findMatches(RX.compile('', 'g').re, 'abc').matches.length, 4, 'empty matches advance');
+  assert.equal(RX.findMatches(RX.compile('', 'gu').re, '😀a').matches.length, 3, 'u flag advances by code point');
+  const big = RX.findMatches(RX.compile('a', 'g').re, 'a'.repeat(50), 10);
+  assert.equal(big.matches.length, 10); assert.equal(big.truncated, true);
+  assert.deepEqual(RX.groupNames('(a)(?<b>c)(?:d)(?=e)\\(x\\)[(]'), [null, 'b']);
+});
+test('regex: run with replace and test cases', () => {
+  const r = RX.run({ pattern: '(?<y>\\d{4})-(\\d{2})', flags: 'g', text: '2026-11 și 2027-01', repl: '$2/$<y> [$&]' });
+  assert.equal(r.replaced, '11/2026 [2026-11] și 01/2027 [2027-01]');
+  assert.equal(RX.run({ pattern: 'a', flags: '', text: 'aa', repl: 'b' }).replaced, 'ba');
+  assert.match(RX.run({ pattern: '[', flags: 'g', text: '' }).error, /Invalid/);
+  const t = RX.runTests('\\d+', 'gy', ['123', 'a1'], ['abc'], false);
+  assert.deepEqual([t.passed, t.total], [3, 3]);
+  const w = RX.runTests('\\d+|x', 'g', ['123', 'a1'], ['x1'], true);
+  assert.deepEqual(w.results.map(x => x.pass), [true, false, true]);
+  assert.deepEqual(RX.lines('a\r\n\nb\n'), ['a', 'b']);
+});
+test('regex: explanation tokens', () => {
+  const k = RX.explain('^(?<y>\\d{4})-ab+?[^a-z]\\.|\\1(?=x)$', 'm').map(x => x.k + ':' + x.t + ':' + x.d);
+  assert.deepEqual(k, ['xStartM:^:0', 'xNamed:(?<y>:0', 'xDigit:\\d:1', 'xRepeat:{4}:1', 'xEndGroup:):0', 'xLit:-a:0', 'xLit:b:0', 'xRepeat:+?:0',
+    'xNotClass:[^a-z]:0', 'xLit:\\.:0', 'xAlt:|:0', 'xRef:\\1:0', 'xLA:(?=:0', 'xLit:x:1', 'xEndGroup:):0', 'xEndM:$:0']);
+  const q = RX.explain('a{2,5}b{3,}c{1}\\u{1F600}\\p{L}', 'u').filter(x => x.k === 'xRepeat' || x.k === 'xCode' || x.k === 'xProp').map(x => x.v);
+  assert.deepEqual(q, [{ q: 'qRange', lazy: false, n: '2', m: '5' }, { q: 'qMin', lazy: false, n: '3' }, { q: 'qN', lazy: false, n: '1' }, { c: 'U+1F600' }, { p: 'L' }]);
+  assert.equal(RX.explain('\\.\\.+', '').map(x => x.t).join(' '), '\\. \\. +');
+  assert.equal(RX.explain('x{a}', '')[0].v.t, 'x{a}', 'invalid quantifier is literal');
+});
+test('regex: export and library', () => {
+  const ms = RX.findMatches(RX.compile('(?<k>\\w+)=(\\d)?', 'g').re, 'a=1 =b= c,d=').matches;
+  assert.equal(RX.toCsv(ms, RX.groupNames('(?<k>\\w+)=(\\d)?')), 'n,index,length,match,$1 k,$2\r\n1,0,3,a=1,a,1\r\n2,5,2,b=,b,\r\n3,10,2,d=,d,\r\n');
+  assert.equal(RX.toCsv([{ i: 0, t: '=SUM(A1)', g: [] }]), 'n,index,length,match\r\n1,0,8,\'=SUM(A1)\r\n');
+  assert.deepEqual(JSON.parse(RX.toJson(ms))[0], { n: 1, index: 0, length: 3, match: 'a=1', groups: ['a', '1'], named: { k: 'a' } });
+  assert.ok(RX.LIB.length >= 30);
+  assert.equal(new Set(RX.LIB.map(l => l.id)).size, RX.LIB.length);
+  for (const l of RX.LIB) {
+    const c = RX.compile(l.p, l.f);
+    assert.ok(c.re, l.id + ': ' + c.error);
+    assert.ok(RX.findMatches(c.re, l.sample).matches.length > 0, l.id + ' sample has no match');
+    assert.ok(l.name.en && l.name.ro && l.name.ru);
+  }
+});

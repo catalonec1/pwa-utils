@@ -16,6 +16,7 @@ const SAMPLE = {
   pct: { pctHist: JSON.stringify([{ time: '2026-11-24 10:15', calc: 'Profit 40 · margin 40% · markup 66.67%', result: '66.67%' }]) },
   ora: { oraQ: 'ORA-06512: at "HR.PAYROLL", line 42\nORA-01403: no data found' },
   pass: { passOpts: JSON.stringify({ length: 20, lower: true, upper: true, digits: true, symbols: true, noSimilar: false }) },
+  regex: { rxState: JSON.stringify({ p: '(?<level>ERROR|WARN)\\s+\\[(?<module>[\\w.]+)\\]\\s+(.+)', f: 'gm', text: '2026-11-26 09:41:07 INFO  [app.start] Server listening on port 8080\n2026-11-26 09:41:12 WARN  [db.pool] Slow query: 1850 ms\n2026-11-26 09:42:03 INFO  [auth] User signed in\n2026-11-26 09:43:55 ERROR [mail.send] Connection refused (smtp.example.com:587)\n2026-11-26 09:44:10 WARN  [cache] Hit ratio below 60%', repl: '$<module>: $3' }) },
   text: { text: 'Grădina de stele — notes\n\nbanana\napple\nbanana\nCherry\nΣ unicode ✓ привет мир\n\nPaste any text here: count words, change case, sort and clean lines.' }
 };
 

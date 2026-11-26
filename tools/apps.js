@@ -94,6 +94,19 @@ module.exports = {
       color: '#c92a2a',
       glyph: 'ORA',
       assets: ['./', 'index.html', 'app.js', 'logic.js', 'data.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
+    },
+    {
+      dir: 'regex',
+      storeId: 'TBD',
+      packageId: 'TBD',
+      id: 'regex-tester',
+      name: 'Stelar Regex Tester',
+      short_name: 'Regex',
+      description: 'Offline JavaScript regex tester: live highlighting, capture groups, clear errors. EN/RO/RU. Pro adds replace preview, pattern explanation, 34-pattern library, saved patterns, tests, CSV/JSON export.',
+      categories: ['developer tools', 'utilities', 'productivity'],
+      color: '#9c36b5',
+      glyph: '.*',
+      assets: ['./', 'index.html', 'app.js', 'logic.js', 'worker.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
     }
   ]
 };

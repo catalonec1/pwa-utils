@@ -273,3 +273,44 @@ Pro (разовая покупка): причины и решения для в�
 **Функция:** Причины и решения ошибок ORA- и PLS-, офлайн, можно вставить весь стек ошибок
 
 **Pro add-on listing:** name „ORA Error Helper Pro”; EN: One-time purchase: causes and fixes for all 251 errors, favorites and copy as Markdown. RO: Cumpărare unică: cauze și soluții pentru toate cele 251 de erori, favorite și copiere ca Markdown. RU: Разовая покупка: причины и решения для всех 251 ошибок, избранное и копирование в Markdown.
+
+## 8. Stelar Regex Tester (`regex/`)
+
+**EN — short description:** Test JavaScript regular expressions offline: live matches, capture groups and clear errors.
+**EN — description:**
+A fast, private tester for JavaScript regular expressions that works on your device.
+• Live highlighting of every match as you type the pattern or the text
+• Match list with positions and capture groups, numbered and named
+• All flags: g, i, m, s, u, y and d (group positions)
+• Clear error messages for invalid patterns
+• Patterns that would freeze (catastrophic backtracking) are stopped after 1.5 s, so the app stays responsive
+• Light and dark theme, English, Romanian and Russian. No account, ads or tracking, works offline
+Pro (one-time add-on): replace preview with $1 and $<name>, plain-language explanation of the pattern token by token, a library of 34 ready-made patterns (email, URL, IPv4, dates, times, phone numbers, UUID and more), saved patterns, test cases that must or must not match, and export of matches as CSV or JSON.
+**Feature:** Live regex matches, capture groups, replace preview and plain-language explanations
+**Keywords:** regex, regular expression, regex tester, JavaScript, pattern, capture groups, replace, developer tools, validation
+
+**RO — descriere scurtă:** Testează expresii regulate JavaScript offline: potriviri live, grupuri capturante și erori clare.
+**RO — descriere:**
+Un tester rapid și privat pentru expresii regulate JavaScript, direct pe dispozitivul tău.
+• Evidențiere live a fiecărei potriviri pe măsură ce scrii modelul sau textul
+• Lista potrivirilor cu poziții și grupuri capturante, numerotate și cu nume
+• Toate flag-urile: g, i, m, s, u, y și d (pozițiile grupurilor)
+• Mesaje clare pentru modelele invalide
+• Modelele care ar bloca aplicația (backtracking catastrofal) sunt oprite după 1,5 s, ca aplicația să rămână utilizabilă
+• Temă luminoasă și întunecată, română, engleză și rusă. Fără cont, reclame sau urmărire, funcționează offline
+Pro (cumpărare unică): previzualizarea înlocuirii cu $1 și $<nume>, explicația pe înțeles a modelului, token cu token, bibliotecă de 34 de modele gata făcute (email, URL, IPv4, date, ore, numere de telefon, UUID și altele), modele salvate, cazuri de test care trebuie sau nu trebuie să se potrivească și export al potrivirilor în CSV sau JSON.
+**Funcție:** Potriviri regex live, grupuri capturante, previzualizare înlocuire și explicații pe înțeles
+
+**RU — краткое описание:** Проверка регулярных выражений JavaScript офлайн: совпадения вживую, группы и понятные ошибки.
+**RU — описание:**
+Быстрый и приватный тестер регулярных выражений JavaScript прямо на вашем устройстве.
+• Подсветка всех совпадений прямо во время ввода шаблона или текста
+• Список совпадений с позициями и группами захвата, нумерованными и именованными
+• Все флаги: g, i, m, s, u, y и d (позиции групп)
+• Понятные сообщения об ошибках в шаблоне
+• Шаблоны, которые зависли бы (катастрофический возврат), останавливаются через 1,5 с, и приложение не зависает
+• Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, работает офлайн
+Pro (разовая покупка): предпросмотр замены с $1 и $<имя>, объяснение шаблона простым языком по каждому элементу, библиотека из 34 готовых шаблонов (email, URL, IPv4, даты, время, телефоны, UUID и другие), сохранённые шаблоны, тест-кейсы, которые должны или не должны совпадать, и экспорт совпадений в CSV или JSON.
+**Функция:** Совпадения regex вживую, группы захвата, предпросмотр замены и объяснения простым языком
+
+**Pro add-on listing:** name „Regex Tester Pro”; EN: One-time purchase: replace preview, plain-language pattern explanation, 34 ready-made patterns, saved patterns, test cases and CSV/JSON export. RO: Cumpărare unică: previzualizare înlocuire, explicația modelului pe înțeles, 34 de modele gata făcute, modele salvate, cazuri de test și export CSV/JSON. RU: Разовая покупка: предпросмотр замены, объяснение шаблона простым языком, 34 готовых шаблона, сохранённые шаблоны, тест-кейсы и экспорт CSV/JSON.
