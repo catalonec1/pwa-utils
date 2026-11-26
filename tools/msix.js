@@ -7,6 +7,13 @@ const cfg = require('./apps');
 const ENDPOINT = 'https://pwabuilder-windows-docker.azurewebsites.net/msix/generatezip';
 const OUT = path.join(__dirname, '..', 'msix');
 
+/* The classic (Windows 10 < 1809) package must have its own, increasing version: 1.0.x keeps 1.0.0 as before,
+   1.b.c becomes 1.0.(b*100+c), e.g. 1.1.0 -> 1.0.100, so it never repeats an earlier classic package. */
+function classicVersion(v) {
+  const [a, b, c] = v.split('.').map(Number);
+  return b === 0 ? `${a}.0.0` : `${a}.0.${b * 100 + c}`;
+}
+
 async function build(a) {
   const url = cfg.baseUrl + a.dir + '/';
   const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, '..', a.dir, 'manifest.webmanifest'), 'utf8'));
@@ -18,7 +25,7 @@ async function build(a) {
     allowSigning: true,
     publisher: cfg.publisher,
     generateModernPackage: true,
-    classicPackage: { generate: true, version: '1.0.0', url },
+    classicPackage: { generate: true, version: classicVersion(cfg.version), url },
     edgeHtmlPackage: { generate: false },
     manifestUrl: url + 'manifest.webmanifest',
     startUrl: url,
