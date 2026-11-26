@@ -16,6 +16,11 @@ const SAMPLE = {
   pct: { pctHist: JSON.stringify([{ time: '2026-11-24 10:15', calc: 'Profit 40 · margin 40% · markup 66.67%', result: '66.67%' }]) },
   ora: { oraQ: 'ORA-06512: at "HR.PAYROLL", line 42\nORA-01403: no data found' },
   pass: { passOpts: JSON.stringify({ length: 20, lower: true, upper: true, digits: true, symbols: true, noSimilar: false }) },
+  json: {
+    jsonSrc: '{\n  "order": "SO-2026-1187",\n  "customer": { "name": "Ana Pop", "city": "Chișinău", "vip": true },\n  "items": [\n    { "sku": "KB-104", "status": "active", "qty": 2, "price": 49.9 },\n    { "sku": "MS-220", "status": "backorder", "qty": 1, "price": 19.5 },\n    { "sku": "HD-310", "status": "active", "qty": 1, "price": 89 }\n  ],\n  "total": 208.3,\n  "paid": false,\n  "note": null\n}',
+    jsonQ: "$.items[?(@.status=='active')].sku",
+    jsonSnips: JSON.stringify([{ name: 'order-api-response', text: '{"ok":true}', time: '2026-11-24 10:15' }])
+  },
   text: { text: 'Grădina de stele — notes\n\nbanana\napple\nbanana\nCherry\nΣ unicode ✓ привет мир\n\nPaste any text here: count words, change case, sort and clean lines.' }
 };
 

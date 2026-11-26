@@ -273,3 +273,41 @@ Pro (разовая покупка): причины и решения для в�
 **Функция:** Причины и решения ошибок ORA- и PLS-, офлайн, можно вставить весь стек ошибок
 
 **Pro add-on listing:** name „ORA Error Helper Pro”; EN: One-time purchase: causes and fixes for all 251 errors, favorites and copy as Markdown. RO: Cumpărare unică: cauze și soluții pentru toate cele 251 de erori, favorite și copiere ca Markdown. RU: Разовая покупка: причины и решения для всех 251 ошибок, избранное и копирование в Markdown.
+
+## 8. Stelar JSON Formatter (`json/`)
+
+**EN — short description:** Validate JSON with the exact error line and column, format, minify and browse it as a tree. Offline.
+**EN — description:**
+A fast JSON formatter and validator for developers that works on your device.
+• Validates as you type and shows the exact line and column of an error, with a clear reason (trailing comma, missing quote, bad number)
+• Pretty-print with 2 or 4 spaces or tabs, minify, sort keys
+• Collapsible tree view; click a key to copy its path
+• Stats: keys, objects, arrays, values, depth and size; warns about integers that lose precision
+• Light and dark theme, English, Romanian and Russian. No account, ads or tracking, your JSON never leaves the device, works offline
+Pro (one-time add-on): JSONPath queries with wildcards, recursive search and filters, JSON ↔ YAML and JSON ↔ CSV conversion, compare two JSON documents (added, removed and changed paths), escape and unescape JSON strings, saved snippets.
+**Feature:** JSON validator with exact error position, formatter, minifier and tree view
+**Keywords:** JSON, JSON formatter, JSON validator, JSON viewer, pretty print, minify, JSONPath, YAML, CSV, JSON diff
+
+**RO — descriere scurtă:** Validează JSON cu linia și coloana exactă a erorii, formatează, minifică, arbore. Offline.
+**RO — descriere:**
+Un formatator și validator JSON rapid pentru programatori, direct pe dispozitivul tău.
+• Validează în timp ce scrii și arată linia și coloana exactă a erorii, cu motivul (virgulă în plus, ghilimele lipsă, număr invalid)
+• Formatare cu 2 sau 4 spații sau tab-uri, minificare, sortarea cheilor
+• Arbore cu noduri pliabile; apasă pe o cheie ca să-i copiezi calea
+• Statistici: chei, obiecte, liste, valori, adâncime și mărime; avertizează la numere întregi care își pierd precizia
+• Temă luminoasă și întunecată, română, engleză și rusă. Fără cont, reclame sau urmărire, JSON-ul nu părăsește dispozitivul, funcționează offline
+Pro (cumpărare unică): interogări JSONPath cu wildcard, căutare recursivă și filtre, conversie JSON ↔ YAML și JSON ↔ CSV, compararea a două documente JSON (căi adăugate, eliminate și modificate), escape și unescape pentru șiruri JSON, fragmente salvate.
+**Funcție:** Validator JSON cu poziția exactă a erorii, formatare, minificare și arbore
+
+**RU — краткое описание:** Проверка JSON с точной строкой и столбцом ошибки, форматирование, сжатие и дерево. Офлайн.
+**RU — описание:**
+Быстрый форматер и валидатор JSON для разработчиков прямо на вашем устройстве.
+• Проверяет при вводе и показывает точную строку и столбец ошибки с понятной причиной (лишняя запятая, нет кавычки, неверное число)
+• Форматирование с отступом 2 или 4 пробела или табуляцией, сжатие, сортировка ключей
+• Сворачиваемое дерево; нажмите на ключ, чтобы скопировать его путь
+• Статистика: ключи, объекты, массивы, значения, глубина и размер; предупреждение о целых числах, теряющих точность
+• Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, JSON не покидает устройство, работает офлайн
+Pro (разовая покупка): запросы JSONPath с подстановками, рекурсивным поиском и фильтрами, конвертация JSON ↔ YAML и JSON ↔ CSV, сравнение двух JSON (добавленные, удалённые и изменённые пути), экранирование строк JSON, сохранённые фрагменты.
+**Функция:** Валидатор JSON с точной позицией ошибки, форматирование, сжатие и дерево
+
+**Pro add-on listing:** name „JSON Formatter Pro”; EN: One-time purchase: JSONPath queries with filters, JSON ↔ YAML and JSON ↔ CSV conversion, JSON diff, escape and unescape, saved snippets. RO: Cumpărare unică: interogări JSONPath cu filtre, conversie JSON ↔ YAML și JSON ↔ CSV, comparare JSON, escape și unescape, fragmente salvate. RU: Разовая покупка: запросы JSONPath с фильтрами, конвертация JSON ↔ YAML и JSON ↔ CSV, сравнение JSON, экранирование строк, сохранённые фрагменты.

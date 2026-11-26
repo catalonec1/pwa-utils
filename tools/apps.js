@@ -94,6 +94,19 @@ module.exports = {
       color: '#c92a2a',
       glyph: 'ORA',
       assets: ['./', 'index.html', 'app.js', 'logic.js', 'data.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
+    },
+    {
+      dir: 'json',
+      storeId: 'TBD',
+      packageId: 'TBD',
+      id: 'json-formatter',
+      name: 'Stelar JSON Formatter',
+      short_name: 'JSON',
+      description: 'Offline JSON validator and formatter: exact error line and column, pretty-print, minify, sort keys, tree view and stats. Pro: JSONPath queries, YAML and CSV conversion, diff, escaping and snippets.',
+      categories: ['developer tools', 'utilities', 'productivity'],
+      color: '#d6336c',
+      glyph: '{}',
+      assets: ['./', 'index.html', 'app.js', 'logic.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
     }
   ]
 };

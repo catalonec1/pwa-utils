@@ -334,3 +334,76 @@ test('text v1.1: shuffle, sort by length (free); CSV ↔ JSON, HTML escape (Pro)
   assert.equal(T.pro.csvToJson(T.pro.jsonToCsv('[{"q":"say \\"hi\\"\\nnow"}]')), JSON.stringify([{ q: 'say "hi"\nnow' }], null, 2));
   assert.equal(T.pro.htmlEscape('<a href="x">Tom & \'Jerry\'</a>'), '&lt;a href=&quot;x&quot;&gt;Tom &amp; &#39;Jerry&#39;&lt;/a&gt;');
 });
+
+const JF = require('../json/logic.js');
+test('json: validator gives exact line and column', () => {
+  const at = s => { const r = JF.check(s); return r.ok ? 'ok' : `${r.code} ${r.line}:${r.col}`; };
+  assert.equal(at('{"a": [1, 2], "b": {"c": null}}'), 'ok');
+  assert.equal(at('{\n  "a": 1,\n}'), 'trailingComma 3:1');
+  assert.equal(at('{"a" 1}'), 'expectedColon 1:6');
+  assert.equal(at('[1 2]'), 'expectedComma 1:4');
+  assert.equal(at("{'a': 1}"), 'expectedKey 1:2');
+  assert.equal(at('{"a": 01}'), 'badNumber 1:7');
+  assert.equal(at('"abc'), 'unterminated 1:5');
+  assert.equal(at('["\\q"]'), 'badEscape 1:3');
+  assert.equal(at('"a\tb"'), 'control 1:3');
+  assert.equal(at('{"a":1}}'), 'extra 1:8');
+  assert.equal(at('[1,\n 2,\n'), 'end 3:1');
+  assert.equal(at('nul'), 'unexpected 1:1');
+  assert.equal(at('\uFEFF{"x": true}'), 'ok');
+  assert.equal(JF.check('[12345678901234567890, 9007199254740991]').bigNums, 1);
+  assert.equal(JF.check('{"a":\n  tru}').lineText, '  tru}');
+});
+test('json: format, minify, sort keys, stats', () => {
+  const src = '{"b":1,"a":{"d":[1,2],"c":"x"}}';
+  assert.equal(JF.format(src, '2'), '{\n  "b": 1,\n  "a": {\n    "d": [\n      1,\n      2\n    ],\n    "c": "x"\n  }\n}');
+  assert.equal(JF.format('[1]', '4'), '[\n    1\n]');
+  assert.equal(JF.format('{"a":1}', 'tab'), '{\n\t"a": 1\n}');
+  assert.equal(JF.minify(JF.format(src, 4)), src);
+  assert.equal(JF.minify(src, true), '{"a":{"c":"x","d":[1,2]},"b":1}');
+  assert.equal(JF.minify('{"b":1,"B":2,"a":3}', true), '{"B":2,"a":3,"b":1}');
+  assert.deepEqual(JF.stats('{ "a": [1, {"b": "ș"}] }'), { objects: 2, arrays: 1, keys: 2, values: 2, depth: 3, bytes: 25, minBytes: 20 });
+  assert.throws(() => JF.format('{', 2), /end at line 1, column 2/);
+});
+test('json: Pro query with wildcards, recursion, negative index and filters', () => {
+  const s = JSON.stringify({ store: { books: [{ t: 'A', cat: 'fic', p: 8 }, { t: 'B', cat: 'ref', p: 12 }, { t: 'C', cat: 'fic', p: 5, isbn: '1' }], 'odd key': { v: 1 } } });
+  const vals = q => JF.query(s, q).map(r => r.value);
+  assert.deepEqual(vals('$.store.books[*].t'), ['A', 'B', 'C']);
+  assert.deepEqual(vals('$..p'), [8, 12, 5]);
+  assert.deepEqual(vals('store.books[-1].t'), ['C']);
+  assert.deepEqual(vals("$['store']['odd key'].v"), [1]);
+  assert.deepEqual(vals("$.store.books[?(@.cat=='fic')].t"), ['A', 'C']);
+  assert.deepEqual(vals('$.store.books[?(@.cat!="fic")].t'), ['B']);
+  assert.deepEqual(vals('$.store.books[?(@.p==12)].t'), ['B']);
+  assert.deepEqual(vals('$.store.books[?(@.isbn)].t'), ['C']);
+  assert.deepEqual(vals('$.store.books[9]'), []);
+  assert.deepEqual(JF.query(s, '$.store.*').map(r => r.path), ['$.store.books', "$.store['odd key']"]);
+  assert.throws(() => JF.query(s, '$.store[oops'), e => e.near === '[oops');
+});
+test('json: Pro diff of two documents', () => {
+  const d = JF.diff({ a: 1, b: { c: [1, 2, 3] }, d: 'x', t: [1] }, { a: 2, b: { c: [1, 2] }, d: 'x', e: null, t: { 0: 1 } });
+  assert.deepEqual(d.map(e => e.op + ' ' + e.path), ['changed $.a', 'removed $.b.c[2]', 'changed $.t', 'added $.e']);
+  assert.equal(JF.diffText(d.slice(0, 2)), '~ $.a: 1 → 2\n- $.b.c[2]: 3');
+  assert.deepEqual(JF.diff({ x: [1, { y: 'z' }] }, { x: [1, { y: 'z' }] }), []);
+  assert.deepEqual(JF.diff(1, '1').map(e => e.op), ['changed']);
+});
+test('json: Pro YAML both ways', () => {
+  const doc = { name: 'x', list: [1, 'two', { a: null, b: [true, false] }, [1, [2, 3]], [], {}], 'my key': 'a: b', n: -1.5e3, s: 'multi\nline', e: '', t: 'true', v: '1.2.3', nested: { deep: { x: '#hash' } } };
+  const y = JF.toYAML(JSON.stringify(doc));
+  assert.match(y, /^name: x\nlist:\n- 1\n- two\n- a: null\n  b:\n  - true\n/);
+  assert.deepEqual(JSON.parse(JF.fromYAML(y)), doc);
+  const cfg = JF.fromYAML('# config\nserver:\n  host: localhost   # comment\n  port: 8080\n  tags: [web, "api", 3]\n  opts: {a: 1, b: \'it\'\'s\'}\nitems:\n- name: a\n  qty: 2\n- name: b\n  more:\n    - x\nscript: |\n  line1\n  line2\nfolded: >-\n  a\n  b\nempty:\n');
+  assert.deepEqual(JSON.parse(cfg), { server: { host: 'localhost', port: 8080, tags: ['web', 'api', 3], opts: { a: 1, b: "it's" } }, items: [{ name: 'a', qty: 2 }, { name: 'b', more: ['x'] }], script: 'line1\nline2\n', folded: 'a b', empty: null });
+  assert.throws(() => JF.fromYAML('a: 1\n   b: 2'), e => e.line === 2);
+  assert.throws(() => JF.fromYAML('a: &x 1'), e => /anchors/.test(e.why));
+});
+test('json: Pro CSV both ways and escaping', () => {
+  assert.equal(JF.toCSV('[{"a":1,"b":{"c":"x,y"}},{"a":2,"d":[1,2]}]'), 'a,b.c,d\n1,"x,y",\n2,,1; 2');
+  assert.equal(JF.toCSV('{"rows":[{"f":"=1+1"}]}'), "f\n'=1+1");
+  assert.deepEqual(JSON.parse(JF.fromCSV('a;b.c\n1;"y;z"\n007;true')), [{ a: 1, b: { c: 'y;z' } }, { a: '007', b: { c: true } }]);
+  assert.deepEqual(JSON.parse(JF.fromCSV('id\n12345678901234567890')), [{ id: '12345678901234567890' }]);
+  assert.equal(JF.escapeString('say "hi"\n\tok'), '"say \\"hi\\"\\n\\tok"');
+  assert.equal(JF.unescapeString('say \\"hi\\"\\n'), 'say "hi"\n');
+  assert.equal(JF.unescapeString('"\\u0103"'), 'ă');
+  assert.throws(() => JF.unescapeString('bad \\x'));
+});
