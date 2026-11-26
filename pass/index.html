@@ -53,6 +53,11 @@
       <label><input type="checkbox" id="digits" checked> <span>0–9</span></label>
       <label><input type="checkbox" id="symbols" checked> <span>!#$%&amp;*</span></label>
       <label class="wide"><input type="checkbox" id="noSimilar"> <span data-i18n="noSimilar">No look-alikes (I l 1 O 0)</span></label>
+      <label class="wide"><input type="checkbox" id="startLetter"> <span data-i18n="startLetter">Start with a letter</span></label>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div><label for="exclude" data-i18n="exclude">Never use these characters</label><input id="exclude" autocomplete="off" spellcheck="false" maxlength="100" placeholder="&quot; ' \ /"></div>
+      <div><label for="symSet"><span data-i18n="symSet">Allowed symbols only</span> <span class="pro-badge">PRO</span></label><input id="symSet" autocomplete="off" spellcheck="false" maxlength="40" placeholder="!#$%&amp;*+-=?@^_~.,:;()[]{}"></div>
     </div>
   </section>
   <section class="card">
@@ -71,6 +76,8 @@
           <option value="random" data-i18n="kindRandom">Random (settings above)</option>
         </select></div>
       <div style="flex:0 0 110px"><label for="words" data-i18n="words">Words / digits</label><input id="words" type="number" min="3" max="12" value="6"></div>
+      <div style="flex:0 0 130px"><label for="sep" data-i18n="sep">Separator</label>
+        <select id="sep"><option value="-">-</option><option value=" " data-i18n="sepSpace">space</option><option value=".">.</option><option value="_">_</option><option value="" data-i18n="sepNone">none</option></select></div>
       <div style="flex:0 0 110px"><label for="count" data-i18n="count">How many</label><input id="count" type="number" min="1" max="500" value="10"></div>
     </div>
     <div class="checks">
@@ -87,7 +94,7 @@
   </section>
   <section class="card pro-box hidden" id="proBox">
     <h2 style="font-size:1rem;margin:0 0 6px" data-i18n="proTitle">Pro version</h2>
-    <p class="muted" data-i18n="proPitch">Passphrases in English, Romanian and Russian, PINs, easy-to-say passwords, lists of up to 500 and CSV export.</p>
+    <p class="muted" data-i18n="proPitch">Passphrases in English, Romanian and Russian with your choice of separator, PINs, easy-to-say passwords, your own allowed symbols, lists of up to 500 and CSV export.</p>
     <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
     <p class="muted" id="proStatus"></p>
   </section>

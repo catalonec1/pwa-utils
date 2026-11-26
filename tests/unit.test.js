@@ -398,3 +398,23 @@ test('focus v1.2: tasks (free), noise generator and tasks CSV (Pro)', () => {
   }
   assert.ok(r.white > r.pink && r.pink > r.brown, JSON.stringify(r));
 });
+
+test('pass v1.2: excluded characters, start with a letter (free); allowed symbols (Pro)', () => {
+  const o = { length: 14, lower: true, upper: true, digits: true, symbols: true, exclude: 'aA1!', startLetter: true };
+  for (let i = 0; i < 300; i++) {
+    const p = P.generate(o);
+    assert.equal(p.length, 14);
+    assert.match(p, /^[a-zA-Z]/);
+    assert.doesNotMatch(p, /[aA1!]/);
+    assert.match(p, /[0-9]/); assert.match(p, /[^a-zA-Z0-9]/);
+  }
+  assert.equal(P.poolSize(o), P.poolSize({ lower: true, upper: true, digits: true, symbols: true }) - 4);
+  assert.match(P.generate({ length: 6, digits: true, startLetter: true }), /^\d{6}$/, 'no letters chosen: ignored');
+  assert.throws(() => P.generate({ length: 8, digits: true, exclude: '0123456789' }));
+  assert.equal(P.cleanSymbols('!?ab 12!#é'), '!?#');
+  for (let i = 0; i < 100; i++) assert.match(P.generate({ length: 10, lower: true, symbols: true, symbolSet: '#_' }), /^(?=.*[#_])[a-z#_]{10}$/);
+  assert.equal(P.poolSize({ symbols: true, symbolSet: 'xyz' }), 0);
+  assert.equal(P.genBits({ length: 16, lower: true, upper: true, digits: true, symbols: true }), P.bits(16, P.poolSize({ lower: true, upper: true, digits: true, symbols: true })));
+  assert.equal(P.genBits({ length: 10, lower: true, digits: true, startLetter: true }), Math.round(9 * Math.log2(36) + Math.log2(26)));
+  assert.match(P.passphrase({ words: 3, sep: '', capitalize: true, lang: 'en' }), /^([A-Z][a-z]+){3}$/);
+});

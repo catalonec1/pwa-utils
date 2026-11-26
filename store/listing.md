@@ -187,6 +187,19 @@ Pro (cumpărare unică): fraze din cuvinte românești, englezești sau rusești
 • Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, работает офлайн
 Pro (разовая покупка): фразы из русских, английских или румынских слов, PIN-коды, легко произносимые пароли, списки до 500 и экспорт CSV.
 
+**Update 1.2 — What's new:**
+EN: New free options for strict password rules: never use characters you choose and always start with a letter. Pro: allow only the symbols a site accepts, and pick the passphrase separator (dash, space, dot, underscore or none).
+RO: Opțiuni gratuite noi pentru reguli stricte de parolă: exclude caracterele pe care le alegi și începe mereu cu o literă. Pro: permite doar simbolurile acceptate de un site și alege separatorul frazei (cratimă, spațiu, punct, underscore sau fără).
+RU: Новые бесплатные настройки для строгих требований к паролям: исключить выбранные символы и всегда начинать с буквы. Pro: только символы, которые принимает сайт, и выбор разделителя фразы (дефис, пробел, точка, подчёркивание или без).
+
+**Updated description lines (1.2):**
+EN: • Option to skip look-alike characters (I, l, 1, O, 0) or any characters you choose, and to start with a letter
+EN: Pro (one-time add-on): passphrases from English, Romanian or Russian words with your choice of separator, PIN codes, easy-to-say passwords, your own allowed symbols, lists of up to 500 and CSV export.
+RO: • Opțiune fără caractere asemănătoare (I, l, 1, O, 0) sau fără caracterele alese de tine, și cu literă la început
+RO: Pro (cumpărare unică): fraze din cuvinte românești, englezești sau rusești cu separatorul ales, coduri PIN, parole ușor de pronunțat, simbolurile permise de tine, liste de până la 500 și export CSV.
+RU: • Без похожих символов (I, l, 1, O, 0) или любых выбранных вами символов, а также с буквой в начале
+RU: Pro (разовая покупка): фразы из русских, английских или румынских слов с выбранным разделителем, PIN-коды, легко произносимые пароли, свои разрешённые символы, списки до 500 и экспорт CSV.
+
 **Pro add-on listing:** name „Password Generator Pro”; EN: One-time purchase: passphrases, PINs, easy-to-say passwords, lists of up to 500 and CSV export. RO: Cumpărare unică: fraze din cuvinte, PIN-uri, parole ușor de pronunțat, liste de până la 500 și export CSV. RU: Разовая покупка: фразы из слов, PIN-коды, легко произносимые пароли, списки до 500 и экспорт CSV.
 
 ## 5. Stelar Date Calculator

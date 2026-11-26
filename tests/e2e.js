@@ -405,6 +405,47 @@ async function newPage(browser, base, opts = {}) {
     await ctx.close();
   });
 
+  await check('pass v1.2: excluded characters, start with a letter (free); allowed symbols, separator (Pro)', async () => {
+    let { ctx, page } = await newPage(browser, base);
+    await page.goto(base + 'pass/');
+    await page.uncheck('#upper'); await page.uncheck('#symbols');
+    await page.check('#startLetter');
+    await page.fill('#exclude', 'abcdefghijklm0123');
+    for (let i = 0; i < 20; i++) {
+      await page.click('#gen');
+      assert.match(await page.textContent('#out'), /^[n-z][n-z4-9]{15}$/);
+    }
+    assert.match(await page.textContent('#strength'), /^\d+ bits of entropy/);
+    await page.uncheck('#lower'); await page.fill('#exclude', '0123456789');
+    assert.equal(await page.textContent('#strength'), 'No characters left: change the settings.');
+    await page.fill('#exclude', 'abc');
+    await page.check('#lower');
+    assert.ok(await page.isDisabled('#symSet'));
+    assert.ok(await page.isDisabled('#sep'));
+    await page.reload();
+    assert.equal(await page.inputValue('#exclude'), 'abc');
+    assert.ok(await page.isChecked('#startLetter'));
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+    ({ ctx, page } = await newPage(browser, base, { pro: true }));
+    await page.goto(base + 'pass/');
+    await page.waitForFunction(() => !document.getElementById('symSet').disabled);
+    await page.uncheck('#lower'); await page.uncheck('#upper'); await page.uncheck('#digits');
+    await page.fill('#symSet', '!?a1');
+    assert.match(await page.textContent('#out'), /^[!?]{16}$/);
+    await page.check('#lower');
+    await page.selectOption('#kind', 'phrase'); await page.fill('#words', '3'); await page.fill('#count', '3');
+    await page.selectOption('#sep', ' '); await page.uncheck('#num');
+    await page.click('#bulk');
+    for (const l of (await page.inputValue('#list')).split('\n')) assert.match(l, /^[A-Z][a-z]+ [A-Z][a-z]+ [A-Z][a-z]+$/);
+    await page.selectOption('#sep', '');
+    assert.match((await page.inputValue('#list')).split('\n')[0], /^([A-Z][a-z]+){3}$/);
+    await page.reload();
+    assert.equal(await page.inputValue('#symSet'), '!?a1');
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
   await check('days: between, add, about and Pro locked', async () => {
     const { ctx, page } = await newPage(browser, base);
     await page.goto(base + 'days/');
