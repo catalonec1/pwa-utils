@@ -166,6 +166,39 @@ async function newPage(browser, base, opts = {}) {
     await ctx.close();
   });
 
+  await check('convertor v1.2: number bases (free), pace and data rate (Pro)', async () => {
+    let { ctx, page } = await newPage(browser, base);
+    await page.goto(base + 'convertor/');
+    await page.click('[data-cat="bases"]');
+    await page.fill('#value', '255');
+    assert.equal(await page.textContent('#result'), '255 DEC (10) = FF HEX (16)');
+    assert.match(await page.textContent('#all'), /BIN \(2\)11111111/);
+    assert.match(await page.textContent('#hint'), /0x/);
+    await page.click('#swap');
+    assert.equal(await page.inputValue('#value'), 'FF');
+    assert.equal(await page.textContent('#result'), 'FF HEX (16) = 255 DEC (10)');
+    await page.selectOption('#from', 'bin');
+    assert.equal(await page.inputValue('#value'), '11111111');
+    await page.fill('#value', '12');
+    assert.equal(await page.textContent('#result'), 'Enter a valid whole number in this base');
+    assert.match(await page.textContent('[data-cat="pace"]'), /🔒/);
+    assert.match(await page.textContent('[data-cat="datarate"]'), /🔒/);
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+    ({ ctx, page } = await newPage(browser, base, { pro: true }));
+    await page.goto(base + 'convertor/');
+    await page.waitForSelector('#proBox.hidden', { state: 'attached' });
+    await page.click('[data-cat="pace"]');
+    await page.fill('#value', '5:30');
+    assert.equal(await page.textContent('#result'), '5:30 min/km = 10.90909091 km/h');
+    assert.match(await page.textContent('#all'), /min\/mi8:51/);
+    await page.click('[data-cat="datarate"]');
+    await page.fill('#value', '100');
+    assert.equal(await page.textContent('#result'), '100 Mbit/s = 12.5 MB/s');
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
   await check('focus: full work session moves to a short break and counts', async () => {
     const { ctx, page } = await newPage(browser, base);
     await page.clock.install({ time: new Date('2026-11-04T10:00:00') });

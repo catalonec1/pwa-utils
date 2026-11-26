@@ -46,6 +46,19 @@ Pro (cumpărare unică): presiune, energie, putere, unghi și consum de carburan
 • Без аккаунта, рекламы и слежки
 Pro (разовая покупка): давление, энергия, мощность, углы и расход топлива (л/100 км, км/л, mpg US/UK), а также история последних 30 конвертаций.
 
+**Update 1.2 — What's new:**
+EN: New free category: number bases (binary, octal, decimal, hex, whole numbers of any size), plus µm, carats and US pints and quarts. Pro: running pace (min/km, min/mi, typed as 5:30) and data rate (Mbit/s, MB/s, MiB/s and more).
+RO: Categorie gratuită nouă: baze numerice (binar, octal, zecimal, hex, numere întregi de orice mărime), plus µm, carate și pinte și quarts US. Pro: ritm de alergare (min/km, min/mi, scris ca 5:30) și viteză de transfer (Mbit/s, MB/s, MiB/s și altele).
+RU: Новая бесплатная категория: системы счисления (двоичная, восьмеричная, десятичная, шестнадцатеричная, целые числа любой длины), а также мкм, караты и пинты и кварты США. Pro: темп бега (мин/км, мин/миля, ввод как 5:30) и скорость передачи данных (Мбит/с, МБ/с, МиБ/с и другие).
+
+**Updated description lines (1.2):**
+EN: • Length, mass, temperature, volume, area, speed, time, data (KB/MB/GB and KiB/MiB/GiB) and number bases (binary, octal, decimal, hex)
+EN: Pro (one-time add-on): pressure, energy, power, angle, fuel economy (L/100 km, km/L, mpg US/UK), frequency, torque, density, flow rate, running pace and data rate, plus a history of your last 30 conversions.
+RO: • Lungime, masă, temperatură, volum, suprafață, viteză, timp, date (KB/MB/GB și KiB/MiB/GiB) și baze numerice (binar, octal, zecimal, hex)
+RO: Pro (cumpărare unică): presiune, energie, putere, unghi, consum de carburant (L/100 km, km/L, mpg US/UK), frecvență, cuplu, densitate, debit, ritm de alergare și viteză de transfer, plus istoricul ultimelor 30 de conversii.
+RU: • Длина, масса, температура, объём, площадь, скорость, время, данные (КБ/МБ/ГБ и КиБ/МиБ/ГиБ) и системы счисления (двоичная, восьмеричная, десятичная, шестнадцатеричная)
+RU: Pro (разовая покупка): давление, энергия, мощность, углы, расход топлива (л/100 км, км/л, mpg US/UK), частота, крутящий момент, плотность, расход, темп бега и скорость передачи данных, а также история последних 30 конвертаций.
+
 ---
 
 ## 2. Stelar Focus Timer (`focus/`)

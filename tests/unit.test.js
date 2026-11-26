@@ -334,3 +334,35 @@ test('text v1.1: shuffle, sort by length (free); CSV ↔ JSON, HTML escape (Pro)
   assert.equal(T.pro.csvToJson(T.pro.jsonToCsv('[{"q":"say \\"hi\\"\\nnow"}]')), JSON.stringify([{ q: 'say "hi"\nnow' }], null, 2));
   assert.equal(T.pro.htmlEscape('<a href="x">Tom & \'Jerry\'</a>'), '&lt;a href=&quot;x&quot;&gt;Tom &amp; &#39;Jerry&#39;&lt;/a&gt;');
 });
+
+test('converter v1.2: number bases, new units (free); pace and data rate (Pro)', () => {
+  assert.equal(U.convertBase('255', 'dec', 'hex'), 'FF');
+  assert.equal(U.convertBase('0xff', 'hex', 'bin'), '11111111');
+  assert.equal(U.convertBase('1111 0000', 'bin', 'oct'), '360');
+  assert.equal(U.convertBase('-42', 'dec', 'bin'), '-101010');
+  assert.equal(U.convertBase('-0', 'dec', 'hex'), '0');
+  assert.equal(U.convertBase('18446744073709551615', 'dec', 'hex'), 'FFFFFFFFFFFFFFFF');
+  assert.equal(U.convertBase('12a', 'dec', 'hex'), null);
+  assert.equal(U.convertBase('102', 'bin', 'dec'), null);
+  assert.equal(U.convertBase('', 'dec', 'hex'), null);
+  assert.throws(() => U.convertBase('1', 'dec', 'b36'));
+  assert.ok(U.categories(false).includes('bases'));
+  close(U.convert('length', 'um', 'mm', 1500), 1.5);
+  close(U.convert('mass', 'ct', 'g', 5), 1);
+  close(U.convert('volume', 'qtUS', 'ptUS', 1), 2);
+  close(U.convert('volume', 'ptUS', 'cup', 1), 2);
+  close(U.convert('pace', 'minkm', 'kmh', 5), 12);
+  close(U.convert('pace', 'kmh', 'minmi', 12), 8.04672);
+  close(U.convert('pace', 'mph', 'minmi', 6), 10);
+  assert.equal(U.convert('pace', 'kmh', 'minkm', 0), Infinity);
+  assert.equal(U.parseMinSec('5:30'), 5.5);
+  assert.equal(U.parseMinSec('4,25'), 4.25);
+  assert.equal(U.formatMinSec(5.5), '5:30');
+  assert.equal(U.formatMinSec(8.04672), '8:03');
+  assert.equal(U.formatMinSec(75), '1:15:00');
+  assert.equal(U.formatMinSec(Infinity), '∞');
+  close(U.convert('datarate', 'Mbps', 'MBps', 100), 12.5);
+  close(U.convert('datarate', 'Gbps', 'MiBps', 1), 119.20928955078125);
+  assert.equal(U.categories(false).includes('pace'), false);
+  assert.equal(U.categories(false).includes('datarate'), false);
+});
