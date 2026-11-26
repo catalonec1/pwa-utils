@@ -418,3 +418,21 @@ test('pass v1.2: excluded characters, start with a letter (free); allowed symbol
   assert.equal(P.genBits({ length: 10, lower: true, digits: true, startLetter: true }), Math.round(9 * Math.log2(36) + Math.log2(26)));
   assert.match(P.passphrase({ words: 3, sep: '', capitalize: true, lang: 'en' }), /^([A-Z][a-z]+){3}$/);
 });
+
+test('days v1.2: age (free) and custom weekend days (Pro)', () => {
+  const p = DC.parse;
+  const a = DC.age(p('2000-02-29'), p('2026-11-26'));
+  assert.deepEqual([a.years, a.months, a.days, a.totalDays, DC.fmt(a.next), a.toNext], [26, 8, 28, 9767, '2027-02-28', 94]);
+  const b = DC.age(p('1990-11-26'), p('2026-11-26'));
+  assert.deepEqual([b.years, b.months, b.days, b.toNext], [36, 0, 0, 0]);
+  assert.equal(DC.age(p('2027-01-01'), p('2026-01-01')), null);
+  assert.equal(DC.age(p('2024-02-29'), p('2028-02-29')).toNext, 0);
+  /* 2026-11-29 is a Sunday; Mon..Sat to 2026-12-05 */
+  assert.equal(DC.workdaysBetween(p('2026-11-29'), p('2026-12-05'), []), 5);
+  assert.equal(DC.workdaysBetween(p('2026-11-29'), p('2026-12-05'), [], false, [5, 6]), 4);
+  assert.equal(DC.workdaysBetween(p('2026-11-29'), p('2026-12-05'), [], false, [0]), 6);
+  assert.equal(DC.workdaysBetween(p('2026-11-29'), p('2026-12-05'), ['2026-12-01'], false, []), 5);
+  assert.equal(DC.fmt(DC.addWorkdays(p('2026-12-03'), 1, [], [5])), '2026-12-05');
+  assert.equal(DC.fmt(DC.addWorkdays(p('2026-12-03'), 1)), '2026-12-04');
+  assert.equal(DC.addWorkdays(p('2026-12-03'), 3, [], [0, 1, 2, 3, 4, 5, 6]), null);
+});

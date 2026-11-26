@@ -490,6 +490,37 @@ async function newPage(browser, base, opts = {}) {
     await ctx.close();
   });
 
+  await check('days v1.2: age (free) and custom weekend days (Pro)', async () => {
+    let { ctx, page } = await newPage(browser, base);
+    await page.goto(base + 'days/');
+    await page.fill('#birth', '2000-02-29'); await page.fill('#ageOn', '2026-11-26');
+    assert.equal(await page.textContent('#ageOut'), '26 years, 8 months, 28 days');
+    assert.match(await page.textContent('#ageMore'), /^9,767 days in total · next birthday: Sunday, February 28, 2027 \(in 94 days\)$/);
+    await page.fill('#ageOn', '1999-01-01');
+    assert.equal(await page.textContent('#ageMore'), 'The birth date is after the chosen date.');
+    assert.ok(await page.isDisabled('#weekend input[data-wd="5"]'));
+    await page.reload();
+    assert.equal(await page.inputValue('#birth'), '2000-02-29');
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+    ({ ctx, page } = await newPage(browser, base, { pro: true }));
+    await page.goto(base + 'days/');
+    await page.waitForFunction(() => !document.querySelector('#weekend input').disabled);
+    await page.fill('#from', '2026-11-29'); await page.fill('#to', '2026-12-05');
+    assert.equal(await page.textContent('#workOut'), '5 working days');
+    await page.uncheck('#weekend input[data-wd="0"]'); await page.check('#weekend input[data-wd="5"]');
+    assert.equal(await page.textContent('#workOut'), '4 working days');
+    await page.uncheck('#weekend input[data-wd="6"]');
+    assert.equal(await page.textContent('#workOut'), '5 working days');
+    await page.fill('#base', '2026-12-03'); await page.fill('#amount', '1'); await page.selectOption('#unit', 'd');
+    assert.match(await page.textContent('#workAdd'), /December 5, 2026/);
+    await page.reload();
+    assert.ok(await page.isChecked('#weekend input[data-wd="5"]'));
+    assert.ok(!(await page.isChecked('#weekend input[data-wd="0"]')));
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
   await check('hub and privacy pages load', async () => {
     const { ctx, page } = await newPage(browser, base);
     await page.goto(base);

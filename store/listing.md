@@ -232,6 +232,19 @@ Pro (cumpărare unică): zile lucrătoare între date cu zilele tale libere, adu
 • Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, работает офлайн
 Pro (разовая покупка): рабочие дни между датами с вашими выходными, прибавление рабочих дней, сохранённые отсчёты и экспорт CSV.
 
+**Update 1.2 — What's new:**
+EN: New free age calculator: exact age in years, months and days, total days and the next birthday. Pro: choose your own weekly days off (for example Friday and Saturday, or Sunday only) for working-day calculations.
+RO: Calculator de vârstă nou, gratuit: vârsta exactă în ani, luni și zile, totalul zilelor și următoarea aniversare. Pro: alegi zilele libere din fiecare săptămână (de exemplu vineri și sâmbătă sau doar duminică) pentru calculul zilelor lucrătoare.
+RU: Новый бесплатный калькулятор возраста: точный возраст в годах, месяцах и днях, всего дней и следующий день рождения. Pro: свои еженедельные выходные (например, пятница и суббота или только воскресенье) для расчёта рабочих дней.
+
+**Updated description lines (1.2):**
+EN: • Age calculator: years, months and days, total days and the next birthday
+EN: Pro (one-time add-on): working days between dates with your own days off and weekend days, adding working days, saved countdowns and CSV export.
+RO: • Calculator de vârstă: ani, luni și zile, totalul zilelor și următoarea aniversare
+RO: Pro (cumpărare unică): zile lucrătoare între date cu zilele tale libere și zilele tale de weekend, adunare de zile lucrătoare, numărători inverse salvate și export CSV.
+RU: • Калькулятор возраста: годы, месяцы и дни, всего дней и следующий день рождения
+RU: Pro (разовая покупка): рабочие дни между датами с вашими выходными и праздниками, прибавление рабочих дней, сохранённые отсчёты и экспорт CSV.
+
 **Pro add-on listing:** name „Date Calculator Pro”; EN: One-time purchase: working days with your own days off, adding working days, saved countdowns and CSV export. RO: Cumpărare unică: zile lucrătoare cu zilele tale libere, adunare de zile lucrătoare, numărători inverse salvate și export CSV. RU: Разовая покупка: рабочие дни с вашими выходными, прибавление рабочих дней, сохранённые отсчёты и экспорт CSV.
 
 ## 6. Stelar Percentage Calculator

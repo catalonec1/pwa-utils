@@ -61,22 +61,37 @@
     }
     return { dates: [...new Set(dates)].sort(), bad };
   }
-  function isWorkday(t, hol) { return !isWeekend(t) && !hol.has(t); }
+  /* weekend: weekday numbers that are days off every week (0 = Sunday); default Saturday + Sunday. */
+  function weekendSet(weekend) {
+    const w = Array.isArray(weekend) ? weekend.filter(d => Number.isInteger(d) && d >= 0 && d <= 6) : [0, 6];
+    return new Set(w);
+  }
+  function isWorkday(t, hol, we) { return !(we ? we.has(weekday(t)) : isWeekend(t)) && !hol.has(t); }
   /* Working days from a to b, counting both ends when includeEnd (default: start excluded, end included, like "days between"). */
-  function workdaysBetween(a, b, holidays, includeStart) {
-    const hol = holidaySet(holidays);
+  function workdaysBetween(a, b, holidays, includeStart, weekend) {
+    const hol = holidaySet(holidays), we = weekendSet(weekend);
     let sign = 1;
     if (b < a) { [a, b] = [b, a]; sign = -1; }
     let n = 0;
-    for (let t = includeStart ? a : addDays(a, 1); t <= b; t = addDays(t, 1)) if (isWorkday(t, hol)) n++;
+    for (let t = includeStart ? a : addDays(a, 1); t <= b; t = addDays(t, 1)) if (isWorkday(t, hol, we)) n++;
     return n * sign;
   }
-  /* Moves n working days from t (n may be negative). */
-  function addWorkdays(t, n, holidays) {
-    const hol = holidaySet(holidays), step = n < 0 ? -1 : 1;
+  /* Moves n working days from t (n may be negative). Returns null when every weekday is a day off. */
+  function addWorkdays(t, n, holidays, weekend) {
+    const hol = holidaySet(holidays), we = weekendSet(weekend), step = n < 0 ? -1 : 1;
+    if (we.size >= 7) return n === 0 ? t : null;
     let left = Math.abs(n);
-    while (left > 0) { t = addDays(t, step); if (isWorkday(t, hol)) left--; }
+    while (left > 0) { t = addDays(t, step); if (isWorkday(t, hol, we)) left--; }
     return t;
+  }
+  /* Age on a given day: calendar years/months/days, total days and the next birthday.
+     A 29 February birthday falls on 28 February in common years. */
+  function age(birth, on) {
+    if (birth > on) return null;
+    const r = ymd(birth, on);
+    let next = addMonths(birth, 12 * r.years);
+    if (next < on) next = addMonths(birth, 12 * (r.years + 1));
+    return { years: r.years, months: r.months, days: r.days, totalDays: diffDays(birth, on), next, toNext: diffDays(on, next) };
   }
 
   /* Countdowns: [{name, date}] -> sorted with days left from 'from'. */
@@ -93,7 +108,7 @@
     return ['name,date,days_left'].concat(rows.map(r => [r.name, r.date, r.left].map(csvCell).join(','))).join('\r\n') + '\r\n';
   }
 
-  const DateCalc = { parse, fmt, today, weekday, isWeekend, diffDays, addDays, addMonths, ymd, isoWeek, dayOfYear, isLeap, parseList, workdaysBetween, addWorkdays, countdowns, toCsv, DAY };
+  const DateCalc = { age, parse, fmt, today, weekday, isWeekend, diffDays, addDays, addMonths, ymd, isoWeek, dayOfYear, isLeap, parseList, workdaysBetween, addWorkdays, countdowns, toCsv, DAY };
   global.DateCalc = DateCalc;
   if (typeof module !== 'undefined') module.exports = DateCalc;
 })(typeof window !== 'undefined' ? window : globalThis);

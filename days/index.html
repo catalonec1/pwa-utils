@@ -23,6 +23,9 @@
   ul.cd li { display: flex; justify-content: space-between; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
   ul.cd li button { flex: 0 0 auto; padding: 4px 10px; }
   textarea#hol { min-height: 70px; }
+  .wk { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 0 0 10px; }
+  .wk label { display: flex; gap: 6px; align-items: center; color: var(--text); margin: 0; font-size: .95rem; }
+  .wk input { width: auto; }
 </style>
 </head>
 <body>
@@ -61,8 +64,19 @@
     <dl class="facts" id="facts"></dl>
   </section>
   <section class="card">
+    <h2 style="font-size:1rem;margin:0 0 8px" data-i18n="ageTitle">Age</h2>
+    <div class="row">
+      <div><label for="birth" data-i18n="birth">Date of birth</label><input type="date" id="birth"></div>
+      <div><label for="ageOn" data-i18n="ageOn">On</label><input type="date" id="ageOn"></div>
+    </div>
+    <p class="big" id="ageOut" aria-live="polite"></p>
+    <p class="muted" id="ageMore" style="margin:0"></p>
+  </section>
+  <section class="card">
     <h2 style="font-size:1rem;margin:0 0 8px"><span data-i18n="workTitle">Working days</span> <span class="pro-badge">PRO</span></h2>
     <p class="muted" style="margin:0 0 8px" data-i18n="workHint">Uses the dates above. Weekends are skipped; add your own days off below.</p>
+    <label data-i18n="weekendLabel">Weekly days off</label>
+    <div id="weekend" class="wk"></div>
     <label for="hol" data-i18n="holidays">Days off (YYYY-MM-DD, one per line)</label>
     <textarea id="hol" spellcheck="false" placeholder="2026-12-25"></textarea>
     <p class="big" id="workOut"></p>
@@ -82,7 +96,7 @@
   </section>
   <section class="card pro-box hidden" id="proBox">
     <h2 style="font-size:1rem;margin:0 0 6px" data-i18n="proTitle">Pro version</h2>
-    <p class="muted" data-i18n="proPitch">Working days with your own days off, adding working days, saved countdowns and CSV export.</p>
+    <p class="muted" data-i18n="proPitch">Working days with your own days off and your own weekend days, adding working days, saved countdowns and CSV export.</p>
     <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
     <p class="muted" id="proStatus"></p>
   </section>
