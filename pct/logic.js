@@ -19,7 +19,17 @@
   function original(y, p) { return p === -100 ? NaN : r(y / (1 + p / 100)); }
   function discount(price, p) { const save = r(price * p / 100); return { save, final: r(price - save) }; }
 
+  /* Two rates in %: difference in percentage points and relative change in %. */
+  function points(a, b) { return { pp: r(b - a), rel: change(a, b) }; }
+  /* a : b = c : x */
+  function proportion(a, b, c) { return a === 0 ? NaN : r(b * c / a); }
+
   /* ---- Pro ---- */
+  /* Compound annual growth rate from start to end over years (fractional years allowed). */
+  function cagr(start, end, years) {
+    if (!(start > 0) || !(end >= 0) || !(years > 0)) return NaN;
+    return r((Math.pow(end / start, 1 / years) - 1) * 100);
+  }
   function vatAdd(net, rate) { const vat = r(net * rate / 100); return { net: r(net), vat, gross: r(net + vat) }; }
   function vatRemove(gross, rate) { const net = r(gross / (1 + rate / 100)); return { net, vat: r(gross - net), gross: r(gross) }; }
   function tip(bill, p, people) {
@@ -48,7 +58,7 @@
   function toCsv(hist) {
     return 'time,calculation,result\r\n' + hist.map(h => [h.time, h.calc, h.result].map(cell).join(',')).join('\r\n') + (hist.length ? '\r\n' : '');
   }
-  const PercentCalc = { r, num, pctOf, whatPct, change, apply, original, discount, vatAdd, vatRemove, tip, margin, compound, toCsv };
+  const PercentCalc = { points, proportion, cagr, r, num, pctOf, whatPct, change, apply, original, discount, vatAdd, vatRemove, tip, margin, compound, toCsv };
   if (typeof module !== 'undefined' && module.exports) module.exports = PercentCalc;
   else global.PercentCalc = PercentCalc;
 })(typeof window !== 'undefined' ? window : globalThis);

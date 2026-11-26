@@ -24,6 +24,11 @@
   .err .tools { display: flex; gap: 8px; margin-top: 6px; }
   .err .tools button { padding: 4px 10px; }
   .locked { color: var(--muted); font-style: italic; }
+  mark { background: color-mix(in srgb, var(--accent) 22%, transparent); color: inherit; border-radius: 3px; padding: 0 1px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; align-items: center; }
+  .chips button { padding: 3px 10px; font-size: .88rem; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar2 { display: flex; gap: 8px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-top: 6px; }
+  .bar2 button { padding: 4px 10px; }
 </style>
 </head>
 <body>
@@ -38,7 +43,11 @@
   <section class="card">
     <label for="q" data-i18n="qLabel">Error code, words, or a pasted error stack</label>
     <textarea id="q" spellcheck="false" data-i18n-ph="qPh" placeholder="ORA-00942, 942, deadlock, or paste: ORA-06512: at line 5 ..."></textarea>
-    <p class="muted" id="count" style="margin:6px 0 0" aria-live="polite"></p>
+    <div class="chips" id="recent"></div>
+    <div class="bar2">
+      <p class="muted" id="count" style="margin:0" aria-live="polite"></p>
+      <button id="copyTable"><span data-i18n="copyTable">Copy results as Markdown table</span> <span class="pro-badge">PRO</span></button>
+    </div>
   </section>
   <section class="card" id="results"></section>
   <section class="card">
@@ -47,7 +56,7 @@
   </section>
   <section class="card pro-box hidden" id="proBox">
     <h2 style="font-size:1rem;margin:0 0 6px" data-i18n="proTitle">Pro version</h2>
-    <p class="muted" data-i18n="proPitch">Causes and fixes for all 251 errors (207 more), favorites and copy as Markdown.</p>
+    <p class="muted" data-i18n="proPitch">Causes and fixes for all 251 errors (207 more), favorites, copy as Markdown and copy all results as a Markdown table.</p>
     <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
     <p class="muted" id="proStatus"></p>
   </section>

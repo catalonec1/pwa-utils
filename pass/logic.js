@@ -20,16 +20,29 @@
   function pick(str, rng) { return str[randInt(str.length, rng)]; }
   function shuffle(a, rng) { for (let i = a.length - 1; i > 0; i--) { const j = randInt(i + 1, rng); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 
+  /* Keeps only printable ASCII symbols (no letters, digits or spaces), each once. */
+  function cleanSymbols(str) {
+    return [...new Set(String(str || '').split(''))].filter(c => /[!-~]/.test(c) && !/[A-Za-z0-9]/.test(c)).join('');
+  }
+  function poolFor(k, o) {
+    let s = k === 'symbols' && o.symbolSet ? cleanSymbols(o.symbolSet) : SETS[k];
+    if (o.noSimilar) s = s.replace(SIMILAR, '');
+    if (o.exclude) { const ex = new Set(String(o.exclude)); s = [...s].filter(c => !ex.has(c)).join(''); }
+    return s;
+  }
   function pools(o) {
     const out = [];
     for (const k of ['lower', 'upper', 'digits', 'symbols']) {
       if (!o[k]) continue;
-      const s = o.noSimilar ? SETS[k].replace(SIMILAR, '') : SETS[k];
+      const s = poolFor(k, o);
       if (s) out.push(s);
     }
     return out;
   }
-  /* opts: length, lower, upper, digits, symbols, noSimilar. Every chosen set appears at least once. */
+  function letterPool(o) { return (o.lower ? poolFor('lower', o) : '') + (o.upper ? poolFor('upper', o) : ''); }
+  /* opts: length, lower, upper, digits, symbols, noSimilar, exclude (characters never used),
+     startLetter (first character is a letter), symbolSet (Pro: allowed symbols instead of the default set).
+     Every chosen set appears at least once. */
   function generate(o, rng) {
     const len = Math.max(4, Math.min(128, o.length | 0 || 16));
     const ps = pools(o);
@@ -37,10 +50,24 @@
     const all = ps.join('');
     const chars = ps.map(p => pick(p, rng));
     while (chars.length < len) chars.push(pick(all, rng));
-    return shuffle(chars, rng).slice(0, len).join('');
+    const out = shuffle(chars, rng).slice(0, len);
+    const letters = letterPool(o);
+    if (o.startLetter && letters && !letters.includes(out[0])) {
+      const idx = out.map((c, i) => (letters.includes(c) ? i : -1)).filter(i => i > 0);
+      if (idx.length) { const j = idx[randInt(idx.length, rng)]; [out[0], out[j]] = [out[j], out[0]]; }
+      else out[0] = pick(letters, rng);
+    }
+    return out.join('');
   }
   function poolSize(o) { return pools(o).join('').length; }
   const bits = (len, pool) => (pool > 1 ? Math.round(len * Math.log2(pool)) : 0);
+  /* Entropy of generate(o): a forced first letter carries log2(letters) bits instead of log2(pool). */
+  function genBits(o) {
+    const len = Math.max(4, Math.min(128, o.length | 0 || 16)), pool = poolSize(o), letters = letterPool(o).length;
+    if (pool < 2) return 0;
+    if (!o.startLetter || !letters) return bits(len, pool);
+    return Math.round((len - 1) * Math.log2(pool) + Math.log2(Math.max(1, letters)));
+  }
 
   /* Estimated entropy of an arbitrary password (character classes present). */
   function estimate(pw) {
@@ -105,7 +132,7 @@
     }).join('\r\n') + '\r\n';
   }
 
-  const api = { SETS, generate, poolSize, bits, estimate, level, passphrase, passphraseBits, pin, pronounceable, bulk, toCsv, WORDS, randInt };
+  const api = { SETS, cleanSymbols, genBits, generate, poolSize, bits, estimate, level, passphrase, passphraseBits, pin, pronounceable, bulk, toCsv, WORDS, randInt };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else global.PassGen = api;
 })(typeof window !== 'undefined' ? window : globalThis);

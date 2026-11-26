@@ -46,6 +46,19 @@ Pro (cumpărare unică): presiune, energie, putere, unghi și consum de carburan
 • Без аккаунта, рекламы и слежки
 Pro (разовая покупка): давление, энергия, мощность, углы и расход топлива (л/100 км, км/л, mpg US/UK), а также история последних 30 конвертаций.
 
+**Update 1.2 — What's new:**
+EN: New free category: number bases (binary, octal, decimal, hex, whole numbers of any size), plus µm, carats and US pints and quarts. Pro: running pace (min/km, min/mi, typed as 5:30) and data rate (Mbit/s, MB/s, MiB/s and more).
+RO: Categorie gratuită nouă: baze numerice (binar, octal, zecimal, hex, numere întregi de orice mărime), plus µm, carate și pinte și quarts US. Pro: ritm de alergare (min/km, min/mi, scris ca 5:30) și viteză de transfer (Mbit/s, MB/s, MiB/s și altele).
+RU: Новая бесплатная категория: системы счисления (двоичная, восьмеричная, десятичная, шестнадцатеричная, целые числа любой длины), а также мкм, караты и пинты и кварты США. Pro: темп бега (мин/км, мин/миля, ввод как 5:30) и скорость передачи данных (Мбит/с, МБ/с, МиБ/с и другие).
+
+**Updated description lines (1.2):**
+EN: • Length, mass, temperature, volume, area, speed, time, data (KB/MB/GB and KiB/MiB/GiB) and number bases (binary, octal, decimal, hex)
+EN: Pro (one-time add-on): pressure, energy, power, angle, fuel economy (L/100 km, km/L, mpg US/UK), frequency, torque, density, flow rate, running pace and data rate, plus a history of your last 30 conversions.
+RO: • Lungime, masă, temperatură, volum, suprafață, viteză, timp, date (KB/MB/GB și KiB/MiB/GiB) și baze numerice (binar, octal, zecimal, hex)
+RO: Pro (cumpărare unică): presiune, energie, putere, unghi, consum de carburant (L/100 km, km/L, mpg US/UK), frecvență, cuplu, densitate, debit, ritm de alergare și viteză de transfer, plus istoricul ultimelor 30 de conversii.
+RU: • Длина, масса, температура, объём, площадь, скорость, время, данные (КБ/МБ/ГБ и КиБ/МиБ/ГиБ) и системы счисления (двоичная, восьмеричная, десятичная, шестнадцатеричная)
+RU: Pro (разовая покупка): давление, энергия, мощность, углы, расход топлива (л/100 км, км/л, mpg US/UK), частота, крутящий момент, плотность, расход, темп бега и скорость передачи данных, а также история последних 30 конвертаций.
+
 ---
 
 ## 2. Stelar Focus Timer (`focus/`)
@@ -82,6 +95,19 @@ Pro (cumpărare unică): durate proprii, grafic pe 7 zile și export CSV al stat
 • Количество сессий за сегодня
 • Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки
 Pro (разовая покупка): свои длительности, график за 7 дней и экспорт статистики в CSV.
+
+**Update 1.2 — What's new:**
+EN: New free task list: pick the task you are working on and every finished focus session is counted on it; the next phase can now start automatically. Pro: ambient white, pink or brown noise while you focus (generated on your device) and CSV export of your tasks.
+RO: Listă de sarcini nouă, gratuită: alegi sarcina la care lucrezi și fiecare sesiune de concentrare încheiată se numără la ea; etapa următoare poate porni automat. Pro: zgomot ambiental alb, roz sau maro în timpul concentrării (generat pe dispozitiv) și export CSV al sarcinilor.
+RU: Новый бесплатный список задач: выберите текущую задачу, и каждая завершённая сессия фокуса засчитывается ей; следующий этап может запускаться автоматически. Pro: фоновый белый, розовый или коричневый шум во время фокуса (создаётся на устройстве) и экспорт задач в CSV.
+
+**Updated description lines (1.2):**
+EN: • Task list: each finished focus session is counted on the current task; optional auto-start of the next phase
+EN: Pro (one-time add-on): your own durations, ambient noise while you focus, a 7-day focus chart and CSV export of your statistics and tasks.
+RO: • Listă de sarcini: fiecare sesiune încheiată se numără la sarcina curentă; pornire automată opțională a etapei următoare
+RO: Pro (cumpărare unică): durate proprii, zgomot ambiental în timpul concentrării, grafic pe 7 zile și export CSV al statisticilor și sarcinilor.
+RU: • Список задач: каждая завершённая сессия засчитывается текущей задаче; по желанию автоматический запуск следующего этапа
+RU: Pro (разовая покупка): свои длительности, фоновый шум во время фокуса, график за 7 дней и экспорт статистики и задач в CSV.
 
 ---
 
@@ -127,6 +153,19 @@ EN: New free tools: shuffle lines and sort lines by length. Pro: convert CSV to 
 RO: Unelte gratuite noi: amestecă rândurile și sortează rândurile după lungime. Pro: conversie CSV → JSON și JSON → CSV (virgulă, punct și virgulă sau tab, câmpuri între ghilimele) și escape HTML.
 RU: Новые бесплатные инструменты: перемешать строки и сортировка строк по длине. Pro: преобразование CSV → JSON и JSON → CSV (запятая, точка с запятой или табуляция, поля в кавычках) и экранирование HTML.
 
+**Update 1.2 — What's new:**
+EN: New free line tools: keep or remove the lines that contain a word, and add a prefix or suffix to every line. Pro: filter lines with regular expressions and compare two texts line by line (added and removed lines highlighted).
+RO: Unelte gratuite noi pentru rânduri: păstrează sau elimină rândurile care conțin un cuvânt și adaugă un prefix sau un sufix la fiecare rând. Pro: filtrezi rândurile cu expresii regulate și compari două texte rând cu rând (rândurile adăugate și eliminate sunt evidențiate).
+RU: Новые бесплатные инструменты для строк: оставить или удалить строки, содержащие слово, и добавить префикс или суффикс к каждой строке. Pro: фильтр строк по регулярным выражениям и построчное сравнение двух текстов (добавленные и удалённые строки выделены).
+
+**Updated description lines (1.2):**
+EN: • Keep or remove lines containing a word, add a prefix or suffix to every line
+EN: Pro (one-time add-on): regex find and replace and regex line filters, compare two texts, Base64 encode/decode (UTF-8), URL encode/decode, JSON pretty-print and minify, CSV ↔ JSON.
+RO: • Păstrează sau elimină rândurile care conțin un cuvânt, adaugă prefix sau sufix la fiecare rând
+RO: Pro (cumpărare unică): căutare și înlocuire cu regex și filtre de rânduri cu regex, compararea a două texte, Base64 (UTF-8), codare URL, formatare și compactare JSON, CSV ↔ JSON.
+RU: • Оставить или удалить строки со словом, префикс или суффикс к каждой строке
+RU: Pro (разовая покупка): поиск и замена по regex и фильтр строк по regex, сравнение двух текстов, Base64 (UTF-8), URL-кодирование, форматирование и сжатие JSON, CSV ↔ JSON.
+
 ## 4. Stelar Password Generator (`pass/`)
 
 Reserved name: **Stelar Password Generator** (Store ID 9PL4BH4S7XD8). Category: Security (fallback Utilities & tools).
@@ -161,6 +200,19 @@ Pro (cumpărare unică): fraze din cuvinte românești, englezești sau rusești
 • Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, работает офлайн
 Pro (разовая покупка): фразы из русских, английских или румынских слов, PIN-коды, легко произносимые пароли, списки до 500 и экспорт CSV.
 
+**Update 1.2 — What's new:**
+EN: New free options for strict password rules: never use characters you choose and always start with a letter. Pro: allow only the symbols a site accepts, and pick the passphrase separator (dash, space, dot, underscore or none).
+RO: Opțiuni gratuite noi pentru reguli stricte de parolă: exclude caracterele pe care le alegi și începe mereu cu o literă. Pro: permite doar simbolurile acceptate de un site și alege separatorul frazei (cratimă, spațiu, punct, underscore sau fără).
+RU: Новые бесплатные настройки для строгих требований к паролям: исключить выбранные символы и всегда начинать с буквы. Pro: только символы, которые принимает сайт, и выбор разделителя фразы (дефис, пробел, точка, подчёркивание или без).
+
+**Updated description lines (1.2):**
+EN: • Option to skip look-alike characters (I, l, 1, O, 0) or any characters you choose, and to start with a letter
+EN: Pro (one-time add-on): passphrases from English, Romanian or Russian words with your choice of separator, PIN codes, easy-to-say passwords, your own allowed symbols, lists of up to 500 and CSV export.
+RO: • Opțiune fără caractere asemănătoare (I, l, 1, O, 0) sau fără caracterele alese de tine, și cu literă la început
+RO: Pro (cumpărare unică): fraze din cuvinte românești, englezești sau rusești cu separatorul ales, coduri PIN, parole ușor de pronunțat, simbolurile permise de tine, liste de până la 500 și export CSV.
+RU: • Без похожих символов (I, l, 1, O, 0) или любых выбранных вами символов, а также с буквой в начале
+RU: Pro (разовая покупка): фразы из русских, английских или румынских слов с выбранным разделителем, PIN-коды, легко произносимые пароли, свои разрешённые символы, списки до 500 и экспорт CSV.
+
 **Pro add-on listing:** name „Password Generator Pro”; EN: One-time purchase: passphrases, PINs, easy-to-say passwords, lists of up to 500 and CSV export. RO: Cumpărare unică: fraze din cuvinte, PIN-uri, parole ușor de pronunțat, liste de până la 500 și export CSV. RU: Разовая покупка: фразы из слов, PIN-коды, легко произносимые пароли, списки до 500 и экспорт CSV.
 
 ## 5. Stelar Date Calculator
@@ -192,6 +244,19 @@ Pro (cumpărare unică): zile lucrătoare între date cu zilele tale libere, adu
 • День недели, номер недели ISO, день года и високосный год для любой даты
 • Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, работает офлайн
 Pro (разовая покупка): рабочие дни между датами с вашими выходными, прибавление рабочих дней, сохранённые отсчёты и экспорт CSV.
+
+**Update 1.2 — What's new:**
+EN: New free age calculator: exact age in years, months and days, total days and the next birthday. Pro: choose your own weekly days off (for example Friday and Saturday, or Sunday only) for working-day calculations.
+RO: Calculator de vârstă nou, gratuit: vârsta exactă în ani, luni și zile, totalul zilelor și următoarea aniversare. Pro: alegi zilele libere din fiecare săptămână (de exemplu vineri și sâmbătă sau doar duminică) pentru calculul zilelor lucrătoare.
+RU: Новый бесплатный калькулятор возраста: точный возраст в годах, месяцах и днях, всего дней и следующий день рождения. Pro: свои еженедельные выходные (например, пятница и суббота или только воскресенье) для расчёта рабочих дней.
+
+**Updated description lines (1.2):**
+EN: • Age calculator: years, months and days, total days and the next birthday
+EN: Pro (one-time add-on): working days between dates with your own days off and weekend days, adding working days, saved countdowns and CSV export.
+RO: • Calculator de vârstă: ani, luni și zile, totalul zilelor și următoarea aniversare
+RO: Pro (cumpărare unică): zile lucrătoare între date cu zilele tale libere și zilele tale de weekend, adunare de zile lucrătoare, numărători inverse salvate și export CSV.
+RU: • Калькулятор возраста: годы, месяцы и дни, всего дней и следующий день рождения
+RU: Pro (разовая покупка): рабочие дни между датами с вашими выходными и праздниками, прибавление рабочих дней, сохранённые отсчёты и экспорт CSV.
 
 **Pro add-on listing:** name „Date Calculator Pro”; EN: One-time purchase: working days with your own days off, adding working days, saved countdowns and CSV export. RO: Cumpărare unică: zile lucrătoare cu zilele tale libere, adunare de zile lucrătoare, numărători inverse salvate și export CSV. RU: Разовая покупка: рабочие дни с вашими выходными, прибавление рабочих дней, сохранённые отсчёты и экспорт CSV.
 
@@ -230,6 +295,19 @@ Pro (cumpărare unică): TVA și taxe, bacșiș și împărțirea notei, marjă 
 • Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, работает офлайн
 Pro (разовая покупка): НДС и налоги, чаевые и деление счёта, маржа и наценка, сложный процент и история с экспортом CSV.
 **Функция:** Процент от числа, изменение в процентах, скидки, НДС, чаевые, маржа и наценка
+
+**Update 1.2 — What's new:**
+EN: New free calculators: percentage points vs percent (5% → 7% is +2 pp, a 40% increase) and proportions (rule of three). Pro: average yearly growth rate (CAGR) from a start value, an end value and the number of years.
+RO: Calculatoare gratuite noi: puncte procentuale vs procente (5% → 7% înseamnă +2 pp, o creștere de 40%) și proporții (regula de trei simplă). Pro: rata medie de creștere anuală (CAGR) dintr-o valoare inițială, una finală și numărul de ani.
+RU: Новые бесплатные калькуляторы: процентные пункты и проценты (5% → 7% — это +2 п. п., рост на 40%) и пропорции (тройное правило). Pro: среднегодовой темп роста (CAGR) по начальному и конечному значению и числу лет.
+
+**Updated description lines (1.2):**
+EN: • Percentage points vs percent, and proportions (rule of three)
+EN: Pro (one-time add-on): VAT and sales tax, tip and bill split, margin and markup, compound growth, average yearly growth (CAGR) and a history with CSV export.
+RO: • Puncte procentuale vs procente și proporții (regula de trei simplă)
+RO: Pro (cumpărare unică): TVA și taxe, bacșiș și împărțirea notei, marjă și adaos, creștere compusă, creștere medie anuală (CAGR) și istoric cu export CSV.
+RU: • Процентные пункты и проценты, пропорции (тройное правило)
+RU: Pro (разовая покупка): НДС и налоги, чаевые и деление счёта, маржа и наценка, сложный процент, среднегодовой рост (CAGR) и история с экспортом CSV.
 
 **Pro add-on listing:** name „Percentage Calculator Pro”; EN: One-time purchase: VAT and sales tax, tip and bill split, margin and markup, compound growth and a history with CSV export. RO: Cumpărare unică: TVA și taxe, bacșiș și împărțirea notei, marjă și adaos, creștere compusă și istoric cu export CSV. RU: Разовая покупка: НДС и налоги, чаевые и деление счёта, маржа и наценка, сложный процент и история с экспортом CSV.
 
@@ -271,6 +349,19 @@ Unealtă independentă, fără legătură cu Oracle.
 Pro (разовая покупка): причины и решения для всех 251 ошибок, избранное и копирование в Markdown.
 Независимый инструмент, не связан с Oracle.
 **Функция:** Причины и решения ошибок ORA- и PLS-, офлайн, можно вставить весь стек ошибок
+
+**Update 1.2 — What's new:**
+EN: Word searches now highlight the matching words, and your recent searches are one tap away. Pro: copy all results (for example every error in a pasted stack) as a Markdown table with code, title, cause and fix.
+RO: Căutările după cuvinte evidențiază acum cuvintele găsite, iar căutările recente sunt la un clic distanță. Pro: copiezi toate rezultatele (de exemplu fiecare eroare dintr-un mesaj lipit) ca tabel Markdown cu cod, titlu, cauză și soluție.
+RU: Поиск по словам теперь подсвечивает найденные слова, а недавние запросы доступны в один клик. Pro: копирование всех результатов (например, каждой ошибки из вставленного стека) таблицей Markdown с кодом, названием, причиной и решением.
+
+**Updated description lines (1.2):**
+EN: • Matching words highlighted, recent searches one tap away
+EN: Pro (one-time add-on): causes and fixes for all 251 errors, favorites, copy as Markdown and copy all results as a Markdown table.
+RO: • Cuvintele găsite sunt evidențiate, căutările recente la un clic distanță
+RO: Pro (cumpărare unică): cauze și soluții pentru toate cele 251 de erori, favorite, copiere ca Markdown și copierea tuturor rezultatelor ca tabel Markdown.
+RU: • Подсветка найденных слов, недавние запросы в один клик
+RU: Pro (разовая покупка): причины и решения для всех 251 ошибок, избранное, копирование в Markdown и копирование всех результатов таблицей Markdown.
 
 **Pro add-on listing:** name „ORA Error Helper Pro”; EN: One-time purchase: causes and fixes for all 251 errors, favorites and copy as Markdown. RO: Cumpărare unică: cauze și soluții pentru toate cele 251 de erori, favorite și copiere ca Markdown. RU: Разовая покупка: причины и решения для всех 251 ошибок, избранное и копирование в Markdown.
 
