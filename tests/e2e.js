@@ -375,7 +375,7 @@ async function newPage(browser, base, opts = {}) {
   await check('hub and privacy pages load', async () => {
     const { ctx, page } = await newPage(browser, base);
     await page.goto(base);
-    assert.equal(await page.locator('.apps a').count(), 14);
+    assert.equal(await page.locator('.apps a').count(), 15);
     for (const img of await page.locator('.apps img').all()) assert.ok(await img.evaluate(i => i.naturalWidth > 0));
     await page.goto(base + 'privacy.html');
     assert.match(await page.textContent('h1'), /Privacy/);
@@ -497,6 +497,32 @@ async function newPage(browser, base, opts = {}) {
     await page.reload();
     assert.equal(await page.inputValue('#type'), 'linear', 'inputs not kept');
     assert.match(await page.textContent(".note"), /Estimates only, not financial advice/);
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
+  await check('sql: formats, options, minify; PL/SQL kept and Pro locked', async () => {
+    const { ctx, page } = await newPage(browser, base);
+    await page.goto(base + 'sql/');
+    assert.match(await page.textContent('#out'), /^SELECT\n  e\.employee_id,/);
+    await page.fill('#src', "select a, b from t where x = 1 and y = 'q;r' -- c\n;");
+    assert.equal(await page.textContent('#out'), "SELECT\n  a,\n  b\nFROM\n  t\nWHERE\n  x = 1\n  AND y = 'q;r'; -- c");
+    assert.equal(await page.textContent('#out .k'), 'SELECT');
+    await page.selectOption('#kwCase', 'lower'); await page.selectOption('#commas', 'leading');
+    assert.match(await page.textContent('#out'), /^select\n  a\n  , b\nfrom/);
+    await page.selectOption('#mode', 'minify');
+    assert.equal(await page.textContent('#out'), "select a, b from t where x = 1 and y = 'q;r' /* c */;");
+    await page.reload();
+    assert.equal(await page.inputValue('#mode'), 'minify', 'options not kept');
+    assert.match(await page.inputValue('#src'), /^select a, b/, 'input not kept');
+    await page.selectOption('#mode', 'format');
+    await page.fill('#src', 'begin\n    if x then y; end if;\nend;\n/');
+    assert.equal(await page.textContent('#out'), 'begin\n    if x then y; end if;\nend;\n/');
+    assert.match(await page.textContent('#note'), /PL\/SQL blocks \(1\).*Pro/);
+    assert.equal(await page.textContent('#info'), '1 statements · 4 lines');
+    for (const id of ['#plsql', '#alignAs', '#idCase', '#codeLang', '#snipSave']) assert.ok(await page.isDisabled(id), id);
+    assert.match(await page.textContent('#stmts'), /Available in Pro/);
+    assert.match(await page.textContent('#code'), /Available in Pro/);
     assert.deepEqual(page.errors, []);
     await ctx.close();
   });
@@ -1003,6 +1029,38 @@ async function newPage(browser, base, opts = {}) {
     await page.reload();
     await page.waitForFunction(() => !document.getElementById('nSave').disabled);
     assert.match(await page.textContent('#nList'), /20 de pagini/, 'note kept');
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
+  await check('sql: Pro PL/SQL, split, code strings and snippets', async () => {
+    const { ctx, page } = await newPage(browser, base, { pro: true, locale: 'ro-RO' });
+    await ctx.grantPermissions(['clipboard-read', 'clipboard-write']);
+    await page.goto(base + 'sql/');
+    await page.waitForFunction(() => !document.getElementById('snipSave').disabled);
+    await page.fill('#src', 'begin if x then y; end if; end;\n/\nselect e.id as a, e.name as nm from emp e where e.id = :id;');
+    assert.match(await page.textContent('#out'), /^BEGIN\n  IF x THEN\n    y;\n  END IF;\nEND;\n\/\n\nSELECT/);
+    assert.ok(await page.isHidden('#note'));
+    await page.check('#alignAs'); await page.selectOption('#idCase', 'upper');
+    assert.match(await page.textContent('#out'), /  E\.ID   AS A,\n  E\.NAME AS NM\n/);
+    assert.equal(await page.locator('#stmts li').count(), 2);
+    assert.match(await page.textContent('#stmts'), /PL\/SQL.*SQL/s);
+    await page.selectOption('#codeLang', 'java');
+    const code = await page.textContent('#code');
+    assert.match(code, /String sql2 = "SELECT\\n"/);
+    assert.match(code, /WHERE\\n"\n    \+ "  E\.ID = \?";\n\/\/ PreparedStatement/);
+    await page.click('#codeCopy');
+    assert.match(await page.evaluate(() => navigator.clipboard.readText()), /^String sql = "BEGIN/);
+    await page.fill('#snipName', 'Raport');
+    await page.click('#snipSave');
+    assert.match(await page.textContent('#snips'), /Raport · \d{4}-/);
+    await page.fill('#src', 'select 1 from dual');
+    await page.reload();
+    await page.waitForFunction(() => !document.getElementById('snipSave').disabled);
+    await page.click('#snips button:has-text("Deschide")');
+    assert.match(await page.inputValue('#src'), /^begin if x/);
+    await page.click('#snips button:has-text("Șterge")');
+    assert.match(await page.textContent('#snips'), /Niciun fragment/);
     assert.deepEqual(page.errors, []);
     await ctx.close();
   });

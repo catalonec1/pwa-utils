@@ -185,6 +185,19 @@ module.exports = {
       color: '#d6336c',
       glyph: '✓',
       assets: ['./', 'index.html', 'app.js', 'logic.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
+    },
+    {
+      dir: 'sql',
+      storeId: 'TBD',
+      packageId: 'TBD',
+      id: 'sql-formatter',
+      name: 'Stelar SQL Formatter',
+      short_name: 'SQL Format',
+      description: 'Offline Oracle SQL formatter: clause line breaks, indentation, keyword case, comma style, minify and highlighting; comments kept. Pro adds PL/SQL indentation, script split and code strings.',
+      categories: ['developer tools', 'utilities', 'productivity'],
+      color: '#364fc7',
+      glyph: 'SQL',
+      assets: ['./', 'index.html', 'app.js', 'logic.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
     }
   ]
 };

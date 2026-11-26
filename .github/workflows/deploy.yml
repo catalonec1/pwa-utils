@@ -36,7 +36,7 @@ jobs:
       - name: Publish to gh-pages
         run: |
           mkdir _site
-          cp -r index.html privacy.html shared convertor focus text pass days pct ora loan color json pick regex hash habit unit-flip catalonec-unit-converter _site/
+          cp -r index.html privacy.html shared convertor focus text pass days pct ora loan color json pick regex hash habit sql unit-flip catalonec-unit-converter _site/
           touch _site/.nojekyll
           cd _site
           git init -q -b gh-pages
