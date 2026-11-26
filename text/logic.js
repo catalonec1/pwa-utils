@@ -36,7 +36,10 @@
     numberLines: t => lines(t).map((l, i) => `${i + 1}. ${l}`).join('\n'),
     joinLines: t => lines(t).map(l => l.trim()).filter(Boolean).join(' '),
     stripHtml: t => String(t).replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/gi, '').replace(/<[^>]+>/g, '')
-      .replace(/&nbsp;/g, ' ').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&')
+      .replace(/&nbsp;/g, ' ').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&'),
+    // v1.1: amestecă rândurile, sortează după lungime
+    shuffleLines: (t, rnd = Math.random) => { const a = lines(t); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a.join('\n'); },
+    sortLength: t => lines(t).map((l, i) => [l, i]).sort((a, b) => [...a[0]].length - [...b[0]].length || a[1] - b[1]).map(x => x[0]).join('\n')
   };
   const FREE = Object.keys(ops);
 
@@ -45,6 +48,35 @@
     return String(t).replace(new RegExp(pattern, f), repl == null ? '' : repl);
   }
   const uniq = a => [...new Set(a)];
+  // v1.1: CSV (RFC 4180: ghilimele, virgule și rânduri noi în câmp; separator , ; sau tab detectat din primul rând)
+  function parseCsv(t) {
+    t = String(t).replace(/^\uFEFF/, '');
+    const first = t.split(/\r?\n/)[0];
+    const sep = [',', ';', '\t'].reduce((b, c) => (first.split(c).length > first.split(b).length ? c : b), ',');
+    const rows = []; let row = [], f = '', q = false;
+    for (let i = 0; i < t.length; i++) {
+      const c = t[i];
+      if (q) { if (c === '"') { if (t[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c; }
+      else if (c === '"') q = true;
+      else if (c === sep) { row.push(f); f = ''; }
+      else if (c === '\n' || c === '\r') { if (c === '\r' && t[i + 1] === '\n') i++; row.push(f); rows.push(row); row = []; f = ''; }
+      else f += c;
+    }
+    if (f !== '' || row.length) { row.push(f); rows.push(row); }
+    return rows.filter(r => r.some(x => x !== ''));
+  }
+  function csvToJson(t) {
+    const rows = parseCsv(t); if (!rows.length) return '[]';
+    const head = rows[0].map((h, i) => h.trim() || `col${i + 1}`);
+    return JSON.stringify(rows.slice(1).map(r => Object.fromEntries(head.map((h, i) => [h, r[i] === undefined ? '' : r[i]]))), null, 2);
+  }
+  function jsonToCsv(t) {
+    let data = JSON.parse(t); if (!Array.isArray(data)) data = [data];
+    const cols = uniq(data.flatMap(o => (o && typeof o === 'object' ? Object.keys(o) : [])));
+    const cell = v => { if (v == null) return ''; const x = typeof v === 'object' ? JSON.stringify(v) : String(v); return /[",\r\n]/.test(x) ? '"' + x.replace(/"/g, '""') + '"' : x; };
+    return [cols.map(cell).join(','), ...data.map(o => cols.map(c => cell(o && o[c])).join(','))].join('\n');
+  }
+  const htmlEscape = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   // cuvinte pentru camel/snake/kebab: separă și la granița myVar → my var, fără diacritice
   const words = l => ops.removeDiacritics(String(l)).replace(/([a-z0-9])([A-Z])/g, '$1 $2').toLowerCase().match(/[\p{L}\p{N}]+/gu) || [];
   function b64encode(t) {
@@ -73,10 +105,11 @@
     camelCase: t => lines(t).map(l => words(l).map((w, i) => i ? w[0].toUpperCase() + w.slice(1) : w).join('')).join('\n'),
     snakeCase: t => lines(t).map(l => words(l).join('_')).join('\n'),
     kebabCase: t => lines(t).map(l => words(l).join('-')).join('\n'),
+    csvToJson, jsonToCsv, htmlEscape,
     translit: t => String(t).replace(/[А-яЁё]/g, c => { const l = c.toLowerCase(), r = RU[l]; return r === undefined ? c : c === l ? r : r.charAt(0).toUpperCase() + r.slice(1); })
   };
 
-  const api = { stats, ops, FREE, pro, PRO: Object.keys(pro), regexReplace };
+  const api = { stats, ops, FREE, pro, PRO: Object.keys(pro), regexReplace, parseCsv };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else global.TextTools = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -321,3 +321,16 @@ test('ora: code parsing and search', () => {
   assert.equal(OL.search(OD, 'the', 5).length, 5);
   assert.match(OL.toMarkdown(OL.entry(OD[0])), /^\*\*ORA-00001: Unique constraint violated\*\*\n\nCause: .+\n\nFix: .+\n$/);
 });
+
+test('text v1.1: shuffle, sort by length (free); CSV ↔ JSON, HTML escape (Pro)', () => {
+  let k = 0; const seq = [0.1, 0.9, 0.5];
+  const sh = T.ops.shuffleLines('a\nb\nc\nd', () => seq[k++ % 3]);
+  assert.deepEqual(sh.split('\n').sort(), ['a', 'b', 'c', 'd']);
+  assert.equal(T.ops.sortLength('ccc\na\nbb\nd'), 'a\nd\nbb\nccc');
+  assert.equal(T.pro.csvToJson('name,city\n"Pop, Ion",Chișinău\nAna,"Iași ""vechi"""\n'),
+    JSON.stringify([{ name: 'Pop, Ion', city: 'Chișinău' }, { name: 'Ana', city: 'Iași "vechi"' }], null, 2));
+  assert.equal(T.pro.csvToJson('a;b\n1;2'), JSON.stringify([{ a: '1', b: '2' }], null, 2));
+  assert.equal(T.pro.jsonToCsv('[{"a":1,"b":"x,y"},{"a":2,"c":null}]'), 'a,b,c\n1,"x,y",\n2,,');
+  assert.equal(T.pro.csvToJson(T.pro.jsonToCsv('[{"q":"say \\"hi\\"\\nnow"}]')), JSON.stringify([{ q: 'say "hi"\nnow' }], null, 2));
+  assert.equal(T.pro.htmlEscape('<a href="x">Tom & \'Jerry\'</a>'), '&lt;a href=&quot;x&quot;&gt;Tom &amp; &#39;Jerry&#39;&lt;/a&gt;');
+});

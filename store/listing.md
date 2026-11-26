@@ -122,6 +122,11 @@ Pro (разовая покупка): поиск и замена по regex, Base
 
 ---
 
+**Update 1.1 — What's new:**
+EN: New free tools: shuffle lines and sort lines by length. Pro: convert CSV to JSON and JSON to CSV (commas, semicolons or tabs, quoted fields) and escape HTML.
+RO: Unelte gratuite noi: amestecă rândurile și sortează rândurile după lungime. Pro: conversie CSV → JSON și JSON → CSV (virgulă, punct și virgulă sau tab, câmpuri între ghilimele) și escape HTML.
+RU: Новые бесплатные инструменты: перемешать строки и сортировка строк по длине. Pro: преобразование CSV → JSON и JSON → CSV (запятая, точка с запятой или табуляция, поля в кавычках) и экранирование HTML.
+
 ## 4. Stelar Password Generator (`pass/`)
 
 Reserved name: **Stelar Password Generator** (Store ID 9PL4BH4S7XD8). Category: Security (fallback Utilities & tools).
