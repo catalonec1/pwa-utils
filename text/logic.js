@@ -109,7 +109,47 @@
     translit: t => String(t).replace(/[А-яЁё]/g, c => { const l = c.toLowerCase(), r = RU[l]; return r === undefined ? c : c === l ? r : r.charAt(0).toUpperCase() + r.slice(1); })
   };
 
-  const api = { stats, ops, FREE, pro, PRO: Object.keys(pro), regexReplace, parseCsv };
+  // v1.2: filtre de rânduri, prefix/sufix (gratuit); regex în filtru și diferențe între texte (Pro)
+  /* Keeps (keep = true) or removes the lines that contain `needle`. opts: { ignoreCase, regex }. */
+  function filterLines(t, needle, keep, opts) {
+    const o = opts || {};
+    if (!needle) return String(t);
+    let test;
+    if (o.regex) { const re = new RegExp(needle, o.ignoreCase ? 'iu' : 'u'); test = l => re.test(l); }
+    else if (o.ignoreCase) { const n = needle.toLocaleLowerCase(); test = l => l.toLocaleLowerCase().includes(n); }
+    else test = l => l.includes(needle);
+    return lines(t).filter(l => test(l) === !!keep).join('\n');
+  }
+  /* Adds a prefix and/or suffix to every non-empty line. */
+  function affixLines(t, prefix, suffix) {
+    return lines(t).map(l => (l.trim() === '' ? l : (prefix || '') + l + (suffix || ''))).join('\n');
+  }
+  /* Line diff (longest common subsequence): [{ op: ' ' | '-' | '+', line }]. */
+  const DIFF_MAX = 3000;
+  function diffLines(a, b) {
+    const A = lines(a), B = lines(b);
+    if (A.length > DIFF_MAX || B.length > DIFF_MAX) throw new Error(`max ${DIFF_MAX} lines`);
+    let s = 0;
+    while (s < A.length && s < B.length && A[s] === B[s]) s++;
+    let ea = A.length, eb = B.length;
+    while (ea > s && eb > s && A[ea - 1] === B[eb - 1]) { ea--; eb--; }
+    const a2 = A.slice(s, ea), b2 = B.slice(s, eb), n = a2.length, m = b2.length;
+    const L = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));
+    for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) L[i][j] = a2[i] === b2[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+    const out = A.slice(0, s).map(line => ({ op: ' ', line }));
+    let i = 0, j = 0;
+    while (i < n && j < m) {
+      if (a2[i] === b2[j]) { out.push({ op: ' ', line: a2[i] }); i++; j++; }
+      else if (L[i + 1][j] >= L[i][j + 1]) out.push({ op: '-', line: a2[i++] });
+      else out.push({ op: '+', line: b2[j++] });
+    }
+    while (i < n) out.push({ op: '-', line: a2[i++] });
+    while (j < m) out.push({ op: '+', line: b2[j++] });
+    return out.concat(A.slice(ea).map(line => ({ op: ' ', line })));
+  }
+  function diffText(a, b) { return diffLines(a, b).map(d => d.op + ' ' + d.line).join('\n'); }
+
+  const api = { stats, ops, FREE, pro, PRO: Object.keys(pro), regexReplace, parseCsv, filterLines, affixLines, diffLines, diffText };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else global.TextTools = api;
 })(typeof window !== 'undefined' ? window : globalThis);

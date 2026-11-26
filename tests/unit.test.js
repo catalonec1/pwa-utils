@@ -474,3 +474,21 @@ test('ora v1.2: highlight terms, recent searches (free); Markdown table (Pro)', 
   const t = OL.toMarkdownTable(OL.search(OD, 'ORA-00942 ORA-00001').slice(0, 2));
   assert.equal(t.trim().split('\n').length, 4);
 });
+
+test('text v1.2: line filters, prefix/suffix (free); regex filter and text diff (Pro)', () => {
+  const t = 'Apple pie\nbanana\napricot jam\n\nCherry';
+  assert.equal(T.filterLines(t, 'ap', true, { ignoreCase: true }), 'Apple pie\napricot jam');
+  assert.equal(T.filterLines(t, 'ap', true), 'apricot jam');
+  assert.equal(T.filterLines(t, 'an', false), 'Apple pie\napricot jam\n\nCherry');
+  assert.equal(T.filterLines(t, '', true), t);
+  assert.equal(T.filterLines('id 12\nname\nid 7', '^id \\d+$', false, { regex: true }), 'name');
+  assert.equal(T.filterLines('Мир\nмир\nдом', 'МИР', true, { regex: true, ignoreCase: true }), 'Мир\nмир');
+  assert.throws(() => T.filterLines('a', '(', true, { regex: true }));
+  assert.equal(T.affixLines('a\n\n  \nb', '- ', ';'), '- a;\n\n  \n- b;');
+  assert.equal(T.diffText('a\nb\nc\nd', 'a\nc\nx\nd'), '  a\n- b\n  c\n+ x\n  d');
+  assert.equal(T.diffText('same', 'same'), '  same');
+  assert.deepEqual(T.diffLines('', 'new'), [{ op: '-', line: '' }, { op: '+', line: 'new' }]);
+  const d = T.diffLines('1\n2\n3\n4\n5', '0\n1\n3\n4\n5\n6');
+  assert.deepEqual(d.map(x => x.op).join(''), '+ -   +');
+  assert.throws(() => T.diffLines('x\n'.repeat(3001), 'y'));
+});

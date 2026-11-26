@@ -362,6 +362,47 @@ async function newPage(browser, base, opts = {}) {
     await ctx.close();
   });
 
+  await check('text v1.2: line filters and prefix/suffix (free); regex filter and compare texts (Pro)', async () => {
+    let { ctx, page } = await newPage(browser, base);
+    await page.goto(base + 'text/');
+    await page.fill('#txt', 'Apple pie\nbanana\napricot jam\n\nCherry');
+    await page.fill('#lf', 'AP');
+    await page.click('#lfKeep');
+    assert.equal(await page.inputValue('#txt'), 'Apple pie\napricot jam');
+    await page.click('#undo');
+    await page.uncheck('#lfCase'); await page.fill('#lf', 'an');
+    await page.click('#lfDrop');
+    assert.equal(await page.inputValue('#txt'), 'Apple pie\napricot jam\n\nCherry');
+    await page.fill('#pre', '- '); await page.fill('#suf', ';');
+    await page.click('#affix');
+    assert.equal(await page.inputValue('#txt'), '- Apple pie;\n- apricot jam;\n\n- Cherry;');
+    assert.ok(await page.isDisabled('#lfRegex'));
+    assert.ok(await page.isDisabled('#doDiff'));
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+    ({ ctx, page } = await newPage(browser, base, { pro: true }));
+    await page.goto(base + 'text/');
+    await page.waitForFunction(() => !document.getElementById('lfRegex').disabled);
+    await page.fill('#txt', 'id 12\nname\nid 7\nx');
+    await page.check('#lfRegex'); await page.fill('#lf', '^id \\d+$');
+    await page.click('#lfDrop');
+    assert.equal(await page.inputValue('#txt'), 'name\nx');
+    await page.fill('#lf', '(');
+    await page.click('#lfKeep');
+    assert.match(await page.textContent('#lfErr'), /^Error: /);
+    await page.fill('#txt', 'a\nb\nc\nd');
+    await page.fill('#cmp', 'a\nc\nx\nd');
+    await page.click('#doDiff');
+    assert.equal(await page.textContent('#diffSum'), '1 lines added, 1 removed, 3 unchanged');
+    assert.equal(await page.textContent('#diffOut'), '  a\n- b\n  c\n+ x\n  d');
+    assert.equal(await page.textContent('#diffOut .add'), '+ x\n');
+    await page.fill('#cmp', 'a\nb\nc\nd');
+    await page.click('#doDiff');
+    assert.equal(await page.textContent('#diffSum'), 'The texts are identical.');
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
   await check('pass: generates with chosen sets, strength, check and Pro locked', async () => {
     const { ctx, page } = await newPage(browser, base);
     await page.goto(base + 'pass/');

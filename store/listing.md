@@ -153,6 +153,19 @@ EN: New free tools: shuffle lines and sort lines by length. Pro: convert CSV to 
 RO: Unelte gratuite noi: amestecă rândurile și sortează rândurile după lungime. Pro: conversie CSV → JSON și JSON → CSV (virgulă, punct și virgulă sau tab, câmpuri între ghilimele) și escape HTML.
 RU: Новые бесплатные инструменты: перемешать строки и сортировка строк по длине. Pro: преобразование CSV → JSON и JSON → CSV (запятая, точка с запятой или табуляция, поля в кавычках) и экранирование HTML.
 
+**Update 1.2 — What's new:**
+EN: New free line tools: keep or remove the lines that contain a word, and add a prefix or suffix to every line. Pro: filter lines with regular expressions and compare two texts line by line (added and removed lines highlighted).
+RO: Unelte gratuite noi pentru rânduri: păstrează sau elimină rândurile care conțin un cuvânt și adaugă un prefix sau un sufix la fiecare rând. Pro: filtrezi rândurile cu expresii regulate și compari două texte rând cu rând (rândurile adăugate și eliminate sunt evidențiate).
+RU: Новые бесплатные инструменты для строк: оставить или удалить строки, содержащие слово, и добавить префикс или суффикс к каждой строке. Pro: фильтр строк по регулярным выражениям и построчное сравнение двух текстов (добавленные и удалённые строки выделены).
+
+**Updated description lines (1.2):**
+EN: • Keep or remove lines containing a word, add a prefix or suffix to every line
+EN: Pro (one-time add-on): regex find and replace and regex line filters, compare two texts, Base64 encode/decode (UTF-8), URL encode/decode, JSON pretty-print and minify, CSV ↔ JSON.
+RO: • Păstrează sau elimină rândurile care conțin un cuvânt, adaugă prefix sau sufix la fiecare rând
+RO: Pro (cumpărare unică): căutare și înlocuire cu regex și filtre de rânduri cu regex, compararea a două texte, Base64 (UTF-8), codare URL, formatare și compactare JSON, CSV ↔ JSON.
+RU: • Оставить или удалить строки со словом, префикс или суффикс к каждой строке
+RU: Pro (разовая покупка): поиск и замена по regex и фильтр строк по regex, сравнение двух текстов, Base64 (UTF-8), URL-кодирование, форматирование и сжатие JSON, CSV ↔ JSON.
+
 ## 4. Stelar Password Generator (`pass/`)
 
 Reserved name: **Stelar Password Generator** (Store ID 9PL4BH4S7XD8). Category: Security (fallback Utilities & tools).
