@@ -273,3 +273,47 @@ Pro (разовая покупка): причины и решения для в�
 **Функция:** Причины и решения ошибок ORA- и PLS-, офлайн, можно вставить весь стек ошибок
 
 **Pro add-on listing:** name „ORA Error Helper Pro”; EN: One-time purchase: causes and fixes for all 251 errors, favorites and copy as Markdown. RO: Cumpărare unică: cauze și soluții pentru toate cele 251 de erori, favorite și copiere ca Markdown. RU: Разовая покупка: причины и решения для всех 251 ошибок, избранное и копирование в Markdown.
+
+## 8. Stelar Random Picker (`pick/`)
+
+**EN — short description:** Spin a wheel to pick names, shuffle lists, flip a coin, roll dice. Fair and offline.
+**EN — description:**
+A fair, fast random picker for classrooms, games, raffles and everyday decisions.
+• Pick one or several names from your list, with or without repeats, on an animated spinning wheel
+• Shuffle a list into a random order
+• Flip a coin, with a heads and tails count
+• Roll several dice (d4, d6, d8, d10, d12, d20) and see the sum
+• Random whole number in any range
+• Uses your device's secure random number generator, without modulo bias
+• Light and dark theme, English, Romanian and Russian. No account, ads or tracking, works offline
+Pro (one-time add-on): split a list into balanced teams or groups, weighted picks, remove picked names (for classrooms and raffles), saved lists and a history of results with CSV export.
+**Feature:** Spinning wheel name picker, coin flip, dice, random numbers, teams
+**Keywords:** random name picker, spin the wheel, random picker, coin flip, dice roller, random number generator, team generator, raffle, classroom, shuffle list
+
+**RO — descriere scurtă:** Învârte roata și alege nume, amestecă liste, aruncă moneda și zarurile. Corect și offline.
+**RO — descriere:**
+Un mod corect și rapid de a alege la întâmplare, pentru clase, jocuri, tombole și decizii de zi cu zi.
+• Alege unul sau mai multe nume din lista ta, cu sau fără repetări, pe o roată animată
+• Amestecă o listă într-o ordine aleatorie
+• Cap sau pajură, cu numărătoare
+• Aruncă mai multe zaruri (d4, d6, d8, d10, d12, d20) și vezi suma
+• Număr întreg aleatoriu în orice interval
+• Folosește generatorul securizat de numere aleatorii al dispozitivului, fără bias de modulo
+• Temă luminoasă și întunecată, română, engleză și rusă. Fără cont, reclame sau urmărire, funcționează offline
+Pro (cumpărare unică): împărțire în echipe sau grupe echilibrate, alegere cu ponderi, scoaterea numelor alese (pentru clase și tombole), liste salvate și istoric al rezultatelor cu export CSV.
+**Funcție:** Roată pentru ales nume, cap sau pajură, zaruri, numere aleatorii, echipe
+
+**RU — краткое описание:** Крутите колесо и выбирайте имена, перемешивайте списки, бросайте монетку и кубики. Офлайн.
+**RU — описание:**
+Честный и быстрый случайный выбор для класса, игр, розыгрышей и повседневных решений.
+• Выбор одного или нескольких имён из списка, с повторами или без, на анимированном колесе
+• Перемешивание списка в случайном порядке
+• Монетка: орёл или решка, со счётом
+• Несколько кубиков (d4, d6, d8, d10, d12, d20) и их сумма
+• Случайное целое число в любом диапазоне
+• Использует защищённый генератор случайных чисел устройства, без смещения по модулю
+• Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, работает офлайн
+Pro (разовая покупка): деление списка на равные команды или группы, выбор с весами, удаление выбранных (для класса и розыгрышей), сохранённые списки и история результатов с экспортом CSV.
+**Функция:** Колесо для выбора имён, монетка, кубики, случайные числа, команды
+
+**Pro add-on listing:** name „Random Picker Pro”; EN: One-time purchase: balanced teams and groups, weighted picks, remove picked names, saved lists and a history with CSV export. RO: Cumpărare unică: echipe și grupe echilibrate, alegere cu ponderi, scoaterea numelor alese, liste salvate și istoric cu export CSV. RU: Разовая покупка: равные команды и группы, выбор с весами, удаление выбранных, сохранённые списки и история с экспортом CSV.

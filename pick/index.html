@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Random Picker</title>
+<meta name="description" content="Offline random picker: pick names from a list with a spinning wheel, shuffle, flip a coin, roll dice and get random numbers. Fair, unbiased randomness.">
+<meta name="theme-color" content="#d6336c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+  :root { --accent: #d6336c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --accent: #faa2c1; } }
+  :root[data-theme="dark"] { --accent: #faa2c1; }
+  h2.t { font-size: 1rem; margin: 0 0 8px; }
+  .pickgrid { display: flex; gap: 16px; flex-wrap: wrap; }
+  .pickgrid > .l { flex: 1 1 240px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+  .pickgrid > .r { flex: 0 1 300px; margin: 0 auto; text-align: center; min-width: 0; }
+  textarea#list { min-height: 150px; font-family: inherit; }
+  #wheel { width: min(300px, 100%); aspect-ratio: 1; display: block; margin: 0 auto; }
+  .chk { display: flex; gap: 8px; align-items: center; color: var(--text); font-size: .95rem; margin: 0; }
+  .chk input { width: auto; }
+  .res { min-height: 2.2em; margin: 8px 0 0; font-size: 1.35rem; font-weight: 700; overflow-wrap: anywhere; }
+  .res ol, .res ul { text-align: left; font-size: 1rem; font-weight: 500; margin: 4px 0; padding-left: 26px; }
+  .res .note { display: block; font-size: .85rem; font-weight: 400; color: var(--muted); }
+  .grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+  .grid3 .card { margin: 0; }
+  .grid3 + * { margin-top: 14px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 8px; }
+  .chips span { min-width: 2.2em; padding: 4px 6px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); font-weight: 700; text-align: center; font-variant-numeric: tabular-nums; }
+  .center { text-align: center; }
+  .coin { display: inline-block; }
+  @media (prefers-reduced-motion: no-preference) { .coin.flip { animation: flip .5s ease-out; } }
+  @keyframes flip { from { transform: rotateX(0); } to { transform: rotateX(720deg); } }
+  .teams { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin-top: 10px; }
+  .teams div { border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; background: var(--bg); overflow-wrap: anywhere; }
+  .teams strong { display: block; color: var(--accent); margin-bottom: 4px; }
+  .teams ul { margin: 0; padding-left: 18px; }
+  ul.hist { list-style: none; padding: 0; margin: 10px 0 0; max-height: 320px; overflow: auto; }
+  ul.hist li { padding: 5px 0; border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
+  .btns { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btns > button { flex: 1 1 auto; }
+</style>
+</head>
+<body>
+<header class="bar">
+  <h1 data-i18n="appName">Random Picker</h1>
+  <select id="lang" data-i18n-aria="language" aria-label="Language">
+    <option value="ro">RO</option><option value="en">EN</option><option value="ru">RU</option>
+  </select>
+  <button id="theme" data-i18n-aria="theme" aria-label="Theme">◐</button>
+</header>
+<main>
+  <section class="card">
+    <div class="pickgrid">
+      <div class="l">
+        <h2 class="t" data-i18n="listTitle">Pick from a list</h2>
+        <div><label for="list" data-i18n="listLabel">One name or option per line</label>
+          <textarea id="list" spellcheck="false"></textarea></div>
+        <div class="row">
+          <div><label for="count" data-i18n="howMany">How many</label><input id="count" type="number" min="1" max="1000" value="1"></div>
+          <label class="chk" style="flex:2 1 160px;padding-bottom:10px"><input type="checkbox" id="unique" checked> <span data-i18n="noRepeats">No repeats</span></label>
+        </div>
+        <div class="btns">
+          <button class="primary" id="pickBtn" data-i18n="pick">Pick</button>
+          <button id="shuffleBtn" data-i18n="shuffle">Shuffle list</button>
+        </div>
+        <p class="muted" id="listInfo" style="margin:0"></p>
+      </div>
+      <div class="r">
+        <canvas id="wheel" width="300" height="300" role="img" data-i18n-aria="wheel" aria-label="Wheel"></canvas>
+        <div class="res" id="result" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 class="t"><span data-i18n="toolsTitle">List tools</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row" style="align-items:center">
+      <label class="chk"><input type="checkbox" id="weighted"> <span data-i18n="weighted">Weighted (write “Name *3”)</span></label>
+      <label class="chk"><input type="checkbox" id="elim"> <span data-i18n="elim">Remove picked names from the list</span></label>
+      <button id="restore" data-i18n="restore" style="flex:0 1 auto">Put back all</button>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div><label for="listName" data-i18n="listName">List name</label><input id="listName" maxlength="60"></div>
+      <div style="flex:0 1 auto"><button id="listSave" data-i18n="saveList">Save list</button></div>
+      <div><label for="listSel" data-i18n="savedLists">Saved lists</label><select id="listSel"></select></div>
+      <div style="flex:0 1 auto"><button id="listDel" data-i18n="del">Delete</button></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 class="t"><span data-i18n="teamsTitle">Teams and groups</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row">
+      <div><label for="teamMode" data-i18n="split">Split into</label>
+        <select id="teamMode"><option value="count" data-i18n="byCount">number of teams</option><option value="size" data-i18n="bySize">people per team</option></select></div>
+      <div><label for="teamN" data-i18n="number">Number</label><input id="teamN" type="number" min="1" max="500" value="2"></div>
+      <div><button class="primary" id="teamGo" data-i18n="makeTeams">Make teams</button></div>
+    </div>
+    <div class="teams" id="teamsOut" aria-live="polite"></div>
+  </section>
+
+  <div class="grid3">
+    <section class="card center">
+      <h2 class="t" data-i18n="coinTitle">Coin flip</h2>
+      <button class="primary" id="coinBtn" data-i18n="flip">Flip</button>
+      <p class="res" aria-live="polite"><span class="coin" id="coinOut"></span></p>
+      <p class="muted" id="coinTally" style="margin:0"></p>
+    </section>
+    <section class="card center">
+      <h2 class="t" data-i18n="diceTitle">Dice</h2>
+      <div class="row">
+        <div><label for="diceN" data-i18n="diceCount">Dice</label><input id="diceN" type="number" min="1" max="50" value="2"></div>
+        <div><label for="diceS" data-i18n="sides">Sides</label>
+          <select id="diceS"><option>4</option><option selected>6</option><option>8</option><option>10</option><option>12</option><option>20</option></select></div>
+      </div>
+      <p style="margin:10px 0 0"><button class="primary" id="diceBtn" data-i18n="roll">Roll</button></p>
+      <div class="chips" id="diceOut" aria-live="polite"></div>
+      <p class="res" id="diceSum" style="font-size:1.1rem"></p>
+    </section>
+    <section class="card center">
+      <h2 class="t" data-i18n="numTitle">Random number</h2>
+      <div class="row">
+        <div><label for="numMin" data-i18n="min">From</label><input id="numMin" inputmode="numeric" value="1"></div>
+        <div><label for="numMax" data-i18n="max">To</label><input id="numMax" inputmode="numeric" value="100"></div>
+      </div>
+      <p style="margin:10px 0 0"><button class="primary" id="numBtn" data-i18n="generate">Generate</button></p>
+      <p class="res" id="numOut" aria-live="polite"></p>
+    </section>
+  </div>
+
+  <section class="card">
+    <h2 class="t"><span data-i18n="histTitle">History</span> <span class="pro-badge">PRO</span></h2>
+    <p class="muted" style="margin:0 0 8px" data-i18n="histHint">Every result is saved here, newest first.</p>
+    <p class="row" style="margin:0">
+      <button id="histCsv" data-i18n="csv">Save CSV</button>
+      <button id="histClear" data-i18n="clear">Clear</button>
+    </p>
+    <ul class="hist" id="histList"></ul>
+  </section>
+
+  <section class="card pro-box hidden" id="proBox">
+    <h2 class="t" style="margin-bottom:6px" data-i18n="proTitle">Pro version</h2>
+    <p class="muted" data-i18n="proPitch">Teams and groups, weighted picks, remove picked names (classrooms and raffles), saved lists and a history with CSV export.</p>
+    <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
+    <p class="muted" id="proStatus"></p>
+  </section>
+  <p class="muted" style="text-align:center" data-i18n="fair">Uses your device's secure random generator, without modulo bias.</p>
+  <p class="muted" style="text-align:center" data-i18n="offline">Works offline too.</p>
+</main>
+<footer><a href="../privacy.html" data-i18n="privacy">Privacy</a></footer>
+<script src="../shared/core.js"></script>
+<script src="logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

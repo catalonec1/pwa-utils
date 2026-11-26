@@ -334,3 +334,75 @@ test('text v1.1: shuffle, sort by length (free); CSV ↔ JSON, HTML escape (Pro)
   assert.equal(T.pro.csvToJson(T.pro.jsonToCsv('[{"q":"say \\"hi\\"\\nnow"}]')), JSON.stringify([{ q: 'say "hi"\nnow' }], null, 2));
   assert.equal(T.pro.htmlEscape('<a href="x">Tom & \'Jerry\'</a>'), '&lt;a href=&quot;x&quot;&gt;Tom &amp; &#39;Jerry&#39;&lt;/a&gt;');
 });
+
+const RP = require('../pick/logic.js');
+/* sursă falsă: întoarce valorile date, apoi o ia de la capăt */
+const seqSrc = vals => { let i = 0; return () => vals[i++ % vals.length]; };
+test('pick: unbiased randInt rejects the biased tail', () => {
+  const MAX = 2 ** 32;
+  for (const n of [2, 3, 6, 7, 10, 20, 100, 1000, 2 ** 31 + 1, 2 ** 32]) {
+    const lim = RP.limit(n);
+    assert.equal(lim % n, 0, 'limit must be a multiple of n: ' + n);
+    assert.ok(lim <= MAX && MAX - lim < n);
+  }
+  // n=3: 2^32 % 3 = 1, so 2^32-1 is rejected and the next value is used
+  let calls = 0; const s3 = seqSrc([MAX - 1, 5]);
+  assert.equal(RP.randInt(3, () => { calls++; return s3(); }), 2);
+  assert.equal(calls, 2);
+  assert.equal(RP.randInt(3, seqSrc([MAX - 2])), (MAX - 2) % 3);
+  // n=6: the last 4 values are rejected
+  assert.equal(RP.randInt(6, seqSrc([MAX - 4, MAX - 1, 13])), 1);
+  // classic worst case: n = 2^31 + 1 rejects almost half of all values
+  assert.equal(RP.randInt(2 ** 31 + 1, seqSrc([2 ** 31 + 1, 2 ** 31])), 2 ** 31);
+  assert.equal(RP.randInt(1, () => { throw new Error('no draw needed'); }), 0);
+  assert.throws(() => RP.randInt(0, seqSrc([0])), RangeError);
+  assert.throws(() => RP.randInt(1.5, seqSrc([0])), RangeError);
+  // above 2^32: two draws build a 53-bit value
+  assert.equal(RP.randInt(2 ** 40, seqSrc([1, 7])), 2 ** 32 + 7);
+});
+test('pick: randRange is inclusive and spreads evenly over a full cycle', () => {
+  assert.equal(RP.randRange(5, 5, seqSrc([123])), 5);
+  assert.equal(RP.randRange(10, 1, seqSrc([0])), 1);
+  assert.equal(RP.randRange(-3, 3, seqSrc([6])), 3);
+  assert.equal(RP.randRange(-3, 3, seqSrc([7])), -3);
+  // every source value 0..59 once → each face of a d6 exactly 10 times
+  const seen = {}; let k = 0;
+  for (let i = 0; i < 60; i++) { const v = RP.randRange(1, 6, () => k++); seen[v] = (seen[v] || 0) + 1; }
+  assert.deepEqual(seen, { 1: 10, 2: 10, 3: 10, 4: 10, 5: 10, 6: 10 });
+  assert.throws(() => RP.randRange(0, 2 ** 60), RangeError);
+  // the real crypto source stays in range
+  for (let i = 0; i < 2000; i++) { const v = RP.randRange(1, 20); assert.ok(v >= 1 && v <= 20 && Number.isInteger(v)); }
+});
+test('pick: parse, pick without repeats, weights, shuffle, coin, dice', () => {
+  assert.deepEqual(RP.parseList(' Ana \n\nBob *3\r\nCe'), [{ name: 'Ana', w: 1, line: 0 }, { name: 'Bob *3', w: 1, line: 2 }, { name: 'Ce', w: 1, line: 3 }]);
+  assert.deepEqual(RP.parseList('Ana\nBob *3\nCe ×0\n*2', true).map(x => [x.name, x.w]), [['Ana', 1], ['Bob', 3], ['Ce', 0], ['*2', 1]]);
+  const four = RP.parseList('a\nb\nc\nd');
+  const p = RP.pick(four, 10, true, RP.cryptoSource);
+  assert.equal(p.length, 4); assert.equal(new Set(p).size, 4);
+  assert.equal(RP.pick(four, 10, false, seqSrc([0])).length, 10);
+  assert.deepEqual(RP.pick(four, 3, true, seqSrc([0])), [0, 1, 2]);
+  // weights: total 1+3=4 → r=1..3 lands on Bob, r=0 on Ana; weight 0 never
+  const w = RP.parseList('Ana\nBob *3\nCe *0', true);
+  assert.deepEqual(RP.pick(w, 1, true, seqSrc([0])), [0]);
+  assert.deepEqual(RP.pick(w, 1, true, seqSrc([1])), [1]);
+  assert.deepEqual(RP.pick(w, 1, true, seqSrc([3])), [1]);
+  assert.deepEqual(RP.pick(w, 5, true, seqSrc([3, 0])), [1, 0]);
+  assert.deepEqual(RP.pick([], 1, true), []);
+  const sh = RP.shuffle(['a', 'b', 'c', 'd', 'e']);
+  assert.deepEqual(sh.slice().sort(), ['a', 'b', 'c', 'd', 'e']);
+  assert.deepEqual(RP.shuffle(['a', 'b', 'c'], seqSrc([0])), ['b', 'c', 'a']);
+  assert.equal(RP.coin(seqSrc([4])), 'heads'); assert.equal(RP.coin(seqSrc([5])), 'tails');
+  assert.deepEqual(RP.dice(3, 6, seqSrc([0, 5, 11])), { rolls: [1, 6, 6], sum: 13 });
+});
+test('pick: Pro teams are balanced and keep everyone; CSV', () => {
+  const people = Array.from({ length: 10 }, (_, i) => 'p' + i);
+  for (const [k, bySize, sizes] of [[3, false, [4, 3, 3]], [2, false, [5, 5]], [4, true, [4, 3, 3]], [3, true, [3, 3, 2, 2]], [20, false, Array(10).fill(1)], [1, false, [10]], [0, false, [10]]]) {
+    const t = RP.teams(people, k, bySize, RP.cryptoSource);
+    assert.deepEqual(t.map(x => x.length), sizes, `k=${k} bySize=${bySize}`);
+    assert.deepEqual(t.flat().sort(), people.slice().sort());
+  }
+  assert.deepEqual(RP.teams(['a', 'b', 'c', 'd'], 2, false, seqSrc([0])), [['b', 'd'], ['c', 'a']]);
+  assert.deepEqual(RP.teams([], 3, false), []);
+  assert.equal(RP.toCsv([{ time: 't', type: 'Pick', result: '=cmd' }, { time: 't', type: 'Teams', result: 'a, b' }]), 'time,type,result\r\nt,Pick,\'=cmd\r\nt,Teams,"a, b"\r\n');
+  assert.equal(RP.toCsv([]), 'time,type,result\r\n');
+});

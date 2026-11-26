@@ -94,6 +94,19 @@ module.exports = {
       color: '#c92a2a',
       glyph: 'ORA',
       assets: ['./', 'index.html', 'app.js', 'logic.js', 'data.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
+    },
+    {
+      dir: 'pick',
+      storeId: 'TBD',
+      packageId: 'TBD',
+      id: 'random-picker',
+      name: 'Stelar Random Picker',
+      short_name: 'Picker',
+      description: 'Fair offline random picker: spin a wheel to pick names, shuffle lists, flip a coin, roll dice, random numbers. Pro: teams, weighted picks, remove picked, saved lists, CSV history.',
+      categories: ['utilities', 'education', 'productivity'],
+      color: '#d6336c',
+      glyph: '⚄',
+      assets: ['./', 'index.html', 'app.js', 'logic.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
     }
   ]
 };
