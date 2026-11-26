@@ -94,6 +94,97 @@ module.exports = {
       color: '#c92a2a',
       glyph: 'ORA',
       assets: ['./', 'index.html', 'app.js', 'logic.js', 'data.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
+    },
+    {
+      dir: 'loan',
+      storeId: 'TBD',
+      packageId: 'TBD',
+      id: 'loan-calculator',
+      name: 'Stelar Loan Calculator',
+      short_name: 'Loans',
+      description: 'Offline loan and mortgage calculator: monthly payment, total interest, term and yearly summary. EN, RO, RU. Pro: full schedule with CSV, extra payments, rate changes, offer comparison, saved loans.',
+      categories: ['finance', 'utilities', 'productivity'],
+      color: '#0c8599',
+      glyph: '⌂',
+      assets: ['./', 'index.html', 'app.js', 'logic.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
+    },
+    {
+      dir: 'color',
+      storeId: 'TBD',
+      packageId: 'TBD',
+      id: 'color-converter',
+      name: 'Stelar Color Converter',
+      short_name: 'Colors',
+      description: 'Offline color converter: HEX, RGB, HSL, HWB, CMYK, color picker and WCAG contrast checker. Pro adds palettes, OKLCH and LAB, CSS color names, saved palettes with export and colorblind previews.',
+      categories: ['developer tools', 'utilities', 'productivity'],
+      color: '#c2255c',
+      glyph: 'RGB',
+      assets: ['./', 'index.html', 'app.js', 'logic.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
+    },
+    {
+      dir: 'json',
+      storeId: 'TBD',
+      packageId: 'TBD',
+      id: 'json-formatter',
+      name: 'Stelar JSON Formatter',
+      short_name: 'JSON',
+      description: 'Offline JSON validator and formatter: exact error line and column, pretty-print, minify, sort keys, tree view and stats. Pro: JSONPath queries, YAML and CSV conversion, diff, escaping and snippets.',
+      categories: ['developer tools', 'utilities', 'productivity'],
+      color: '#d6336c',
+      glyph: '{}',
+      assets: ['./', 'index.html', 'app.js', 'logic.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
+    },
+    {
+      dir: 'pick',
+      storeId: 'TBD',
+      packageId: 'TBD',
+      id: 'random-picker',
+      name: 'Stelar Random Picker',
+      short_name: 'Picker',
+      description: 'Fair offline random picker: spin a wheel to pick names, shuffle lists, flip a coin, roll dice, random numbers. Pro: teams, weighted picks, remove picked, saved lists, CSV history.',
+      categories: ['utilities', 'education', 'productivity'],
+      color: '#d6336c',
+      glyph: '⚄',
+      assets: ['./', 'index.html', 'app.js', 'logic.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
+    },
+    {
+      dir: 'regex',
+      storeId: 'TBD',
+      packageId: 'TBD',
+      id: 'regex-tester',
+      name: 'Stelar Regex Tester',
+      short_name: 'Regex',
+      description: 'Offline JavaScript regex tester: live highlighting, capture groups, clear errors. EN/RO/RU. Pro adds replace preview, pattern explanation, 34-pattern library, saved patterns, tests, CSV/JSON export.',
+      categories: ['developer tools', 'utilities', 'productivity'],
+      color: '#9c36b5',
+      glyph: '.*',
+      assets: ['./', 'index.html', 'app.js', 'logic.js', 'worker.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
+    },
+    {
+      dir: 'hash',
+      storeId: 'TBD',
+      packageId: 'TBD',
+      id: 'hash-generator',
+      name: 'Stelar Hash Generator',
+      short_name: 'Hash',
+      description: 'Offline hash generator: SHA-256, SHA-1, SHA-384, SHA-512, MD5 and CRC32 of text, hex or Base64, compare hashes. Pro: hash and verify files, SHA256SUMS lists, HMAC, batch lines, CSV.',
+      categories: ['developer tools', 'utilities', 'security'],
+      color: '#a61e4d',
+      glyph: '#',
+      assets: ['./', 'index.html', 'app.js', 'logic.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
+    },
+    {
+      dir: 'habit',
+      storeId: 'TBD',
+      packageId: 'TBD',
+      id: 'habit-tracker',
+      name: 'Stelar Habit Tracker',
+      short_name: 'Habits',
+      description: 'Offline habit tracker: up to 3 habits, daily check-off, streaks, week view and month heat map. Pro: unlimited habits, weekday or N-per-week goals, notes, stats, backup, CSV, colors.',
+      categories: ['productivity', 'lifestyle', 'health'],
+      color: '#d6336c',
+      glyph: '✓',
+      assets: ['./', 'index.html', 'app.js', 'logic.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
     }
   ]
 };

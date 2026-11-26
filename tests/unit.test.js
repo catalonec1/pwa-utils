@@ -334,3 +334,511 @@ test('text v1.1: shuffle, sort by length (free); CSV ↔ JSON, HTML escape (Pro)
   assert.equal(T.pro.csvToJson(T.pro.jsonToCsv('[{"q":"say \\"hi\\"\\nnow"}]')), JSON.stringify([{ q: 'say "hi"\nnow' }], null, 2));
   assert.equal(T.pro.htmlEscape('<a href="x">Tom & \'Jerry\'</a>'), '&lt;a href=&quot;x&quot;&gt;Tom &amp; &#39;Jerry&#39;&lt;/a&gt;');
 });
+
+const LN = require('../loan/logic.js');
+test('loan: annuity, decreasing, zero rate, solving', () => {
+  assert.equal(LN.payment(100000, 6, 360), 599.55);
+  assert.equal(LN.payment(1200, 0, 12), 100);
+  assert.ok(Number.isNaN(LN.payment(0, 5, 10)));
+  assert.ok(Number.isNaN(LN.payment(1000, 5, 1201)));
+  const a = LN.schedule({ principal: 100000, rate: 6, months: 360 });
+  assert.equal(a.months, 360);
+  assert.equal(a.totalInterest, 115838.45);
+  assert.equal(a.totalPaid, 215838.45);
+  assert.equal(a.rows[359].balance, 0);
+  const d = LN.schedule({ principal: 12000, rate: 12, months: 12, type: 'linear' });
+  assert.deepEqual([d.rows[0].payment, d.rows[11].payment, d.totalInterest], [1120, 1010, 780]);
+  const odd = LN.schedule({ principal: 10000, rate: 7, months: 7, type: 'linear' });
+  assert.equal(odd.rows[6].principal, 1428.58);
+  assert.equal(LN.schedule({ principal: 100, rate: 5, months: 0 }), null);
+  assert.equal(LN.termFor(100000, 6, 599.55), 360);
+  assert.equal(LN.termFor(1000, 0, 300), 4);
+  assert.ok(Number.isNaN(LN.termFor(100000, 6, 500)));
+  assert.equal(LN.principalFor(599.55, 6, 360), 99999.91);
+  assert.equal(LN.principalFor(100, 0, 12), 1200);
+  assert.equal(LN.num('1 234,5'), 1234.5);
+  assert.ok(Number.isNaN(LN.num('12abc')));
+  const y = LN.yearly(LN.schedule({ principal: 1000, rate: 12, months: 24 }).rows);
+  assert.equal(y.length, 2);
+  assert.equal(y[1].balance, 0);
+  assert.equal(LN.c2(y[0].principal + y[1].principal), 1000);
+});
+test('loan: Pro extras, rate change, compare, CSV', () => {
+  const base = { principal: 100000, rate: 6, months: 360 };
+  const e = LN.schedule(Object.assign({ recurring: { amount: 100, from: 1 }, extras: [{ month: 12, amount: 5000 }] }, base));
+  assert.ok(e.months < 360 && e.totalInterest < 115838.45);
+  assert.equal(e.rows[11].extra, 5100);
+  assert.equal(e.rows[e.rows.length - 1].balance, 0);
+  const big = LN.schedule(Object.assign({ extras: [{ month: 1, amount: 1e9 }] }, base));
+  assert.equal(big.months, 1);
+  assert.equal(big.totalPaid, LN.c2(100000 + 500));
+  const r = LN.schedule(Object.assign({ rateChange: { month: 60, rate: 8 } }, base));
+  assert.equal(r.months, 360);
+  assert.equal(r.rows[59].payment, 599.55);
+  assert.equal(r.rows[60].rate, 8);
+  assert.ok(r.rows[60].payment > 700 && r.totalInterest > 115838.45);
+  close(LN.effectiveRate(100000, 0, LN.schedule(base).rows), 6.1678, 1e-4);
+  assert.ok(LN.effectiveRate(100000, 2000, LN.schedule(base).rows) > 6.3);
+  const c = LN.compare([base, Object.assign({}, base, { rate: 5.8, fee: 3000 }), Object.assign({}, base, { months: 0 })]);
+  assert.equal(c.best, 1);
+  assert.equal(c.offers[1].totalCost, LN.c2(c.offers[1].totalInterest + 3000));
+  assert.equal(c.offers[2], null);
+  assert.equal(LN.toCsv(LN.schedule({ principal: 1000, rate: 12, months: 2 }).rows),
+    'month,rate_pct,payment,interest,principal,extra,balance\r\n1,12,507.51,10.00,497.51,0.00,502.49\r\n2,12,507.51,5.02,502.49,0.00,0.00\r\n');
+});
+
+const CL = require('../color/logic.js');
+test('color: parse every input format and convert', () => {
+  assert.equal(Object.keys(CL.NAMES).length, 148);
+  const red = { r: 255, g: 0, b: 0 };
+  for (const s of ['#f00', 'FF0000', 'red', 'rgb(255, 0, 0)', 'rgb(100% 0% 0%)', 'rgba(255,0,0,1)', '255 0 0', 'hsl(0, 100%, 50%)', 'hsl(360deg 100% 50% / 100%)', 'hwb(0 0% 0%)', 'cmyk(0%, 100%, 100%, 0%)', 'oklch(62.8% 0.2577 29.23)', 'lab(54.29 80.8 69.88)']) {
+    assert.equal(CL.toHex(CL.parse(s)), '#ff0000', s);
+  }
+  for (const s of ['', 'nope', '#ff00', 'rgb(300, 0, 0)', 'rgba(255, 0, 0, 0.5)', 'hsl(0, 120%, 50%)', 'rgb(1, 2)']) assert.equal(CL.parse(s), null, s);
+  assert.deepEqual(['hex', 'rgb', 'hsl', 'hwb', 'cmyk', 'oklch', 'lab'].map(k => CL.format(red, k)),
+    ['#ff0000', 'rgb(255, 0, 0)', 'hsl(0, 100%, 50%)', 'hwb(0 0% 0%)', 'cmyk(0%, 100%, 100%, 0%)', 'oklch(62.8% 0.2577 29.23)', 'lab(54.29 80.8 69.88)']);
+  const c = CL.parse('#3d5afe');
+  assert.equal(CL.format(c, 'hwb'), 'hwb(231 24% 0%)');
+  assert.equal(CL.format(CL.parse('#808080'), 'oklch'), 'oklch(59.99% 0 0)');
+  assert.equal(CL.format(CL.parse('black'), 'cmyk'), 'cmyk(0%, 0%, 0%, 100%)');
+  assert.equal(CL.toHex(CL.fromHwb({ h: 0, w: 70, b: 70 })), '#808080');
+  for (const k of ['oklch', 'lab']) assert.equal(CL.toHex(CL.parse(CL.format(c, k))), '#3d5afe', k);
+});
+test('color: WCAG contrast', () => {
+  assert.deepEqual(CL.contrast(CL.parse('#000'), CL.parse('#fff')), { ratio: 21, aaNormal: true, aaLarge: true, aaaNormal: true, aaaLarge: true });
+  assert.deepEqual(CL.contrast(CL.parse('#777'), CL.parse('#fff')), { ratio: 4.47, aaNormal: false, aaLarge: true, aaaNormal: false, aaaLarge: false });
+  assert.equal(CL.contrast(CL.parse('#fff'), CL.parse('#fff')).ratio, 1);
+});
+test('color: Pro names, palettes, colorblind simulation, export', () => {
+  assert.deepEqual(CL.nearestName(CL.parse('#ff6347')), { name: 'tomato', hex: '#ff6347', dist: 0, exact: true, deltaE: 0 });
+  const n = CL.nearestName(CL.parse('#3d5afe'));
+  assert.equal(n.name, 'royalblue'); assert.equal(n.exact, false);
+  const c = CL.parse('#3d5afe');
+  assert.deepEqual(CL.palette(c, 'complementary'), ['#3d5afe', '#fee13d']);
+  assert.deepEqual(CL.palette(c, 'triadic'), ['#3d5afe', '#fe3d5a', '#5afe3d']);
+  assert.equal(CL.palette(c, 'analogous').length, 3);
+  assert.equal(CL.palette(c, 'tetradic').length, 4);
+  const t = CL.palette(c, 'tints'); assert.equal(t.length, 9); assert.equal(t[4], '#3d5afe');
+  assert.deepEqual(CL.palette(c, 'x'), []);
+  assert.equal(CL.toHex(CL.simulate(CL.parse('#ff0000'), 'protanopia')), '#6d5f00');
+  assert.equal(CL.toHex(CL.simulate(CL.parse('#ff0000'), 'deuteranopia')), '#a39000');
+  for (const k of CL.CVD) for (const g of ['#000000', '#ffffff']) assert.equal(CL.toHex(CL.simulate(CL.parse(g), k)), g);
+  const pals = [{ name: 'Brand Ăă', colors: ['#3d5afe', '#ffffff'] }, { name: 'Brand Ăă', colors: ['#000000'] }, { name: '!!', colors: ['#111111'] }];
+  assert.equal(CL.exportCss(pals), ':root {\n  --brand-aa-100: #3d5afe;\n  --brand-aa-200: #ffffff;\n  --brand-aa-2-100: #000000;\n  --palette-3-100: #111111;\n}\n');
+  assert.deepEqual(JSON.parse(CL.exportJson(pals)), pals);
+  assert.match(CL.exportTailwind(pals), /colors: \{\n {8}'brand-aa': \{\n {10}100: '#3d5afe',\n {10}200: '#ffffff'\n {8}\},/);
+  assert.equal(CL.exportCss([]), ':root {\n}\n');
+});
+
+const JF = require('../json/logic.js');
+test('json: validator gives exact line and column', () => {
+  const at = s => { const r = JF.check(s); return r.ok ? 'ok' : `${r.code} ${r.line}:${r.col}`; };
+  assert.equal(at('{"a": [1, 2], "b": {"c": null}}'), 'ok');
+  assert.equal(at('{\n  "a": 1,\n}'), 'trailingComma 3:1');
+  assert.equal(at('{"a" 1}'), 'expectedColon 1:6');
+  assert.equal(at('[1 2]'), 'expectedComma 1:4');
+  assert.equal(at("{'a': 1}"), 'expectedKey 1:2');
+  assert.equal(at('{"a": 01}'), 'badNumber 1:7');
+  assert.equal(at('"abc'), 'unterminated 1:5');
+  assert.equal(at('["\\q"]'), 'badEscape 1:3');
+  assert.equal(at('"a\tb"'), 'control 1:3');
+  assert.equal(at('{"a":1}}'), 'extra 1:8');
+  assert.equal(at('[1,\n 2,\n'), 'end 3:1');
+  assert.equal(at('nul'), 'unexpected 1:1');
+  assert.equal(at('\uFEFF{"x": true}'), 'ok');
+  assert.equal(JF.check('[12345678901234567890, 9007199254740991]').bigNums, 1);
+  assert.equal(JF.check('{"a":\n  tru}').lineText, '  tru}');
+});
+test('json: format, minify, sort keys, stats', () => {
+  const src = '{"b":1,"a":{"d":[1,2],"c":"x"}}';
+  assert.equal(JF.format(src, '2'), '{\n  "b": 1,\n  "a": {\n    "d": [\n      1,\n      2\n    ],\n    "c": "x"\n  }\n}');
+  assert.equal(JF.format('[1]', '4'), '[\n    1\n]');
+  assert.equal(JF.format('{"a":1}', 'tab'), '{\n\t"a": 1\n}');
+  assert.equal(JF.minify(JF.format(src, 4)), src);
+  assert.equal(JF.minify(src, true), '{"a":{"c":"x","d":[1,2]},"b":1}');
+  assert.equal(JF.minify('{"b":1,"B":2,"a":3}', true), '{"B":2,"a":3,"b":1}');
+  assert.deepEqual(JF.stats('{ "a": [1, {"b": "ș"}] }'), { objects: 2, arrays: 1, keys: 2, values: 2, depth: 3, bytes: 25, minBytes: 20 });
+  assert.throws(() => JF.format('{', 2), /end at line 1, column 2/);
+});
+test('json: Pro query with wildcards, recursion, negative index and filters', () => {
+  const s = JSON.stringify({ store: { books: [{ t: 'A', cat: 'fic', p: 8 }, { t: 'B', cat: 'ref', p: 12 }, { t: 'C', cat: 'fic', p: 5, isbn: '1' }], 'odd key': { v: 1 } } });
+  const vals = q => JF.query(s, q).map(r => r.value);
+  assert.deepEqual(vals('$.store.books[*].t'), ['A', 'B', 'C']);
+  assert.deepEqual(vals('$..p'), [8, 12, 5]);
+  assert.deepEqual(vals('store.books[-1].t'), ['C']);
+  assert.deepEqual(vals("$['store']['odd key'].v"), [1]);
+  assert.deepEqual(vals("$.store.books[?(@.cat=='fic')].t"), ['A', 'C']);
+  assert.deepEqual(vals('$.store.books[?(@.cat!="fic")].t'), ['B']);
+  assert.deepEqual(vals('$.store.books[?(@.p==12)].t'), ['B']);
+  assert.deepEqual(vals('$.store.books[?(@.isbn)].t'), ['C']);
+  assert.deepEqual(vals('$.store.books[9]'), []);
+  assert.deepEqual(JF.query(s, '$.store.*').map(r => r.path), ['$.store.books', "$.store['odd key']"]);
+  assert.throws(() => JF.query(s, '$.store[oops'), e => e.near === '[oops');
+});
+test('json: Pro diff of two documents', () => {
+  const d = JF.diff({ a: 1, b: { c: [1, 2, 3] }, d: 'x', t: [1] }, { a: 2, b: { c: [1, 2] }, d: 'x', e: null, t: { 0: 1 } });
+  assert.deepEqual(d.map(e => e.op + ' ' + e.path), ['changed $.a', 'removed $.b.c[2]', 'changed $.t', 'added $.e']);
+  assert.equal(JF.diffText(d.slice(0, 2)), '~ $.a: 1 → 2\n- $.b.c[2]: 3');
+  assert.deepEqual(JF.diff({ x: [1, { y: 'z' }] }, { x: [1, { y: 'z' }] }), []);
+  assert.deepEqual(JF.diff(1, '1').map(e => e.op), ['changed']);
+});
+test('json: Pro YAML both ways', () => {
+  const doc = { name: 'x', list: [1, 'two', { a: null, b: [true, false] }, [1, [2, 3]], [], {}], 'my key': 'a: b', n: -1.5e3, s: 'multi\nline', e: '', t: 'true', v: '1.2.3', nested: { deep: { x: '#hash' } } };
+  const y = JF.toYAML(JSON.stringify(doc));
+  assert.match(y, /^name: x\nlist:\n- 1\n- two\n- a: null\n  b:\n  - true\n/);
+  assert.deepEqual(JSON.parse(JF.fromYAML(y)), doc);
+  const cfg = JF.fromYAML('# config\nserver:\n  host: localhost   # comment\n  port: 8080\n  tags: [web, "api", 3]\n  opts: {a: 1, b: \'it\'\'s\'}\nitems:\n- name: a\n  qty: 2\n- name: b\n  more:\n    - x\nscript: |\n  line1\n  line2\nfolded: >-\n  a\n  b\nempty:\n');
+  assert.deepEqual(JSON.parse(cfg), { server: { host: 'localhost', port: 8080, tags: ['web', 'api', 3], opts: { a: 1, b: "it's" } }, items: [{ name: 'a', qty: 2 }, { name: 'b', more: ['x'] }], script: 'line1\nline2\n', folded: 'a b', empty: null });
+  assert.throws(() => JF.fromYAML('a: 1\n   b: 2'), e => e.line === 2);
+  assert.throws(() => JF.fromYAML('a: &x 1'), e => /anchors/.test(e.why));
+});
+test('json: Pro CSV both ways and escaping', () => {
+  assert.equal(JF.toCSV('[{"a":1,"b":{"c":"x,y"}},{"a":2,"d":[1,2]}]'), 'a,b.c,d\n1,"x,y",\n2,,1; 2');
+  assert.equal(JF.toCSV('{"rows":[{"f":"=1+1"}]}'), "f\n'=1+1");
+  assert.deepEqual(JSON.parse(JF.fromCSV('a;b.c\n1;"y;z"\n007;true')), [{ a: 1, b: { c: 'y;z' } }, { a: '007', b: { c: true } }]);
+  assert.deepEqual(JSON.parse(JF.fromCSV('id\n12345678901234567890')), [{ id: '12345678901234567890' }]);
+  assert.equal(JF.escapeString('say "hi"\n\tok'), '"say \\"hi\\"\\n\\tok"');
+  assert.equal(JF.unescapeString('say \\"hi\\"\\n'), 'say "hi"\n');
+  assert.equal(JF.unescapeString('"\\u0103"'), 'ă');
+  assert.throws(() => JF.unescapeString('bad \\x'));
+});
+
+const RP = require('../pick/logic.js');
+/* sursă falsă: întoarce valorile date, apoi o ia de la capăt */
+const seqSrc = vals => { let i = 0; return () => vals[i++ % vals.length]; };
+test('pick: unbiased randInt rejects the biased tail', () => {
+  const MAX = 2 ** 32;
+  for (const n of [2, 3, 6, 7, 10, 20, 100, 1000, 2 ** 31 + 1, 2 ** 32]) {
+    const lim = RP.limit(n);
+    assert.equal(lim % n, 0, 'limit must be a multiple of n: ' + n);
+    assert.ok(lim <= MAX && MAX - lim < n);
+  }
+  // n=3: 2^32 % 3 = 1, so 2^32-1 is rejected and the next value is used
+  let calls = 0; const s3 = seqSrc([MAX - 1, 5]);
+  assert.equal(RP.randInt(3, () => { calls++; return s3(); }), 2);
+  assert.equal(calls, 2);
+  assert.equal(RP.randInt(3, seqSrc([MAX - 2])), (MAX - 2) % 3);
+  // n=6: the last 4 values are rejected
+  assert.equal(RP.randInt(6, seqSrc([MAX - 4, MAX - 1, 13])), 1);
+  // classic worst case: n = 2^31 + 1 rejects almost half of all values
+  assert.equal(RP.randInt(2 ** 31 + 1, seqSrc([2 ** 31 + 1, 2 ** 31])), 2 ** 31);
+  assert.equal(RP.randInt(1, () => { throw new Error('no draw needed'); }), 0);
+  assert.throws(() => RP.randInt(0, seqSrc([0])), RangeError);
+  assert.throws(() => RP.randInt(1.5, seqSrc([0])), RangeError);
+  // above 2^32: two draws build a 53-bit value
+  assert.equal(RP.randInt(2 ** 40, seqSrc([1, 7])), 2 ** 32 + 7);
+});
+test('pick: randRange is inclusive and spreads evenly over a full cycle', () => {
+  assert.equal(RP.randRange(5, 5, seqSrc([123])), 5);
+  assert.equal(RP.randRange(10, 1, seqSrc([0])), 1);
+  assert.equal(RP.randRange(-3, 3, seqSrc([6])), 3);
+  assert.equal(RP.randRange(-3, 3, seqSrc([7])), -3);
+  // every source value 0..59 once → each face of a d6 exactly 10 times
+  const seen = {}; let k = 0;
+  for (let i = 0; i < 60; i++) { const v = RP.randRange(1, 6, () => k++); seen[v] = (seen[v] || 0) + 1; }
+  assert.deepEqual(seen, { 1: 10, 2: 10, 3: 10, 4: 10, 5: 10, 6: 10 });
+  assert.throws(() => RP.randRange(0, 2 ** 60), RangeError);
+  // the real crypto source stays in range
+  for (let i = 0; i < 2000; i++) { const v = RP.randRange(1, 20); assert.ok(v >= 1 && v <= 20 && Number.isInteger(v)); }
+});
+test('pick: parse, pick without repeats, weights, shuffle, coin, dice', () => {
+  assert.deepEqual(RP.parseList(' Ana \n\nBob *3\r\nCe'), [{ name: 'Ana', w: 1, line: 0 }, { name: 'Bob *3', w: 1, line: 2 }, { name: 'Ce', w: 1, line: 3 }]);
+  assert.deepEqual(RP.parseList('Ana\nBob *3\nCe ×0\n*2', true).map(x => [x.name, x.w]), [['Ana', 1], ['Bob', 3], ['Ce', 0], ['*2', 1]]);
+  const four = RP.parseList('a\nb\nc\nd');
+  const p = RP.pick(four, 10, true, RP.cryptoSource);
+  assert.equal(p.length, 4); assert.equal(new Set(p).size, 4);
+  assert.equal(RP.pick(four, 10, false, seqSrc([0])).length, 10);
+  assert.deepEqual(RP.pick(four, 3, true, seqSrc([0])), [0, 1, 2]);
+  // weights: total 1+3=4 → r=1..3 lands on Bob, r=0 on Ana; weight 0 never
+  const w = RP.parseList('Ana\nBob *3\nCe *0', true);
+  assert.deepEqual(RP.pick(w, 1, true, seqSrc([0])), [0]);
+  assert.deepEqual(RP.pick(w, 1, true, seqSrc([1])), [1]);
+  assert.deepEqual(RP.pick(w, 1, true, seqSrc([3])), [1]);
+  assert.deepEqual(RP.pick(w, 5, true, seqSrc([3, 0])), [1, 0]);
+  assert.deepEqual(RP.pick([], 1, true), []);
+  const sh = RP.shuffle(['a', 'b', 'c', 'd', 'e']);
+  assert.deepEqual(sh.slice().sort(), ['a', 'b', 'c', 'd', 'e']);
+  assert.deepEqual(RP.shuffle(['a', 'b', 'c'], seqSrc([0])), ['b', 'c', 'a']);
+  assert.equal(RP.coin(seqSrc([4])), 'heads'); assert.equal(RP.coin(seqSrc([5])), 'tails');
+  assert.deepEqual(RP.dice(3, 6, seqSrc([0, 5, 11])), { rolls: [1, 6, 6], sum: 13 });
+});
+test('pick: Pro teams are balanced and keep everyone; CSV', () => {
+  const people = Array.from({ length: 10 }, (_, i) => 'p' + i);
+  for (const [k, bySize, sizes] of [[3, false, [4, 3, 3]], [2, false, [5, 5]], [4, true, [4, 3, 3]], [3, true, [3, 3, 2, 2]], [20, false, Array(10).fill(1)], [1, false, [10]], [0, false, [10]]]) {
+    const t = RP.teams(people, k, bySize, RP.cryptoSource);
+    assert.deepEqual(t.map(x => x.length), sizes, `k=${k} bySize=${bySize}`);
+    assert.deepEqual(t.flat().sort(), people.slice().sort());
+  }
+  assert.deepEqual(RP.teams(['a', 'b', 'c', 'd'], 2, false, seqSrc([0])), [['b', 'd'], ['c', 'a']]);
+  assert.deepEqual(RP.teams([], 3, false), []);
+  assert.equal(RP.toCsv([{ time: 't', type: 'Pick', result: '=cmd' }, { time: 't', type: 'Teams', result: 'a, b' }]), 'time,type,result\r\nt,Pick,\'=cmd\r\nt,Teams,"a, b"\r\n');
+  assert.equal(RP.toCsv([]), 'time,type,result\r\n');
+});
+
+const RX = require('../regex/logic.js');
+test('regex: compile, flags, matches with numbered and named groups', () => {
+  assert.equal(RX.cleanFlags('yggix'), 'giy');
+  assert.match(RX.compile('(', 'g').error, /Invalid regular expression/);
+  const re = RX.compile('(?<y>\\d{4})-(\\d{2})(x)?', 'gd').re;
+  const r = RX.findMatches(re, 'a 2026-11 b 2027-01x');
+  assert.equal(r.matches.length, 2);
+  assert.deepEqual(r.matches[0], { i: 2, t: '2026-11', g: ['2026', '11', null], n: { y: '2026' }, gi: [[2, 6], [7, 9], null] });
+  assert.equal(r.matches[1].g[2], 'x');
+  assert.equal(RX.findMatches(RX.compile('\\d', '').re, 'a1b2').matches.length, 1, 'no g: first match only');
+  assert.equal(RX.findMatches(RX.compile('', 'g').re, 'abc').matches.length, 4, 'empty matches advance');
+  assert.equal(RX.findMatches(RX.compile('', 'gu').re, '😀a').matches.length, 3, 'u flag advances by code point');
+  const big = RX.findMatches(RX.compile('a', 'g').re, 'a'.repeat(50), 10);
+  assert.equal(big.matches.length, 10); assert.equal(big.truncated, true);
+  assert.deepEqual(RX.groupNames('(a)(?<b>c)(?:d)(?=e)\\(x\\)[(]'), [null, 'b']);
+});
+test('regex: run with replace and test cases', () => {
+  const r = RX.run({ pattern: '(?<y>\\d{4})-(\\d{2})', flags: 'g', text: '2026-11 și 2027-01', repl: '$2/$<y> [$&]' });
+  assert.equal(r.replaced, '11/2026 [2026-11] și 01/2027 [2027-01]');
+  assert.equal(RX.run({ pattern: 'a', flags: '', text: 'aa', repl: 'b' }).replaced, 'ba');
+  assert.match(RX.run({ pattern: '[', flags: 'g', text: '' }).error, /Invalid/);
+  const t = RX.runTests('\\d+', 'gy', ['123', 'a1'], ['abc'], false);
+  assert.deepEqual([t.passed, t.total], [3, 3]);
+  const w = RX.runTests('\\d+|x', 'g', ['123', 'a1'], ['x1'], true);
+  assert.deepEqual(w.results.map(x => x.pass), [true, false, true]);
+  assert.deepEqual(RX.lines('a\r\n\nb\n'), ['a', 'b']);
+});
+test('regex: explanation tokens', () => {
+  const k = RX.explain('^(?<y>\\d{4})-ab+?[^a-z]\\.|\\1(?=x)$', 'm').map(x => x.k + ':' + x.t + ':' + x.d);
+  assert.deepEqual(k, ['xStartM:^:0', 'xNamed:(?<y>:0', 'xDigit:\\d:1', 'xRepeat:{4}:1', 'xEndGroup:):0', 'xLit:-a:0', 'xLit:b:0', 'xRepeat:+?:0',
+    'xNotClass:[^a-z]:0', 'xLit:\\.:0', 'xAlt:|:0', 'xRef:\\1:0', 'xLA:(?=:0', 'xLit:x:1', 'xEndGroup:):0', 'xEndM:$:0']);
+  const q = RX.explain('a{2,5}b{3,}c{1}\\u{1F600}\\p{L}', 'u').filter(x => x.k === 'xRepeat' || x.k === 'xCode' || x.k === 'xProp').map(x => x.v);
+  assert.deepEqual(q, [{ q: 'qRange', lazy: false, n: '2', m: '5' }, { q: 'qMin', lazy: false, n: '3' }, { q: 'qN', lazy: false, n: '1' }, { c: 'U+1F600' }, { p: 'L' }]);
+  assert.equal(RX.explain('\\.\\.+', '').map(x => x.t).join(' '), '\\. \\. +');
+  assert.equal(RX.explain('x{a}', '')[0].v.t, 'x{a}', 'invalid quantifier is literal');
+});
+test('regex: export and library', () => {
+  const ms = RX.findMatches(RX.compile('(?<k>\\w+)=(\\d)?', 'g').re, 'a=1 =b= c,d=').matches;
+  assert.equal(RX.toCsv(ms, RX.groupNames('(?<k>\\w+)=(\\d)?')), 'n,index,length,match,$1 k,$2\r\n1,0,3,a=1,a,1\r\n2,5,2,b=,b,\r\n3,10,2,d=,d,\r\n');
+  assert.equal(RX.toCsv([{ i: 0, t: '=SUM(A1)', g: [] }]), 'n,index,length,match\r\n1,0,8,\'=SUM(A1)\r\n');
+  assert.deepEqual(JSON.parse(RX.toJson(ms))[0], { n: 1, index: 0, length: 3, match: 'a=1', groups: ['a', '1'], named: { k: 'a' } });
+  assert.ok(RX.LIB.length >= 30);
+  assert.equal(new Set(RX.LIB.map(l => l.id)).size, RX.LIB.length);
+  for (const l of RX.LIB) {
+    const c = RX.compile(l.p, l.f);
+    assert.ok(c.re, l.id + ': ' + c.error);
+    assert.ok(RX.findMatches(c.re, l.sample).matches.length > 0, l.id + ' sample has no match');
+    assert.ok(l.name.en && l.name.ro && l.name.ru);
+  }
+});
+
+const HK = require('../hash/logic.js');
+const hx = (alg, s) => HK.toHex(HK.hashBytes(alg, typeof s === 'string' ? HK.utf8(s) : s));
+const rep = (b, n) => new Uint8Array(n).fill(b);
+const MLN_A = HK.utf8('a'.repeat(1000000));
+test('hash: MD5 test suite (RFC 1321)', () => {
+  assert.equal(hx('md5', ''), 'd41d8cd98f00b204e9800998ecf8427e');
+  assert.equal(hx('md5', 'a'), '0cc175b9c0f1b6a831c399e269772661');
+  assert.equal(hx('md5', 'abc'), '900150983cd24fb0d6963f7d28e17f72');
+  assert.equal(hx('md5', 'message digest'), 'f96b697d7cb7938d525a2f31aaf161d0');
+  assert.equal(hx('md5', 'abcdefghijklmnopqrstuvwxyz'), 'c3fcd3d76192e4007dfb496cca67e13b');
+  assert.equal(hx('md5', 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 'd174ab98d277d9f5a5611c2c9f419d9f');
+  assert.equal(hx('md5', '1234567890'.repeat(8)), '57edf4a22be3c955ac49da2e2107b67a');
+});
+test('hash: CRC32 check values (IEEE 802.3)', () => {
+  assert.equal(hx('crc32', '123456789'), 'cbf43926');
+  assert.equal(hx('crc32', ''), '00000000');
+  assert.equal(hx('crc32', 'The quick brown fox jumps over the lazy dog'), '414fa339');
+});
+test('hash: SHA-1 and SHA-2 (FIPS 180 examples)', () => {
+  const m448 = 'abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq';
+  const m896 = 'abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu';
+  assert.equal(hx('sha1', ''), 'da39a3ee5e6b4b0d3255bfef95601890afd80709');
+  assert.equal(hx('sha1', 'abc'), 'a9993e364706816aba3e25717850c26c9cd0d89d');
+  assert.equal(hx('sha1', m448), '84983e441c3bd26ebaae4aa1f95129e5e54670f1');
+  assert.equal(hx('sha1', MLN_A), '34aa973cd4c4daa4f61eeb2bdbad27316534016f');
+  assert.equal(hx('sha256', ''), 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855');
+  assert.equal(hx('sha256', 'abc'), 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad');
+  assert.equal(hx('sha256', m448), '248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1');
+  assert.equal(hx('sha256', MLN_A), 'cdc76e5c9914fb9281a1c7e284d73e67f1809a48a497200e046d39ccc7112cd0');
+  assert.equal(hx('sha384', ''), '38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b');
+  assert.equal(hx('sha384', 'abc'), 'cb00753f45a35e8bb5a03d699ac65007272c32ab0eded1631a8b605a43ff5bed8086072ba1e7cc2358baeca134c825a7');
+  assert.equal(hx('sha384', m896), '09330c33f71147e83d192fc782cd1b4753111b173b3b05d22fa08086e3b0f712fcc7c71a557e2db966c3e9fa91746039');
+  assert.equal(hx('sha512', ''), 'cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e');
+  assert.equal(hx('sha512', 'abc'), 'ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f');
+  assert.equal(hx('sha512', m896), '8e959b75dae313da8cf4f72814fc143f8f7779c6eb9f7fa17299aeadb6889018501d289e4900f7e4331b99dec4b5433ac7d329eeb6dd26545e96e55b874be909');
+});
+test('hash: chunked updates equal one-shot, Web Crypto path equals own code', async () => {
+  const data = new Uint8Array(5000).map((_, i) => (i * 131 + 7) & 255);
+  for (const alg of HK.ALGS) {
+    const h = HK.createHasher(alg);
+    for (let i = 0, k = 1; i < data.length; i += k, k = (k * 7) % 191 + 1) h.update(data.subarray(i, i + k));
+    assert.equal(HK.toHex(h.digest()), hx(alg, data), alg);
+    for (const n of [55, 56, 63, 64, 111, 112, 128]) assert.equal(HK.toHex(await HK.digest(alg, data.subarray(0, n))), hx(alg, data.subarray(0, n)), alg + ' ' + n);
+  }
+});
+test('hash: HMAC test cases (RFC 4231)', async () => {
+  const cases = [
+    [rep(0x0b, 20), HK.utf8('Hi There'), 'b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7',
+      'afd03944d84895626b0825f4ab46907f15f9dadbe4101ec682aa034c7cebc59cfaea9ea9076ede7f4af152e8b2fa9cb6',
+      '87aa7cdea5ef619d4ff0b4241a1d6cb02379f4e2ce4ec2787ad0b30545e17cdedaa833b7d6b8a702038b274eaea3f4e4be9d914eeb61f1702e696c203a126854'],
+    [HK.utf8('Jefe'), HK.utf8('what do ya want for nothing?'), '5bdcc146bf60754e6a042426089575c75a003f089d2739839dec58b964ec3843',
+      'af45d2e376484031617f78d2b58a6b1b9c7ef464f5a01b47e42ec3736322445e8e2240ca5e69e2c78b3239ecfab21649',
+      '164b7a7bfcf819e2e395fbe73b56e0a387bd64222e831fd610270cd7ea2505549758bf75c05a994a6d034f65f8f0e6fdcaeab1a34d4a6b4b636e070a38bce737'],
+    [rep(0xaa, 20), rep(0xdd, 50), '773ea91e36800e46854db8ebd09181a72959098b3ef8c122d9635514ced565fe', null, null],
+    [rep(0xaa, 131), HK.utf8('Test Using Larger Than Block-Size Key - Hash Key First'), '60e431591ee0b67f0d8a26aacbf5b77f8e0bc6213728c5140546040f0ee37f54', null,
+      '80b24263c7c1a3ebb71493c1dd7be8b49b46d1f41b4aeec1121b013783f8f3526b56d037e05f2598bd0fd2215d6a1e5295e64f73f63f0aec8b915a985d786598'],
+    [rep(0xaa, 131), HK.utf8('This is a test using a larger than block-size key and a larger than block-size data. The key needs to be hashed before being used by the HMAC algorithm.'),
+      '9b09ffa71b942fcb27635fbcd5b0e944bfdc63644f0713938a7f51535c3a35e2', null, null]
+  ];
+  for (const [key, msg, ...exp] of cases) {
+    ['sha256', 'sha384', 'sha512'].forEach((alg, i) => { if (exp[i]) assert.equal(HK.toHex(HK.hmacSync(alg, key, msg)), exp[i], alg); });
+    assert.equal(HK.toHex(await HK.hmac('sha256', key, msg)), exp[0]);
+  }
+  assert.equal(HK.toHex(HK.hmacSync('sha256', rep(0x0c, 20), HK.utf8('Test With Truncation'))).slice(0, 32), 'a3b6167473100ee06e0c796c2955552b');
+  assert.equal(HK.toHex(await HK.hmac('sha256', new Uint8Array(0), new Uint8Array(0))), 'b613679a0814d9ec772f95d778c35fc5ff1697c493715653c6c712144292c5ad');
+});
+test('hash: formats, checksum lists, compare, batch and CSV', () => {
+  const abc = HK.hashBytes('sha256', HK.utf8('abc'));
+  assert.equal(HK.toBase64(abc), 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=');
+  assert.equal(HK.toBase64(HK.utf8('ab')), 'YWI=');
+  assert.equal(HK.format(HK.hashBytes('crc32', HK.utf8('123456789')), 'hex', true), 'CBF43926');
+  assert.deepEqual(Array.from(HK.fromHex('0a ff')), [10, 255]);
+  assert.equal(HK.fromHex('abc'), null);
+  const sums = HK.parseSums('# list\n' + HK.toHex(abc) + '  dist/app.zip\n' + 'd41d8cd98f00b204e9800998ecf8427e *empty.bin\nSHA512 (x.iso) = ' + 'ab'.repeat(64) + '\nnot a hash line\n' + 'A'.repeat(39));
+  assert.deepEqual(sums.map(e => [e.alg, e.name]), [['sha256', 'dist/app.zip'], ['md5', 'empty.bin'], ['sha512', 'x.iso']]);
+  assert.equal(HK.entryFor(sums, 'app.zip').alg, 'sha256');
+  assert.equal(HK.entryFor(sums, 'EMPTY.BIN').alg, 'md5');
+  assert.equal(HK.entryFor(sums, 'other.txt'), null);
+  assert.equal(HK.entryFor(HK.parseSums(HK.toHex(abc).toUpperCase()), 'any.file').hash, HK.toHex(abc));
+  const res = {}; for (const a of HK.ALGS) res[a] = HK.hashBytes(a, HK.utf8('abc'));
+  assert.deepEqual(HK.compare(' ' + HK.toHex(abc).toUpperCase() + ' ', res), { alg: 'sha256', match: true });
+  assert.deepEqual(HK.compare('900150983cd24fb0d6963f7d28e17f72  abc.txt', res), { alg: 'md5', match: true });
+  assert.deepEqual(HK.compare('900150983cd24fb0d6963f7d28e17f73', res), { alg: 'md5', match: false });
+  assert.deepEqual(HK.compare('ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=', res), { alg: 'sha256', match: true });
+  assert.equal(HK.compare('hello world', res), null);
+  assert.equal(HK.compare('', res), null);
+  assert.deepEqual(HK.batch('abc\r\n\n123456789', 'crc32', 'hex', false), [{ line: 'abc', hash: '352441c2' }, { line: '123456789', hash: 'cbf43926' }]);
+  assert.equal(HK.toCsv(['text', 'hash'], [['=1+1', 'a"b'], ['x,y', 1]]), 'text,hash\r\n\'=1+1,"a""b"\r\n"x,y",1\r\n');
+});
+
+const H = require('../habit/logic.js');
+/* rulează fn cu un fus orar dat (Node recitește process.env.TZ la fiecare schimbare) */
+function inTz(tz, fn) {
+  const old = process.env.TZ;
+  process.env.TZ = tz;
+  try { fn(); } finally { if (old === undefined) delete process.env.TZ; else process.env.TZ = old; }
+}
+const hab = (done, extra) => Object.assign({ id: 'a', name: 'A', created: '2026-01-01', done: Object.fromEntries(done.map(k => [k, 1])), notes: {} }, extra);
+
+test('habit: day keys are local and DST-safe', () => {
+  inTz('Europe/Bucharest', () => {
+    assert.equal(new Date(2026, 2, 29, 12).getTimezoneOffset(), -180, 'TZ switch works');
+    // DST începe 29 martie 2026 (03:00 → 04:00), se termină 25 octombrie 2026
+    assert.equal(H.key(new Date(2026, 2, 29, 0, 30)), '2026-03-29');
+    assert.equal(H.key(new Date(2026, 2, 29, 23, 59)), '2026-03-29');
+    assert.equal(H.key(new Date(2026, 9, 25, 23, 30)), '2026-10-25');
+    assert.equal(H.key(new Date(2026, 9, 26, 0, 5)), '2026-10-26');
+    // ziua de 23 h și cea de 25 h sunt tot câte o zi
+    assert.equal(H.addDays('2026-03-28', 1), '2026-03-29');
+    assert.equal(H.addDays('2026-03-29', 1), '2026-03-30');
+    assert.equal(H.addDays('2026-10-25', 1), '2026-10-26');
+    assert.equal(H.diff('2026-03-01', '2026-04-01'), 31);
+    assert.equal(H.diff('2026-10-01', '2026-11-01'), 31);
+    // un timestamp de miezul nopții + 24 h ar cădea greșit; cheile nu
+    const mid = new Date(2026, 9, 25).getTime();
+    assert.equal(H.key(new Date(mid + 24 * 3600e3)), '2026-10-25', 'naive +24h stays on the 25-hour day');
+  });
+  inTz('America/New_York', () => {
+    assert.equal(H.key(new Date(2026, 2, 8, 1, 59)), '2026-03-08');
+    assert.equal(H.key(new Date(2026, 10, 1, 23, 0)), '2026-11-01');
+    assert.equal(H.addDays('2026-11-01', 1), '2026-11-02');
+  });
+  inTz('America/Santiago', () => {
+    // în Chile ora se schimbă la miezul nopții: 6 sept 2026 00:00 nu există
+    assert.equal(H.key(new Date(2026, 8, 6)), '2026-09-06');
+    assert.equal(H.key(new Date(2026, 8, 5, 23, 30)), '2026-09-05');
+  });
+  inTz('Pacific/Kiritimati', () => assert.equal(H.key(new Date(Date.UTC(2026, 0, 1, 10, 30))), '2026-01-02'));
+  assert.equal(H.dow('1970-01-01'), 4);
+  assert.equal(H.dow('2026-11-26'), 4);
+  assert.equal(H.dow('1969-12-28'), 0);
+  assert.equal(H.weekStart('2026-11-26'), '2026-11-23');
+  assert.equal(H.weekStart('2026-11-29'), '2026-11-23');
+  assert.equal(H.weekStart('2026-11-30'), '2026-11-30');
+  assert.equal(H.monthDays(2028, 2), 29);
+  assert.equal(H.monthDays(2026, 2), 28);
+  assert.deepEqual(H.addMonths(2026, 12, 1), { y: 2027, m: 1 });
+  assert.deepEqual(H.addMonths(2026, 1, -1), { y: 2025, m: 12 });
+  const g = H.monthGrid(2026, 3);
+  assert.equal(g[0].indexOf('2026-03-01'), 6, 'March 2026 starts on Sunday');
+  assert.equal(g.flat().filter(Boolean).length, 31);
+  assert.ok(g.every(w => w.length === 7));
+  assert.ok(H.valid('2028-02-29') && !H.valid('2026-02-29') && !H.valid('2026-1-5') && !H.valid(null));
+});
+
+test('habit: daily streaks across DST, today not done does not break', () => {
+  const days = []; for (let k = '2026-03-25'; k <= '2026-04-02'; k = H.addDays(k, 1)) days.push(k);
+  const h = hab(days.concat(['2026-03-10', '2026-03-11']));
+  assert.deepEqual(H.streaks(h, '2026-04-02'), { current: 9, best: 9, unit: 'd' });
+  assert.deepEqual(H.streaks(h, '2026-04-03'), { current: 9, best: 9, unit: 'd' }, 'today still open');
+  assert.deepEqual(H.streaks(h, '2026-04-04'), { current: 0, best: 9, unit: 'd' }, 'missed yesterday');
+  const fall = hab(['2026-10-24', '2026-10-25', '2026-10-26']);
+  assert.equal(H.streaks(fall, '2026-10-26').current, 3);
+  assert.deepEqual(H.streaks(hab([]), '2026-04-04'), { current: 0, best: 0, unit: 'd' });
+  assert.equal(H.start(hab(['2025-12-30']), '2026-02-01'), '2025-12-30', 'backfilled day before creation counts');
+});
+
+test('habit: weekday and N-per-week schedules (Pro)', () => {
+  // Lu, Mi, Vi
+  const mwf = hab(['2026-11-02', '2026-11-04', '2026-11-06', '2026-11-09', '2026-11-11', '2026-11-13', '2026-11-16'], { sched: { t: 'days', d: [1, 3, 5] } });
+  assert.ok(H.scheduled(mwf, '2026-11-16') && !H.scheduled(mwf, '2026-11-17'));
+  assert.equal(H.streaks(mwf, '2026-11-17').current, 7, 'Tuesday is not scheduled');
+  assert.equal(H.streaks(mwf, '2026-11-18').current, 7, 'Wednesday not yet done');
+  assert.equal(H.streaks(mwf, '2026-11-19').current, 0, 'missed Wednesday');
+  assert.equal(H.dueToday(mwf, '2026-11-17'), false);
+  // de 3 ori pe săptămână, în săptămâni (luni–duminică)
+  const t3 = hab(['2026-11-02', '2026-11-03', '2026-11-08', '2026-11-10', '2026-11-12', '2026-11-14', '2026-11-16'], { sched: { t: 'times', n: 3 } });
+  assert.equal(H.weekCount(t3, '2026-11-12'), 3);
+  assert.deepEqual(H.streaks(t3, '2026-11-17'), { current: 2, best: 2, unit: 'w' }, 'current week still open');
+  assert.equal(H.streaks(t3, '2026-11-24').current, 0, 'last week had only 1');
+  assert.equal(H.dueToday(t3, '2026-11-13'), false, 'goal already met this week');
+  assert.equal(H.dueToday(t3, '2026-11-14'), true, 'done today still shows');
+  assert.deepEqual(H.sched({ sched: { t: 'days', d: [] } }), { t: 'daily' });
+  assert.deepEqual(H.sched({ sched: { t: 'times', n: 9 } }), { t: 'daily' });
+  assert.deepEqual(H.sched({ sched: { t: 'days', d: [5, 1, 1, 9] } }), { t: 'days', d: [1, 5] });
+});
+
+test('habit: today summary, heat levels, month stats, best weekday', () => {
+  const a = hab(['2026-11-26'], { id: 'a', name: 'Read' }), b = hab([], { id: 'b', name: 'Walk' }), c = hab([], { id: 'c', name: 'Gym', sched: { t: 'days', d: [1] } });
+  assert.deepEqual(H.summary([a, b, c], '2026-11-26'), { due: 2, done: 1, left: ['Walk'] });
+  assert.deepEqual(H.summary([], '2026-11-26'), { due: 0, done: 0, left: [] });
+  assert.equal(H.dayRate([a, b, c], '2026-11-26', '2026-11-26'), 0.5);
+  assert.equal(H.dayRate([a, b], '2026-11-27', '2026-11-26'), null, 'future');
+  assert.equal(H.dayRate([hab([], { created: '2026-11-20' })], '2026-11-10', '2026-11-26'), null, 'before start');
+  assert.deepEqual([null, 0, 0.2, 0.5, 0.9, 1].map(H.level), [0, 0, 1, 2, 3, 4]);
+  // noiembrie 2026 până pe 26: 26 de zile, 13 bifate
+  const done = []; for (let i = 1; i <= 26; i += 2) done.push('2026-11-' + String(i).padStart(2, '0'));
+  assert.deepEqual(H.monthStats(hab(done), 2026, 11, '2026-11-26'), { done: 13, due: 26, pct: 50 });
+  assert.deepEqual(H.monthStats(hab(done), 2026, 12, '2026-11-26'), { done: 0, due: 0, pct: null });
+  assert.deepEqual(H.monthStats(hab(['2026-11-02', '2026-11-03'], { sched: { t: 'days', d: [1] } }), 2026, 11, '2026-11-26'), { done: 1, due: 4, pct: 25 });
+  assert.deepEqual(H.monthStats(hab(done.slice(0, 6), { sched: { t: 'times', n: 2 } }), 2026, 11, '2026-11-14'), { done: 6, due: 4, pct: 100 });
+  // doar luni bifate
+  const mon = hab(['2026-11-02', '2026-11-09', '2026-11-16', '2026-11-23'], { created: '2026-11-01' });
+  const w = H.weekdayRates([mon], '2026-11-01', '2026-11-26');
+  assert.equal(w.best, 1); assert.equal(w.rates[1], 1); assert.equal(w.rates[2], 0);
+  assert.equal(H.weekdayRates([hab([])], '2026-11-01', '2026-11-26').best, null);
+});
+
+test('habit: free limit, backup JSON round trip, CSV', () => {
+  assert.ok(H.canAdd([1, 2], false)); assert.ok(!H.canAdd([1, 2, 3], false)); assert.ok(H.canAdd([1, 2, 3, 4], true));
+  const data = { habits: [
+    { id: 'x', name: ' Read ', sched: { t: 'days', d: [1, 3] }, color: '#AA0011', emoji: '📚📚📚', created: '2026-11-01', done: { '2026-11-02': 1, '2026-11-31': 1, bad: 1 }, notes: { '2026-11-02': ' 20 pages, "great" ' } },
+    { id: 'x', name: 'Walk, outside', done: { '2026-11-01': 1 } },
+    { name: '' }, null
+  ] };
+  const n = H.normalize(data);
+  assert.equal(n.habits.length, 2);
+  assert.notEqual(n.habits[1].id, 'x', 'duplicate id replaced');
+  assert.deepEqual(n.habits[0], { id: 'x', name: 'Read', sched: { t: 'days', d: [1, 3] }, color: '#aa0011', emoji: '📚📚', created: '2026-11-01', done: { '2026-11-02': 1 }, notes: { '2026-11-02': '20 pages, "great"' } });
+  const back = H.importJson(H.exportJson(n, '2026-11-26'));
+  assert.deepEqual(back, n);
+  assert.throws(() => H.importJson('not json'), /format/);
+  assert.throws(() => H.importJson('{"foo":1}'), /format/);
+  assert.equal(H.toCsv(n.habits), 'date,habit,done,note\r\n2026-11-01,"Walk, outside",1,\r\n2026-11-02,Read,1,"20 pages, ""great"""\r\n');
+  const h = hab([]); assert.equal(H.toggle(h, '2026-11-26'), true); assert.equal(H.toggle(h, '2026-11-26'), false); assert.deepEqual(h.done, {});
+});

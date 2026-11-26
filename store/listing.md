@@ -273,3 +273,284 @@ Pro (разовая покупка): причины и решения для в�
 **Функция:** Причины и решения ошибок ORA- и PLS-, офлайн, можно вставить весь стек ошибок
 
 **Pro add-on listing:** name „ORA Error Helper Pro”; EN: One-time purchase: causes and fixes for all 251 errors, favorites and copy as Markdown. RO: Cumpărare unică: cauze și soluții pentru toate cele 251 de erori, favorite și copiere ca Markdown. RU: Разовая покупка: причины и решения для всех 251 ошибок, избранное и копирование в Markdown.
+
+## 8. Stelar Loan Calculator (`loan/`)
+
+**EN — short description:** Loan and mortgage payments, total interest, term and yearly summary. Works offline.
+**EN — description:**
+A clear loan and mortgage calculator that works on your device.
+• Monthly payment for equal (annuity) or decreasing (equal principal) payments
+• Total interest and total amount paid
+• Find the term for a monthly payment, or how much you can borrow for it
+• Summary by year: paid, principal, interest and remaining balance
+• Numbers formatted for your language, with any currency label you type
+• Light and dark theme, English, Romanian and Russian. No account, ads or tracking, works offline
+Pro (one-time add-on): full monthly payment schedule with CSV export, extra payments (one-off and monthly) with interest saved and shorter term, rate change after a chosen month, comparing up to 3 offers including fees, and saved loans.
+Estimates only, not financial advice. Real offers can differ because of fees, insurance, rounding and lender rules.
+**Feature:** Loan and mortgage payments, total interest, extra payments and offer comparison
+**Keywords:** loan calculator, mortgage calculator, monthly payment, amortization, interest, annuity, early repayment, credit, finance, offline
+
+**RO — descriere scurtă:** Rate pentru credite și ipoteci, dobânda totală, termen și rezumat pe ani. Funcționează offline.
+**RO — descriere:**
+Un calculator de credite și ipoteci clar, direct pe dispozitivul tău.
+• Rata lunară pentru rate egale (anuități) sau descrescătoare (principal egal)
+• Dobânda totală și suma totală plătită
+• Află termenul pentru o rată lunară sau cât poți împrumuta cu ea
+• Rezumat pe ani: plătit, principal, dobândă și sold rămas
+• Numere formatate pentru limba ta, cu orice monedă scrii
+• Temă luminoasă și întunecată, română, engleză și rusă. Fără cont, reclame sau urmărire, funcționează offline
+Pro (cumpărare unică): graficul lunar complet cu export CSV, plăți anticipate (unice și lunare) cu dobânda economisită și termenul scurtat, schimbarea dobânzii după o lună aleasă, comparația a până la 3 oferte cu comisioane și credite salvate.
+Doar estimări, nu sunt sfaturi financiare. Ofertele reale pot diferi din cauza comisioanelor, asigurărilor, rotunjirilor și regulilor băncii.
+**Funcție:** Rate pentru credite și ipoteci, dobânda totală, plăți anticipate și comparația ofertelor
+
+**RU — краткое описание:** Платежи по кредиту и ипотеке, переплата, срок и итоги по годам. Работает офлайн.
+**RU — описание:**
+Понятный кредитный и ипотечный калькулятор прямо на вашем устройстве.
+• Ежемесячный платёж: равные (аннуитетные) или убывающие (дифференцированные) платежи
+• Переплата по процентам и общая сумма выплат
+• Срок для заданного платежа или сумма, которую можно занять
+• Итоги по годам: выплачено, основной долг, проценты и остаток
+• Числа в формате вашего языка, с любым обозначением валюты
+• Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, работает офлайн
+Pro (разовая покупка): полный помесячный график с экспортом CSV, досрочные платежи (разовые и ежемесячные) с экономией на процентах и сокращением срока, изменение ставки после выбранного месяца, сравнение до 3 предложений с комиссиями и сохранённые кредиты.
+Только оценка, не финансовая консультация. Реальные условия могут отличаться из-за комиссий, страховок, округлений и правил банка.
+**Функция:** Платежи по кредиту и ипотеке, переплата, досрочные платежи и сравнение предложений
+
+**Pro add-on listing:** name „Stelar Loan Calculator Pro”; EN: One-time purchase: full monthly schedule with CSV export, extra payments, rate changes, comparing up to 3 offers and saved loans. RO: Cumpărare unică: graficul lunar complet cu export CSV, plăți anticipate, schimbarea dobânzii, comparația a până la 3 oferte și credite salvate. RU: Разовая покупка: полный помесячный график с экспортом CSV, досрочные платежи, изменение ставки, сравнение до 3 предложений и сохранённые кредиты.
+
+## 8. Stelar Color Converter
+
+**EN — short description:** Convert HEX, RGB, HSL, HWB and CMYK colors and check WCAG contrast. Works offline.
+**EN — description:**
+A fast, offline color tool for designers and developers.
+• Type a color in any format (HEX, rgb(), hsl(), hwb(), cmyk(), oklch(), lab() or a CSS name) or use the color picker
+• See it as HEX, RGB, HSL, HWB and CMYK at once, with a live swatch and copy buttons
+• WCAG contrast checker: contrast ratio and AA / AAA results for normal and large text, with a live preview
+• Light and dark theme, English, Romanian and Russian. No account, ads or tracking, works offline
+Pro (one-time add-on): palette generator (complementary, analogous, triadic, tetradic, tints and shades), nearest of the 148 CSS named colors, OKLCH and LAB output, saved palettes with export as CSS variables, JSON or Tailwind config, and colorblindness previews (protanopia, deuteranopia, tritanopia).
+Colorblindness previews are simulations and only approximate how colors may look.
+**Feature:** HEX, RGB, HSL, HWB and CMYK conversion, WCAG contrast checker, palettes and CSS color names
+**Keywords:** color converter, hex to rgb, rgb to hex, hsl, cmyk, color picker, contrast checker, WCAG, color palette, oklch
+
+**RO — descriere scurtă:** Convertește culori HEX, RGB, HSL, HWB și CMYK și verifică contrastul WCAG. Fără internet.
+**RO — descriere:**
+O unealtă de culori rapidă și offline pentru designeri și programatori.
+• Scrie o culoare în orice format (HEX, rgb(), hsl(), hwb(), cmyk(), oklch(), lab() sau un nume CSS) ori folosește selectorul de culoare
+• Vezi-o simultan ca HEX, RGB, HSL, HWB și CMYK, cu mostră live și butoane de copiere
+• Verificare contrast WCAG: raportul de contrast și rezultatele AA / AAA pentru text normal și mare, cu previzualizare
+• Temă luminoasă și întunecată, română, engleză și rusă. Fără cont, reclame sau urmărire, funcționează offline
+Pro (cumpărare unică): generator de palete (complementară, analogă, triadică, tetradică, nuanțe deschise și închise), cea mai apropiată dintre cele 148 de culori CSS numite, OKLCH și LAB, palete salvate cu export ca variabile CSS, JSON sau configurație Tailwind și previzualizare pentru daltonism (protanopie, deuteranopie, tritanopie).
+Previzualizările pentru daltonism sunt simulări și arată doar aproximativ cum pot fi văzute culorile.
+**Funcție:** Conversie HEX, RGB, HSL, HWB și CMYK, verificare contrast WCAG, palete și nume de culori CSS
+
+**RU — краткое описание:** Конвертация цветов HEX, RGB, HSL, HWB и CMYK и проверка контраста WCAG. Офлайн.
+**RU — описание:**
+Быстрый офлайн-инструмент для работы с цветом для дизайнеров и разработчиков.
+• Введите цвет в любом формате (HEX, rgb(), hsl(), hwb(), cmyk(), oklch(), lab() или имя CSS) или выберите его в окне выбора цвета
+• Сразу видно HEX, RGB, HSL, HWB и CMYK, образец цвета и кнопки копирования
+• Проверка контраста WCAG: коэффициент контраста и результаты AA / AAA для обычного и крупного текста с предпросмотром
+• Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, работает офлайн
+Pro (разовая покупка): генератор палитр (комплементарная, аналоговая, триада, тетрада, светлые и тёмные оттенки), ближайший из 148 именованных цветов CSS, OKLCH и LAB, сохранённые палитры с экспортом в CSS-переменные, JSON или конфигурацию Tailwind и просмотр для дальтонизма (протанопия, дейтеранопия, тританопия).
+Просмотр для дальтонизма — это симуляция, она лишь приблизительно показывает, как могут выглядеть цвета.
+**Функция:** Конвертация HEX, RGB, HSL, HWB и CMYK, проверка контраста WCAG, палитры и имена цветов CSS
+
+**Pro add-on listing:** name „Color Converter Pro”; EN: One-time purchase: palette generator, nearest CSS color name, OKLCH and LAB, saved palettes with CSS, JSON and Tailwind export, and colorblindness previews. RO: Cumpărare unică: generator de palete, cel mai apropiat nume de culoare CSS, OKLCH și LAB, palete salvate cu export CSS, JSON și Tailwind și previzualizare pentru daltonism. RU: Разовая покупка: генератор палитр, ближайшее имя цвета CSS, OKLCH и LAB, сохранённые палитры с экспортом в CSS, JSON и Tailwind и просмотр для дальтонизма.
+
+## 8. Stelar JSON Formatter (`json/`)
+
+**EN — short description:** Validate JSON with the exact error line and column, format, minify and browse it as a tree. Offline.
+**EN — description:**
+A fast JSON formatter and validator for developers that works on your device.
+• Validates as you type and shows the exact line and column of an error, with a clear reason (trailing comma, missing quote, bad number)
+• Pretty-print with 2 or 4 spaces or tabs, minify, sort keys
+• Collapsible tree view; click a key to copy its path
+• Stats: keys, objects, arrays, values, depth and size; warns about integers that lose precision
+• Light and dark theme, English, Romanian and Russian. No account, ads or tracking, your JSON never leaves the device, works offline
+Pro (one-time add-on): JSONPath queries with wildcards, recursive search and filters, JSON ↔ YAML and JSON ↔ CSV conversion, compare two JSON documents (added, removed and changed paths), escape and unescape JSON strings, saved snippets.
+**Feature:** JSON validator with exact error position, formatter, minifier and tree view
+**Keywords:** JSON, JSON formatter, JSON validator, JSON viewer, pretty print, minify, JSONPath, YAML, CSV, JSON diff
+
+**RO — descriere scurtă:** Validează JSON cu linia și coloana exactă a erorii, formatează, minifică, arbore. Offline.
+**RO — descriere:**
+Un formatator și validator JSON rapid pentru programatori, direct pe dispozitivul tău.
+• Validează în timp ce scrii și arată linia și coloana exactă a erorii, cu motivul (virgulă în plus, ghilimele lipsă, număr invalid)
+• Formatare cu 2 sau 4 spații sau tab-uri, minificare, sortarea cheilor
+• Arbore cu noduri pliabile; apasă pe o cheie ca să-i copiezi calea
+• Statistici: chei, obiecte, liste, valori, adâncime și mărime; avertizează la numere întregi care își pierd precizia
+• Temă luminoasă și întunecată, română, engleză și rusă. Fără cont, reclame sau urmărire, JSON-ul nu părăsește dispozitivul, funcționează offline
+Pro (cumpărare unică): interogări JSONPath cu wildcard, căutare recursivă și filtre, conversie JSON ↔ YAML și JSON ↔ CSV, compararea a două documente JSON (căi adăugate, eliminate și modificate), escape și unescape pentru șiruri JSON, fragmente salvate.
+**Funcție:** Validator JSON cu poziția exactă a erorii, formatare, minificare și arbore
+
+**RU — краткое описание:** Проверка JSON с точной строкой и столбцом ошибки, форматирование, сжатие и дерево. Офлайн.
+**RU — описание:**
+Быстрый форматер и валидатор JSON для разработчиков прямо на вашем устройстве.
+• Проверяет при вводе и показывает точную строку и столбец ошибки с понятной причиной (лишняя запятая, нет кавычки, неверное число)
+• Форматирование с отступом 2 или 4 пробела или табуляцией, сжатие, сортировка ключей
+• Сворачиваемое дерево; нажмите на ключ, чтобы скопировать его путь
+• Статистика: ключи, объекты, массивы, значения, глубина и размер; предупреждение о целых числах, теряющих точность
+• Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, JSON не покидает устройство, работает офлайн
+Pro (разовая покупка): запросы JSONPath с подстановками, рекурсивным поиском и фильтрами, конвертация JSON ↔ YAML и JSON ↔ CSV, сравнение двух JSON (добавленные, удалённые и изменённые пути), экранирование строк JSON, сохранённые фрагменты.
+**Функция:** Валидатор JSON с точной позицией ошибки, форматирование, сжатие и дерево
+
+**Pro add-on listing:** name „JSON Formatter Pro”; EN: One-time purchase: JSONPath queries with filters, JSON ↔ YAML and JSON ↔ CSV conversion, JSON diff, escape and unescape, saved snippets. RO: Cumpărare unică: interogări JSONPath cu filtre, conversie JSON ↔ YAML și JSON ↔ CSV, comparare JSON, escape și unescape, fragmente salvate. RU: Разовая покупка: запросы JSONPath с фильтрами, конвертация JSON ↔ YAML и JSON ↔ CSV, сравнение JSON, экранирование строк, сохранённые фрагменты.
+
+## 8. Stelar Random Picker (`pick/`)
+
+**EN — short description:** Spin a wheel to pick names, shuffle lists, flip a coin, roll dice. Fair and offline.
+**EN — description:**
+A fair, fast random picker for classrooms, games, raffles and everyday decisions.
+• Pick one or several names from your list, with or without repeats, on an animated spinning wheel
+• Shuffle a list into a random order
+• Flip a coin, with a heads and tails count
+• Roll several dice (d4, d6, d8, d10, d12, d20) and see the sum
+• Random whole number in any range
+• Uses your device's secure random number generator, without modulo bias
+• Light and dark theme, English, Romanian and Russian. No account, ads or tracking, works offline
+Pro (one-time add-on): split a list into balanced teams or groups, weighted picks, remove picked names (for classrooms and raffles), saved lists and a history of results with CSV export.
+**Feature:** Spinning wheel name picker, coin flip, dice, random numbers, teams
+**Keywords:** random name picker, spin the wheel, random picker, coin flip, dice roller, random number generator, team generator, raffle, classroom, shuffle list
+
+**RO — descriere scurtă:** Învârte roata și alege nume, amestecă liste, aruncă moneda și zarurile. Corect și offline.
+**RO — descriere:**
+Un mod corect și rapid de a alege la întâmplare, pentru clase, jocuri, tombole și decizii de zi cu zi.
+• Alege unul sau mai multe nume din lista ta, cu sau fără repetări, pe o roată animată
+• Amestecă o listă într-o ordine aleatorie
+• Cap sau pajură, cu numărătoare
+• Aruncă mai multe zaruri (d4, d6, d8, d10, d12, d20) și vezi suma
+• Număr întreg aleatoriu în orice interval
+• Folosește generatorul securizat de numere aleatorii al dispozitivului, fără bias de modulo
+• Temă luminoasă și întunecată, română, engleză și rusă. Fără cont, reclame sau urmărire, funcționează offline
+Pro (cumpărare unică): împărțire în echipe sau grupe echilibrate, alegere cu ponderi, scoaterea numelor alese (pentru clase și tombole), liste salvate și istoric al rezultatelor cu export CSV.
+**Funcție:** Roată pentru ales nume, cap sau pajură, zaruri, numere aleatorii, echipe
+
+**RU — краткое описание:** Крутите колесо и выбирайте имена, перемешивайте списки, бросайте монетку и кубики. Офлайн.
+**RU — описание:**
+Честный и быстрый случайный выбор для класса, игр, розыгрышей и повседневных решений.
+• Выбор одного или нескольких имён из списка, с повторами или без, на анимированном колесе
+• Перемешивание списка в случайном порядке
+• Монетка: орёл или решка, со счётом
+• Несколько кубиков (d4, d6, d8, d10, d12, d20) и их сумма
+• Случайное целое число в любом диапазоне
+• Использует защищённый генератор случайных чисел устройства, без смещения по модулю
+• Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, работает офлайн
+Pro (разовая покупка): деление списка на равные команды или группы, выбор с весами, удаление выбранных (для класса и розыгрышей), сохранённые списки и история результатов с экспортом CSV.
+**Функция:** Колесо для выбора имён, монетка, кубики, случайные числа, команды
+
+**Pro add-on listing:** name „Random Picker Pro”; EN: One-time purchase: balanced teams and groups, weighted picks, remove picked names, saved lists and a history with CSV export. RO: Cumpărare unică: echipe și grupe echilibrate, alegere cu ponderi, scoaterea numelor alese, liste salvate și istoric cu export CSV. RU: Разовая покупка: равные команды и группы, выбор с весами, удаление выбранных, сохранённые списки и история с экспортом CSV.
+
+## 8. Stelar Regex Tester (`regex/`)
+
+**EN — short description:** Test JavaScript regular expressions offline: live matches, capture groups and clear errors.
+**EN — description:**
+A fast, private tester for JavaScript regular expressions that works on your device.
+• Live highlighting of every match as you type the pattern or the text
+• Match list with positions and capture groups, numbered and named
+• All flags: g, i, m, s, u, y and d (group positions)
+• Clear error messages for invalid patterns
+• Patterns that would freeze (catastrophic backtracking) are stopped after 1.5 s, so the app stays responsive
+• Light and dark theme, English, Romanian and Russian. No account, ads or tracking, works offline
+Pro (one-time add-on): replace preview with $1 and $<name>, plain-language explanation of the pattern token by token, a library of 34 ready-made patterns (email, URL, IPv4, dates, times, phone numbers, UUID and more), saved patterns, test cases that must or must not match, and export of matches as CSV or JSON.
+**Feature:** Live regex matches, capture groups, replace preview and plain-language explanations
+**Keywords:** regex, regular expression, regex tester, JavaScript, pattern, capture groups, replace, developer tools, validation
+
+**RO — descriere scurtă:** Testează expresii regulate JavaScript offline: potriviri live, grupuri capturante și erori clare.
+**RO — descriere:**
+Un tester rapid și privat pentru expresii regulate JavaScript, direct pe dispozitivul tău.
+• Evidențiere live a fiecărei potriviri pe măsură ce scrii modelul sau textul
+• Lista potrivirilor cu poziții și grupuri capturante, numerotate și cu nume
+• Toate flag-urile: g, i, m, s, u, y și d (pozițiile grupurilor)
+• Mesaje clare pentru modelele invalide
+• Modelele care ar bloca aplicația (backtracking catastrofal) sunt oprite după 1,5 s, ca aplicația să rămână utilizabilă
+• Temă luminoasă și întunecată, română, engleză și rusă. Fără cont, reclame sau urmărire, funcționează offline
+Pro (cumpărare unică): previzualizarea înlocuirii cu $1 și $<nume>, explicația pe înțeles a modelului, token cu token, bibliotecă de 34 de modele gata făcute (email, URL, IPv4, date, ore, numere de telefon, UUID și altele), modele salvate, cazuri de test care trebuie sau nu trebuie să se potrivească și export al potrivirilor în CSV sau JSON.
+**Funcție:** Potriviri regex live, grupuri capturante, previzualizare înlocuire și explicații pe înțeles
+
+**RU — краткое описание:** Проверка регулярных выражений JavaScript офлайн: совпадения вживую, группы и понятные ошибки.
+**RU — описание:**
+Быстрый и приватный тестер регулярных выражений JavaScript прямо на вашем устройстве.
+• Подсветка всех совпадений прямо во время ввода шаблона или текста
+• Список совпадений с позициями и группами захвата, нумерованными и именованными
+• Все флаги: g, i, m, s, u, y и d (позиции групп)
+• Понятные сообщения об ошибках в шаблоне
+• Шаблоны, которые зависли бы (катастрофический возврат), останавливаются через 1,5 с, и приложение не зависает
+• Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, работает офлайн
+Pro (разовая покупка): предпросмотр замены с $1 и $<имя>, объяснение шаблона простым языком по каждому элементу, библиотека из 34 готовых шаблонов (email, URL, IPv4, даты, время, телефоны, UUID и другие), сохранённые шаблоны, тест-кейсы, которые должны или не должны совпадать, и экспорт совпадений в CSV или JSON.
+**Функция:** Совпадения regex вживую, группы захвата, предпросмотр замены и объяснения простым языком
+
+**Pro add-on listing:** name „Regex Tester Pro”; EN: One-time purchase: replace preview, plain-language pattern explanation, 34 ready-made patterns, saved patterns, test cases and CSV/JSON export. RO: Cumpărare unică: previzualizare înlocuire, explicația modelului pe înțeles, 34 de modele gata făcute, modele salvate, cazuri de test și export CSV/JSON. RU: Разовая покупка: предпросмотр замены, объяснение шаблона простым языком, 34 готовых шаблона, сохранённые шаблоны, тест-кейсы и экспорт CSV/JSON.
+
+## 8. Stelar Hash Generator (`hash/`)
+
+**EN — short description:** SHA-256, SHA-1, SHA-512, MD5 and CRC32 hashes of text. Compare hashes. Works offline.
+**EN — description:**
+A fast, private checksum and hash tool that works on your device.
+• SHA-256, SHA-1, SHA-384, SHA-512, MD5 and CRC32 of any text, all at once
+• Hex or Base64 output, uppercase option, one-click copy
+• Compare with an expected hash: see at once if it matches and which algorithm it is
+• Light and dark theme, English, Romanian and Russian. No account, ads or tracking, works offline
+Pro (one-time add-on): hash files of any size (drag and drop, read in pieces with progress; files never leave your device), verify files against a pasted checksum, a .sha256 file or a SHA256SUMS list, HMAC-SHA-256/384/512 with a secret key, and batch hashing of many lines with CSV export.
+MD5, SHA-1 and CRC32 are suitable for detecting damaged files, not for security.
+**Feature:** SHA-256, SHA-1, SHA-512, MD5 and CRC32 of text and files, checksum verification, HMAC
+**Keywords:** hash generator, checksum, SHA-256, SHA256SUMS, MD5, SHA-1, SHA-512, CRC32, HMAC, verify download
+
+**RO — descriere scurtă:** Hash SHA-256, SHA-1, SHA-512, MD5 și CRC32 pentru text. Compară hash-uri. Funcționează offline.
+**RO — descriere:**
+Un instrument rapid și privat pentru checksum-uri și hash-uri, direct pe dispozitivul tău.
+• SHA-256, SHA-1, SHA-384, SHA-512, MD5 și CRC32 pentru orice text, toate deodată
+• Rezultat hex sau Base64, opțiune pentru majuscule, copiere dintr-un clic
+• Compară cu un hash așteptat: vezi imediat dacă se potrivește și ce algoritm este
+• Temă luminoasă și întunecată, română, engleză și rusă. Fără cont, reclame sau urmărire, funcționează offline
+Pro (cumpărare unică): hash pentru fișiere de orice mărime (trage și plasează, citire pe bucăți cu progres; fișierele nu părăsesc dispozitivul), verificarea fișierelor cu un checksum lipit, un fișier .sha256 sau o listă SHA256SUMS, HMAC-SHA-256/384/512 cu cheie secretă și hash pe loturi de linii cu export CSV.
+MD5, SHA-1 și CRC32 sunt potrivite pentru a găsi fișiere deteriorate, nu pentru securitate.
+**Funcție:** SHA-256, SHA-1, SHA-512, MD5 și CRC32 pentru text și fișiere, verificare checksum, HMAC
+
+**RU — краткое описание:** Хеши SHA-256, SHA-1, SHA-512, MD5 и CRC32 для текста. Сравнение хешей. Работает офлайн.
+**RU — описание:**
+Быстрый и приватный инструмент для контрольных сумм и хешей прямо на вашем устройстве.
+• SHA-256, SHA-1, SHA-384, SHA-512, MD5 и CRC32 для любого текста, все сразу
+• Вывод в hex или Base64, заглавные буквы, копирование в один клик
+• Сравнение с ожидаемым хешем: сразу видно, совпадает ли он и какой это алгоритм
+• Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, работает офлайн
+Pro (разовая покупка): хеши файлов любого размера (перетаскивание, чтение по частям с прогрессом; файлы не покидают устройство), проверка файлов по вставленной контрольной сумме, файлу .sha256 или списку SHA256SUMS, HMAC-SHA-256/384/512 с секретным ключом и пакетное хеширование строк с экспортом CSV.
+MD5, SHA-1 и CRC32 подходят для поиска повреждённых файлов, но не для защиты.
+**Функция:** SHA-256, SHA-1, SHA-512, MD5 и CRC32 для текста и файлов, проверка контрольных сумм, HMAC
+
+**Pro add-on listing:** name „Stelar Hash Generator Pro”; EN: One-time purchase: hash and verify files of any size, SHA256SUMS lists, HMAC with a secret key and batch hashing with CSV export. RO: Cumpărare unică: hash și verificare pentru fișiere de orice mărime, liste SHA256SUMS, HMAC cu cheie secretă și hash pe loturi cu export CSV. RU: Разовая покупка: хеш и проверка файлов любого размера, списки SHA256SUMS, HMAC с секретным ключом и пакетное хеширование с экспортом CSV.
+
+## 8. Stelar Habit Tracker
+
+**EN — short description:** Simple offline habit tracker: daily check-off, streaks, week view and a month heat map.
+**EN — description:**
+A calm, simple habit tracker that keeps everything on your device.
+• Up to 3 habits free, checked off with one tap
+• Current and best streak for every habit; a day not yet done never breaks your streak
+• Week view to fill in days you missed, and a month calendar heat map
+• A gentle "today" summary: what is done and what is left
+• Light and dark theme, English, Romanian and Russian. No account, ads or tracking, works offline
+Pro (one-time add-on): unlimited habits, habits on specific weekdays or N times per week, a note for each day, statistics (completion per habit per month, best day of the week), backup to a JSON file and restore, CSV export, a color and an emoji for each habit.
+**Feature:** Daily check-off, streaks, week view and month heat map, offline
+**Keywords:** habit tracker, habits, streak, daily goals, routine, check list, heat map, self-improvement
+
+**RO — descriere scurtă:** Jurnal de obiceiuri simplu și offline: bifezi zilnic, vezi seriile, săptămâna și harta lunii.
+**RO — descriere:**
+Un jurnal de obiceiuri liniștit și simplu, cu totul pe dispozitivul tău.
+• Până la 3 obiceiuri gratuit, bifate dintr-o atingere
+• Seria curentă și recordul pentru fiecare obicei; o zi încă nebifată nu îți strică seria
+• Vederea săptămânii, ca să completezi zilele uitate, și calendarul lunii ca hartă de culori
+• Un rezumat blând pentru azi: ce ai făcut și ce mai ai
+• Temă luminoasă și întunecată, română, engleză și rusă. Fără cont, reclame sau urmărire, funcționează offline
+Pro (cumpărare unică): obiceiuri nelimitate, obiceiuri în anumite zile sau de N ori pe săptămână, o notiță pentru fiecare zi, statistici (procent pe obicei pe lună, cea mai bună zi a săptămânii), copie de siguranță JSON și restaurare, export CSV, culoare și emoji pentru fiecare obicei.
+**Funcție:** Bifare zilnică, serii, vederea săptămânii și harta lunii, offline
+
+**RU — краткое описание:** Простой офлайн-трекер привычек: отметки за день, серии, неделя и тепловая карта месяца.
+**RU — описание:**
+Спокойный и простой трекер привычек, все данные остаются на вашем устройстве.
+• До 3 привычек бесплатно, отметка одним касанием
+• Текущая серия и рекорд для каждой привычки; ещё не отмеченный сегодняшний день не прерывает серию
+• Вид недели, чтобы отметить пропущенные дни, и календарь месяца в виде тепловой карты
+• Мягкая сводка на сегодня: что сделано и что осталось
+• Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, работает офлайн
+Pro (разовая покупка): неограниченное число привычек, привычки в определённые дни или N раз в неделю, заметка на каждый день, статистика (процент выполнения по месяцам, лучший день недели), резервная копия JSON и восстановление, экспорт CSV, цвет и эмодзи для каждой привычки.
+**Функция:** Отметки за день, серии, вид недели и тепловая карта месяца, офлайн
+
+**Pro add-on listing:** name „Habit Tracker Pro”; EN: One-time purchase: unlimited habits, weekday or N-per-week schedules, daily notes, statistics, backup, CSV export, colors and emoji. RO: Cumpărare unică: obiceiuri nelimitate, anumite zile sau de N ori pe săptămână, notițe zilnice, statistici, copie de siguranță, export CSV, culori și emoji. RU: Разовая покупка: неограниченные привычки, дни недели или N раз в неделю, заметки, статистика, резервная копия, экспорт CSV, цвета и эмодзи.
