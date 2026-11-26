@@ -273,3 +273,47 @@ Pro (разовая покупка): причины и решения для в�
 **Функция:** Причины и решения ошибок ORA- и PLS-, офлайн, можно вставить весь стек ошибок
 
 **Pro add-on listing:** name „ORA Error Helper Pro”; EN: One-time purchase: causes and fixes for all 251 errors, favorites and copy as Markdown. RO: Cumpărare unică: cauze și soluții pentru toate cele 251 de erori, favorite și copiere ca Markdown. RU: Разовая покупка: причины и решения для всех 251 ошибок, избранное и копирование в Markdown.
+
+## 8. Stelar SQL Formatter (`sql/`)
+
+**EN — short description:** Format Oracle SQL and PL/SQL offline: line breaks, indentation, keyword case, minify.
+**EN — description:**
+A fast, private formatter for Oracle SQL. Your SQL never leaves your device.
+• Formats SELECT, INSERT, UPDATE, DELETE and MERGE: clauses on their own lines, indented lists, joins, AND/OR conditions, CASE and subqueries
+• Keywords in UPPER, lower or as typed; trailing or leading commas; 2 or 4 spaces
+• Minify a statement to one line
+• Comments, optimizer hints and string literals (including q'[...]' quoting) are kept exactly
+• Syntax highlighting, copy and save as .sql
+• Light and dark theme, interface in English, Romanian and Russian. No account, ads or tracking, works offline
+Pro (one-time add-on): PL/SQL block indentation (DECLARE/BEGIN/EXCEPTION/END, IF, loops, CASE, procedures, functions, packages, triggers), identifier case, aligned AS aliases, split a script into statements (; and / terminators), copy as a Java, C#, Python or PL/SQL string with bind-variable hints, and saved snippets.
+Independent tool, not affiliated with or endorsed by Oracle.
+**Feature:** Oracle SQL and PL/SQL formatter that keeps comments and q-quoted strings, offline
+**Keywords:** SQL formatter, Oracle, PL/SQL, SQL beautifier, pretty print, minify SQL, developer tools, DBA
+
+**RO — descriere scurtă:** Formatează offline SQL și PL/SQL Oracle: rânduri, indentare, majuscule, minificare.
+**RO — descriere:**
+Un formatator rapid și privat pentru SQL Oracle. SQL-ul tău nu părăsește dispozitivul.
+• Formatează SELECT, INSERT, UPDATE, DELETE și MERGE: clauze pe rânduri separate, liste indentate, join-uri, condiții AND/OR, CASE și subinterogări
+• Cuvinte cheie cu MAJUSCULE, minuscule sau cum sunt scrise; virgule la final sau la început; 2 sau 4 spații
+• Minificare: o instrucțiune pe un singur rând
+• Comentariile, hint-urile și șirurile (inclusiv q'[...]') rămân exact cum sunt
+• Colorare de sintaxă, copiere și salvare ca .sql
+• Temă luminoasă și întunecată, interfață în română, engleză și rusă. Fără cont, reclame sau urmărire, funcționează offline
+Pro (cumpărare unică): indentarea blocurilor PL/SQL (DECLARE/BEGIN/EXCEPTION/END, IF, bucle, CASE, proceduri, funcții, pachete, triggere), majuscule pentru identificatori, aliasuri AS aliniate, împărțirea scriptului în instrucțiuni (; și /), copiere ca șir Java, C#, Python sau PL/SQL cu indicii pentru variabilele bind și fragmente salvate.
+Unealtă independentă, fără legătură cu Oracle.
+**Funcție:** Formatator SQL și PL/SQL Oracle care păstrează comentariile și șirurile q'[...]', offline
+
+**RU — краткое описание:** Форматирование Oracle SQL и PL/SQL офлайн: переносы, отступы, регистр, в одну строку.
+**RU — описание:**
+Быстрое и приватное форматирование Oracle SQL. Ваш SQL не покидает устройство.
+• Форматирует SELECT, INSERT, UPDATE, DELETE и MERGE: предложения с новой строки, списки с отступом, JOIN, условия AND/OR, CASE и подзапросы
+• Ключевые слова ПРОПИСНЫМИ, строчными или как написано; запятые в конце или в начале; 2 или 4 пробела
+• Сжатие команды в одну строку
+• Комментарии, хинты и строки (включая q'[...]') сохраняются без изменений
+• Подсветка синтаксиса, копирование и сохранение в .sql
+• Светлая и тёмная тема, интерфейс на русском, английском и румынском. Без аккаунта, рекламы и слежки, работает офлайн
+Pro (разовая покупка): отступы в блоках PL/SQL (DECLARE/BEGIN/EXCEPTION/END, IF, циклы, CASE, процедуры, функции, пакеты, триггеры), регистр идентификаторов, выравнивание псевдонимов AS, разбиение скрипта на команды (; и /), копирование строкой для Java, C#, Python или PL/SQL с подсказками по bind-переменным и сохранённые фрагменты.
+Независимый инструмент, не связан с Oracle.
+**Функция:** Форматирование Oracle SQL и PL/SQL с сохранением комментариев и строк q'[...]', офлайн
+
+**Pro add-on listing:** name „Stelar SQL Formatter Pro”; EN: One-time purchase: PL/SQL indentation, identifier case, aligned aliases, script splitting, code strings with bind hints and saved snippets. RO: Cumpărare unică: indentare PL/SQL, majuscule pentru identificatori, aliasuri aliniate, împărțirea scriptului, șiruri pentru cod cu indicii bind și fragmente salvate. RU: Разовая покупка: отступы PL/SQL, регистр идентификаторов, выравнивание псевдонимов, разбиение скрипта, строки для кода с подсказками bind и сохранённые фрагменты.
