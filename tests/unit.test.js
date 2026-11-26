@@ -334,3 +334,198 @@ test('text v1.1: shuffle, sort by length (free); CSV ↔ JSON, HTML escape (Pro)
   assert.equal(T.pro.csvToJson(T.pro.jsonToCsv('[{"q":"say \\"hi\\"\\nnow"}]')), JSON.stringify([{ q: 'say "hi"\nnow' }], null, 2));
   assert.equal(T.pro.htmlEscape('<a href="x">Tom & \'Jerry\'</a>'), '&lt;a href=&quot;x&quot;&gt;Tom &amp; &#39;Jerry&#39;&lt;/a&gt;');
 });
+
+const SQ = require('../sql/logic.js');
+const sqlToks = s => SQ.tokenize(s).filter(t => !/comment/.test(t.type)).map(t => (t.type === 'word' ? t.text.toUpperCase() : t.text));
+test('sql: tokenizer handles Oracle literals, comments, binds and slash lines', () => {
+  const k = s => SQ.tokenize(s).map(t => t.type + ':' + t.text);
+  assert.deepEqual(k("q'[it's; -- ok]' nq'{x}' N'n' 'a''b' \"Col \"\"x\" :b1 :=1"),
+    ["string:q'[it's; -- ok]'", "string:nq'{x}'", "string:N'n'", "string:'a''b'", 'quoted:"Col "', 'quoted:"x"', 'bind::b1', 'symbol::=', 'number:1']);
+  assert.deepEqual(k("q'<a>b'>' q'!x!'"), ["string:q'<a>b'>'", "string:q'!x!'"].slice(0, 1).concat(k("q'!x!'")));
+  assert.deepEqual(k('-- a /* b\n/* c -- d */x'), ['lcomment:-- a /* b', 'bcomment:/* c -- d */', 'word:x']);
+  assert.deepEqual(k('1..10 .5 1e-3 2.5f v%TYPE emp@dblink a<>b'), ['number:1', 'symbol:..', 'number:10', 'number:.5', 'number:1e-3', 'number:2.5f',
+    'word:v', 'symbol:%', 'word:TYPE', 'word:emp', 'symbol:@', 'word:dblink', 'word:a', 'symbol:<>', 'word:b']);
+  assert.deepEqual(k('a / b\n  /  \n&&sub x$#'), ['word:a', 'symbol:/', 'word:b', 'slash:/', 'bind:&&sub', 'word:x$#']);
+  assert.deepEqual(k("'unterminated -- x"), ["string:'unterminated -- x"]);
+  assert.deepEqual(k('Über_tabel ţară'), ['word:Über_tabel', 'word:ţară']);
+});
+test('sql: splits scripts on ; and /, keeps PL/SQL blocks whole', () => {
+  const kinds = s => SQ.statements(s).map(x => x.kind + ':' + x.text);
+  assert.deepEqual(kinds("select 'a;b' from dual; select 2 from dual\n/\nselect 3 from dual"),
+    ["sql:select 'a;b' from dual;", 'sql:select 2 from dual\n/', 'sql:select 3 from dual']);
+  const blk = 'begin\n  if x then y; end if;\n  for r in (select 1 from dual) loop null; end loop;\nend;';
+  assert.deepEqual(kinds(blk + '\nselect 1 from dual;'), ['plsql:' + blk, 'sql:select 1 from dual;']);
+  const pkg = 'create or replace package body p as\n procedure a is begin null; end;\nbegin init; end p;';
+  assert.deepEqual(kinds(pkg + '\n/\ncommit;'), ['plsql:' + pkg + '\n/', 'sql:commit;']);
+  assert.deepEqual(kinds('create type t as object (a number);\n/\ncreate or replace type body t as member function f return number is begin return 1; end; end;\n/'),
+    ['sql:create type t as object (a number);\n/', 'plsql:create or replace type body t as member function f return number is begin return 1; end; end;\n/']);
+  assert.deepEqual(kinds("SET SERVEROUTPUT ON\nPROMPT it's running\n@setup.sql\nset transaction read only;\nexec p;"),
+    ['cmd:SET SERVEROUTPUT ON', "cmd:PROMPT it's running", 'cmd:@setup.sql', 'sql:set transaction read only;', 'cmd:exec p;']);
+  assert.deepEqual(kinds('create trigger t before insert on x for each row begin :new.a := 1; end;\ndeclare v number; begin v := case when 1=1 then 1 end; end;'),
+    ['plsql:create trigger t before insert on x for each row begin :new.a := 1; end;', 'plsql:declare v number; begin v := case when 1=1 then 1 end; end;']);
+  assert.deepEqual(SQ.statements('-- just a note\n'), []);
+  assert.deepEqual(SQ.statements(''), []);
+});
+test('sql: formats SELECT with joins, CASE, BETWEEN, subquery and comments', () => {
+  const src = "select /*+ first_rows */ e.id, e.name, -- who\ncase when e.sal > 10 then 'hi' else 'lo' end band from emp e join dept d on d.id = e.dept_id and d.on_line = 'Y' " +
+    "where e.sal between 1 and 2 and e.dept_id in (select id from dept where loc = 'a;b') and e.x=-1 order by 1 desc;";
+  assert.equal(SQ.format(src), [
+    'SELECT /*+ first_rows */',
+    '  e.id,',
+    '  e.name, -- who',
+    '  CASE',
+    "    WHEN e.sal > 10 THEN 'hi'",
+    "    ELSE 'lo'",
+    '  END band',
+    'FROM',
+    '  emp e',
+    '  JOIN dept d ON d.id = e.dept_id',
+    "    AND d.on_line = 'Y'",
+    'WHERE',
+    '  e.sal BETWEEN 1 AND 2',
+    '  AND e.dept_id IN (',
+    '    SELECT',
+    '      id',
+    '    FROM',
+    '      dept',
+    '    WHERE',
+    "      loc = 'a;b'",
+    '  )',
+    '  AND e.x = -1',
+    'ORDER BY',
+    '  1 DESC;'].join('\n'));
+});
+test('sql: keyword case, comma style, indent and minify', () => {
+  const src = 'SELECT a, Count(*) AS n FROM T WHERE x = 1 GROUP BY a';
+  assert.equal(SQ.format(src, { keywordCase: 'lower', commaStyle: 'leading', indent: 4 }),
+    'select\n    a\n    , count(*) as n\nfrom\n    T\nwhere\n    x = 1\ngroup by\n    a');
+  assert.equal(SQ.format('select A from B', { keywordCase: 'keep' }), 'select\n  A\nfrom\n  B');
+  assert.equal(SQ.format("select a -- c1\n, b from t where s = '--x' /* k */;", { minify: true }), "SELECT a /* c1 */, b FROM t WHERE s = '--x' /* k */;");
+  assert.equal(SQ.format('select 1 from dual;\nbegin null; end;\n/', { minify: true }), 'SELECT 1 FROM dual;\nBEGIN NULL; END;\n/');
+  assert.equal(SQ.format('-- c */ x\nselect 1 from dual', { minify: true }), '/* c * / x */ SELECT 1 FROM dual');
+  assert.equal(SQ.format("select x||'y', a.b(+), t.*, -5, 3-2, sysdate - 1, f(-x) from dual", { minify: true }),
+    "SELECT x || 'y', a.b(+), t.*, -5, 3 - 2, SYSDATE - 1, f(-x) FROM dual");
+  assert.equal(SQ.format("select name, t.date, cast(x as number(5,2)) from t", { minify: true }), 'SELECT name, t.date, CAST(x AS NUMBER(5, 2)) FROM t');
+});
+test('sql: INSERT, UPDATE, DELETE, MERGE, WITH and set operators', () => {
+  assert.equal(SQ.format("insert into t (a, b) values (1, q'[x;y]');"), "INSERT INTO t (a, b)\nVALUES (1, q'[x;y]');");
+  assert.equal(SQ.format('update t set a = 1, b = b * 2 where id = :id returning a into :ra;'),
+    'UPDATE t\nSET\n  a = 1,\n  b = b * 2\nWHERE\n  id = :id\nRETURNING a INTO :ra;');
+  assert.equal(SQ.format('delete from t where a = 1 or b is null'), 'DELETE FROM t\nWHERE\n  a = 1\n  OR b IS NULL');
+  assert.equal(SQ.format('merge into t using s on (t.id = s.id) when matched then update set t.a = s.a when not matched then insert (id) values (s.id)'),
+    'MERGE INTO t\nUSING s\nON (t.id = s.id)\nWHEN MATCHED THEN\n  UPDATE SET\n    t.a = s.a\nWHEN NOT MATCHED THEN\n  INSERT (id)\n  VALUES (s.id)');
+  assert.equal(SQ.format('with a as (select 1 x from dual) select x from a union all select 2 from dual minus select 3 from dual'),
+    'WITH\n  a AS (\n    SELECT\n      1 x\n    FROM\n      dual\n  )\nSELECT\n  x\nFROM\n  a\nUNION ALL\nSELECT\n  2\nFROM\n  dual\nMINUS\nSELECT\n  3\nFROM\n  dual');
+  assert.equal(SQ.format('select rank() over (partition by a order by b) r from t order by r fetch first 5 rows only'),
+    'SELECT\n  RANK() OVER (PARTITION BY a ORDER BY b) r\nFROM\n  t\nORDER BY\n  r\nFETCH FIRST 5 ROWS ONLY');
+  assert.equal(SQ.format('select id from t start with p is null connect by prior id = p'), 'SELECT\n  id\nFROM\n  t\nSTART WITH\n  p IS NULL\nCONNECT BY\n  PRIOR id = p');
+  assert.equal(SQ.format('create table t (id number(10) primary key, n varchar2(30))'), 'CREATE TABLE t (\n  id NUMBER(10) PRIMARY KEY,\n  n VARCHAR2(30)\n)');
+  assert.equal(SQ.format('grant select, update on t to u;'), 'GRANT SELECT, UPDATE ON t TO u;');
+  assert.equal(SQ.format('create view v as select a from t'), 'CREATE VIEW v AS\nSELECT\n  a\nFROM\n  t');
+  assert.equal(SQ.format('select 1 from dual;select 2 from dual;'), 'SELECT\n  1\nFROM\n  dual;\n\nSELECT\n  2\nFROM\n  dual;');
+});
+test('sql: Pro identifier case and aligned AS aliases', () => {
+  assert.equal(SQ.format('select e.Id as a, e.long_name as b, nvl(x, 0) as c from Emp e', { identCase: 'upper', keywordCase: 'lower', alignAs: true }),
+    'select\n  E.ID        as A,\n  E.LONG_NAME as B,\n  nvl(X, 0)   as C\nfrom\n  EMP E');
+  assert.equal(SQ.format('select a as x from t', { alignAs: true }), 'SELECT\n  a AS x\nFROM\n  t');
+  assert.equal(SQ.format('select "Mixed" as "M", Abc from t', { identCase: 'lower' }), 'SELECT\n  "Mixed" AS "M",\n  abc\nFROM\n  t');
+  assert.equal(SQ.format('select t.type, p(x => 1), v%rowtype from t', { identCase: 'upper', keywordCase: 'lower', minify: true }), 'select T.TYPE, P(X => 1), V%rowtype from T');
+});
+test('sql: Pro PL/SQL procedure with IF, loops, CASE and exceptions', () => {
+  const src = `create or replace procedure p(a in number, b out varchar2, c in date default sysdate) is
+v number := 0; cursor cr is select id from t;
+begin
+if a > 0 then for r in cr loop v := v + 1; end loop; elsif a < 0 then null; else
+case a when 1 then b := 'x'; else b := 'y'; end case; end if;
+select count(*) into v from t where id = a;
+exception when no_data_found then null; when others then raise; end p;
+/`;
+  assert.equal(SQ.format(src), `CREATE OR REPLACE PROCEDURE p (
+  a IN NUMBER,
+  b OUT VARCHAR2,
+  c IN DATE DEFAULT SYSDATE
+) IS
+  v NUMBER := 0;
+  CURSOR cr IS
+    SELECT
+      id
+    FROM
+      t;
+BEGIN
+  IF a > 0 THEN
+    FOR r IN cr LOOP
+      v := v + 1;
+    END LOOP;
+  ELSIF a < 0 THEN
+    NULL;
+  ELSE
+    CASE a
+      WHEN 1 THEN
+        b := 'x';
+      ELSE
+        b := 'y';
+    END CASE;
+  END IF;
+  SELECT
+    COUNT(*)
+  INTO v
+  FROM
+    t
+  WHERE
+    id = a;
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    NULL;
+  WHEN OTHERS THEN
+    RAISE;
+END p;
+/`);
+});
+test('sql: Pro PL/SQL packages, triggers, nested blocks, labels; free keeps layout', () => {
+  assert.equal(SQ.format('create package k as function f return number; procedure p; end k;\n/\ncreate or replace package body k as\nfunction f return number is begin return 1; end;\n\nprocedure p is begin null; end;\nend k;\n/'),
+    'CREATE PACKAGE k AS\n  FUNCTION f RETURN NUMBER;\n  PROCEDURE p;\nEND k;\n/\n\nCREATE OR REPLACE PACKAGE BODY k AS\n  FUNCTION f RETURN NUMBER IS\n  BEGIN\n    RETURN 1;\n  END;\n\n  PROCEDURE p IS\n  BEGIN\n    NULL;\n  END;\nEND k;\n/');
+  assert.equal(SQ.format('create or replace trigger t before update on x for each row when (new.a > 0) declare v number; begin :new.b := v; end;'),
+    'CREATE OR REPLACE TRIGGER t\n  BEFORE UPDATE ON x\n  FOR EACH ROW\n  WHEN (new.a > 0)\nDECLARE\n  v NUMBER;\nBEGIN\n  :new.b := v;\nEND;');
+  assert.equal(SQ.format('begin <<outer_loop>> loop exit when x > 1; begin null; exception when others then null; end; end loop outer_loop; forall i in 1..n delete from t where id = ids(i); end;'),
+    'BEGIN\n  <<outer_loop>>\n  LOOP\n    EXIT WHEN x > 1;\n    BEGIN\n      NULL;\n    EXCEPTION\n      WHEN OTHERS THEN\n        NULL;\n    END;\n  END LOOP outer_loop;\n  FORALL i IN 1..n\n    DELETE FROM t\n    WHERE\n      id = ids(i);\nEND;');
+  const blk = 'begin\n      if x then   y;\nend if; -- note\nend;';
+  assert.equal(SQ.format(blk + '\nselect 1 from dual', { plsql: false }), 'BEGIN\n      IF x THEN   y;\nEND IF; -- note\nEND;\n\nSELECT\n  1\nFROM\n  dual');
+  assert.equal(SQ.format('begin x := 1; -- a\n-- b\n\n  y := 2; end;'), 'BEGIN\n  x := 1; -- a\n  -- b\n\n  y := 2;\nEND;');
+});
+test('sql: formatting is stable and never changes tokens', () => {
+  const samples = [
+    "select a, b -- x\n , c from t where q'[;]' = 'x' and y in (1,2) order by 1",
+    'with x as (select * from (select 1 a from dual) where a in (select 1 from dual)) select * from x',
+    'begin for r in (select * from t) loop if r.a = 1 then p(r.a => 1); elsif r.b then null; end if; end loop; end;',
+    'create or replace package body k as procedure p(a number, b number, c number) is begin update t set a = 1; end; begin null; end;',
+    "select /* a */ 1 /* b */ from dual -- end\n",
+    'select case when a then case when b then 1 end else 2 end from t; select nvl(case when a then 1 end, 0) from t',
+    'merge into t using (select * from s) s on (t.id = s.id) when matched then update set a = 1 delete where b = 2',
+    'select * from a, b, c where a.id = b.id(+) and x between 1 and 2 having count(*) > 1',
+    '', '   ', '-- just comment', ';', ')', 'end;', 'select (', 'begin if x then'];
+  for (const s of samples) for (const o of [{}, { commaStyle: 'leading', alignAs: true, keywordCase: 'lower', identCase: 'upper' }, { minify: true }, { plsql: false }]) {
+    const a = SQ.format(s, o);
+    assert.equal(SQ.format(a, o), a, 'not stable: ' + s + ' ' + JSON.stringify(o));
+    assert.deepEqual(sqlToks(a), sqlToks(s), 'tokens changed: ' + s);
+    assert.equal(SQ.highlight(s).map(x => x[1]).join(''), s);
+  }
+});
+test('sql: highlighting classes', () => {
+  const h = SQ.highlight("select nvl(a, 'x') from t -- c\nwhere b = :v and n = 1").filter(x => x[0]);
+  assert.deepEqual(h, [['k', 'select'], ['f', 'nvl'], ['s', "'x'"], ['k', 'from'], ['c', '-- c'], ['k', 'where'], ['b', ':v'], ['k', 'and'], ['n', '1']]);
+  assert.deepEqual(SQ.highlight("PROMPT it's\nselect 1 from dual").slice(0, 1), [['m', "PROMPT it's"]]);
+});
+test('sql: Pro code strings with bind hints', () => {
+  const sql = 'SELECT\n  "Name", \'a\\b\'\nFROM t\nWHERE id = :id AND d = :dept_no OR id = :id;';
+  assert.equal(SQ.toCode(sql, 'java'), 'String sql = "SELECT\\n"\n    + "  \\"Name\\", \'a\\\\b\'\\n"\n    + "FROM t\\n"\n    + "WHERE id = ? AND d = ? OR id = ?";\n' +
+    '// PreparedStatement ps = conn.prepareStatement(sql);\n// ps.setObject(1, id); // :id\n// ps.setObject(2, deptNo); // :dept_no\n// ps.setObject(3, id); // :id');
+  assert.equal(SQ.toCode(sql, 'csharp'), 'string sql = @"SELECT\n  ""Name"", \'a\\b\'\nFROM t\nWHERE id = :id AND d = :dept_no OR id = :id";\n// cmd.BindByName = true;\n// cmd.Parameters.Add("id", id);\n// cmd.Parameters.Add("dept_no", deptNo);');
+  assert.equal(SQ.toCode(sql, 'python'), 'sql = """SELECT\n  "Name", \'a\\\\b\'\nFROM t\nWHERE id = :id AND d = :dept_no OR id = :id\n"""\n# cursor.execute(sql, {"id": id, "dept_no": dept_no})');
+  assert.equal(SQ.toCode(sql, 'plsql'), 'l_sql VARCHAR2(32767) := q\'[SELECT\n  "Name", \'a\\b\'\nFROM t\nWHERE id = :id AND d = :dept_no OR id = :id]\';\n-- EXECUTE IMMEDIATE l_sql USING l_id, l_dept_no, l_id;');
+  assert.equal(SQ.toCode("select q'[x]' from t where a = :1 and b = :2", 'plsql'), "l_sql VARCHAR2(32767) := q'{select q'[x]' from t where a = :1 and b = :2}';\n-- EXECUTE IMMEDIATE l_sql USING l_p1, l_p2;");
+  assert.equal(SQ.toCode('select :1 from dual', 'python'), 'sql = """select :1 from dual\n"""\n# cursor.execute(sql, [p1])');
+  assert.equal(SQ.toCode("begin p(:a, ':not_bind'); x := :a; end;\n/\nselect 1 from dual;\nSET ECHO ON", 'plsql'),
+    "l_sql VARCHAR2(32767) := q'[begin p(:a, ':not_bind'); x := :a; end;]';\n-- EXECUTE IMMEDIATE l_sql USING l_a;\n\nl_sql2 VARCHAR2(32767) := q'[select 1 from dual]';\n-- EXECUTE IMMEDIATE l_sql2;");
+  assert.equal(SQ.toCode('select 1 from dual', 'java'), 'String sql = "select 1 from dual";');
+  assert.equal(SQ.toCode('', 'java'), '');
+});
