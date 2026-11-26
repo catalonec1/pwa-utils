@@ -10,7 +10,9 @@ const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/cs
 const SAMPLE = {
   convertor: { cat: 'length' },
   focus: {
-    state: JSON.stringify({ phase: 'work', workDone: 2, endAt: null, remaining: 1004 })
+    state: JSON.stringify({ phase: 'work', workDone: 2, endAt: null, remaining: 1004 }),
+    tasks: JSON.stringify([{ id: 'a', text: 'Quarterly report', done: false, pomos: 2 }, { id: 'b', text: 'Reply to emails', done: true, pomos: 1 }, { id: 'c', text: 'Study: chapter 4', done: false, pomos: 0 }]),
+    curTask: JSON.stringify('a')
   },
   days: { daysCd: JSON.stringify([{ name: 'New Year', date: '2027-01-01' }, { name: 'Vacation', date: '2027-07-15' }]), daysHol: '2026-12-25\n2027-01-01' },
   pct: { pctHist: JSON.stringify([{ time: '2026-11-24 10:15', calc: 'Profit 40 · margin 40% · markup 66.67%', result: '66.67%' }]) },

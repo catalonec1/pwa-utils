@@ -1036,3 +1036,160 @@ test('sql: Pro code strings with bind hints', () => {
   assert.equal(SQ.toCode('select 1 from dual', 'java'), 'String sql = "select 1 from dual";');
   assert.equal(SQ.toCode('', 'java'), '');
 });
+test('converter v1.2: number bases, new units (free); pace and data rate (Pro)', () => {
+  assert.equal(U.convertBase('255', 'dec', 'hex'), 'FF');
+  assert.equal(U.convertBase('0xff', 'hex', 'bin'), '11111111');
+  assert.equal(U.convertBase('1111 0000', 'bin', 'oct'), '360');
+  assert.equal(U.convertBase('-42', 'dec', 'bin'), '-101010');
+  assert.equal(U.convertBase('-0', 'dec', 'hex'), '0');
+  assert.equal(U.convertBase('18446744073709551615', 'dec', 'hex'), 'FFFFFFFFFFFFFFFF');
+  assert.equal(U.convertBase('12a', 'dec', 'hex'), null);
+  assert.equal(U.convertBase('102', 'bin', 'dec'), null);
+  assert.equal(U.convertBase('', 'dec', 'hex'), null);
+  assert.throws(() => U.convertBase('1', 'dec', 'b36'));
+  assert.ok(U.categories(false).includes('bases'));
+  close(U.convert('length', 'um', 'mm', 1500), 1.5);
+  close(U.convert('mass', 'ct', 'g', 5), 1);
+  close(U.convert('volume', 'qtUS', 'ptUS', 1), 2);
+  close(U.convert('volume', 'ptUS', 'cup', 1), 2);
+  close(U.convert('pace', 'minkm', 'kmh', 5), 12);
+  close(U.convert('pace', 'kmh', 'minmi', 12), 8.04672);
+  close(U.convert('pace', 'mph', 'minmi', 6), 10);
+  assert.equal(U.convert('pace', 'kmh', 'minkm', 0), Infinity);
+  assert.equal(U.parseMinSec('5:30'), 5.5);
+  assert.equal(U.parseMinSec('4,25'), 4.25);
+  assert.equal(U.formatMinSec(5.5), '5:30');
+  assert.equal(U.formatMinSec(8.04672), '8:03');
+  assert.equal(U.formatMinSec(75), '1:15:00');
+  assert.equal(U.formatMinSec(Infinity), '∞');
+  close(U.convert('datarate', 'Mbps', 'MBps', 100), 12.5);
+  close(U.convert('datarate', 'Gbps', 'MiBps', 1), 119.20928955078125);
+  assert.equal(U.categories(false).includes('pace'), false);
+  assert.equal(U.categories(false).includes('datarate'), false);
+});
+
+test('focus v1.2: tasks (free), noise generator and tasks CSV (Pro)', () => {
+  let t = F.addTask([], '  Write   report ', 'a');
+  t = F.addTask(t, '', 'x');
+  t = F.addTask(t, 'Read, "notes"', 'b');
+  assert.deepEqual(t.map(x => x.text), ['Write report', 'Read, "notes"']);
+  assert.equal(F.addTask([], 'x'.repeat(500), 'c')[0].text.length, F.TASK_LEN);
+  let many = [];
+  for (let i = 0; i < 60; i++) many = F.addTask(many, 't' + i, i);
+  assert.equal(many.length, F.TASK_MAX);
+  t = F.creditTask(F.creditTask(t, 'a'), 'a');
+  assert.equal(t[0].pomos, 2);
+  t = F.toggleTask(t, 'b');
+  assert.equal(t[1].done, true);
+  assert.equal(F.tasksCSV(t, 25), 'task,done,sessions,minutes\nWrite report,no,2,50\n"Read, ""notes""",yes,0,0\n');
+  assert.equal(F.tasksCSV(F.addTask([], '=1+1', 'z')), "task,done,sessions,minutes\n'=1+1,no,0,0\n");
+  assert.deepEqual(F.clearDone(t).map(x => x.id), ['a']);
+  assert.deepEqual(F.removeTask(t, 'a').map(x => x.id), ['b']);
+  assert.deepEqual(F.sanitizeTasks([{ id: 1, text: 'ok', pomos: '3' }, null, { text: 5 }]), [{ id: '1', text: 'ok', done: false, pomos: 3 }]);
+  assert.deepEqual(F.sanitizeTasks('nope'), []);
+  let seed = 1;
+  const rand = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+  const roughness = a => { let d = 0; for (let i = 1; i < a.length; i++) d += Math.abs(a[i] - a[i - 1]); return d / a.length; };
+  const r = {};
+  for (const k of F.NOISES) {
+    const a = F.fillNoise(k, new Float32Array(20000), rand);
+    assert.ok(a.every(v => v >= -1 && v <= 1), k);
+    assert.ok(Math.abs(a[a.length - 1] - a[0]) < 1e-6, k + ' loops without a jump');
+    r[k] = roughness(a);
+  }
+  assert.ok(r.white > r.pink && r.pink > r.brown, JSON.stringify(r));
+});
+
+test('pass v1.2: excluded characters, start with a letter (free); allowed symbols (Pro)', () => {
+  const o = { length: 14, lower: true, upper: true, digits: true, symbols: true, exclude: 'aA1!', startLetter: true };
+  for (let i = 0; i < 300; i++) {
+    const p = P.generate(o);
+    assert.equal(p.length, 14);
+    assert.match(p, /^[a-zA-Z]/);
+    assert.doesNotMatch(p, /[aA1!]/);
+    assert.match(p, /[0-9]/); assert.match(p, /[^a-zA-Z0-9]/);
+  }
+  assert.equal(P.poolSize(o), P.poolSize({ lower: true, upper: true, digits: true, symbols: true }) - 4);
+  assert.match(P.generate({ length: 6, digits: true, startLetter: true }), /^\d{6}$/, 'no letters chosen: ignored');
+  assert.throws(() => P.generate({ length: 8, digits: true, exclude: '0123456789' }));
+  assert.equal(P.cleanSymbols('!?ab 12!#é'), '!?#');
+  for (let i = 0; i < 100; i++) assert.match(P.generate({ length: 10, lower: true, symbols: true, symbolSet: '#_' }), /^(?=.*[#_])[a-z#_]{10}$/);
+  assert.equal(P.poolSize({ symbols: true, symbolSet: 'xyz' }), 0);
+  assert.equal(P.genBits({ length: 16, lower: true, upper: true, digits: true, symbols: true }), P.bits(16, P.poolSize({ lower: true, upper: true, digits: true, symbols: true })));
+  assert.equal(P.genBits({ length: 10, lower: true, digits: true, startLetter: true }), Math.round(9 * Math.log2(36) + Math.log2(26)));
+  assert.match(P.passphrase({ words: 3, sep: '', capitalize: true, lang: 'en' }), /^([A-Z][a-z]+){3}$/);
+});
+
+test('days v1.2: age (free) and custom weekend days (Pro)', () => {
+  const p = DC.parse;
+  const a = DC.age(p('2000-02-29'), p('2026-11-26'));
+  assert.deepEqual([a.years, a.months, a.days, a.totalDays, DC.fmt(a.next), a.toNext], [26, 8, 28, 9767, '2027-02-28', 94]);
+  const b = DC.age(p('1990-11-26'), p('2026-11-26'));
+  assert.deepEqual([b.years, b.months, b.days, b.toNext], [36, 0, 0, 0]);
+  assert.equal(DC.age(p('2027-01-01'), p('2026-01-01')), null);
+  assert.equal(DC.age(p('2024-02-29'), p('2028-02-29')).toNext, 0);
+  /* 2026-11-29 is a Sunday; Mon..Sat to 2026-12-05 */
+  assert.equal(DC.workdaysBetween(p('2026-11-29'), p('2026-12-05'), []), 5);
+  assert.equal(DC.workdaysBetween(p('2026-11-29'), p('2026-12-05'), [], false, [5, 6]), 4);
+  assert.equal(DC.workdaysBetween(p('2026-11-29'), p('2026-12-05'), [], false, [0]), 6);
+  assert.equal(DC.workdaysBetween(p('2026-11-29'), p('2026-12-05'), ['2026-12-01'], false, []), 5);
+  assert.equal(DC.fmt(DC.addWorkdays(p('2026-12-03'), 1, [], [5])), '2026-12-05');
+  assert.equal(DC.fmt(DC.addWorkdays(p('2026-12-03'), 1)), '2026-12-04');
+  assert.equal(DC.addWorkdays(p('2026-12-03'), 3, [], [0, 1, 2, 3, 4, 5, 6]), null);
+});
+
+test('pct v1.2: percentage points and proportion (free), CAGR (Pro)', () => {
+  assert.deepEqual(PC.points(5, 7), { pp: 2, rel: 40 });
+  assert.deepEqual(PC.points(0.1, 0.3), { pp: 0.2, rel: 200 });
+  assert.ok(Number.isNaN(PC.points(0, 3).rel));
+  assert.equal(PC.proportion(3, 450, 5), 750);
+  assert.equal(PC.proportion(4, 1, 2), 0.5);
+  assert.ok(Number.isNaN(PC.proportion(0, 1, 2)));
+  assert.equal(PC.cagr(1000, 1210, 2), 10);
+  assert.equal(PC.cagr(100, 100, 5), 0);
+  assert.equal(PC.cagr(200, 100, 1), -50);
+  assert.ok(Math.abs(PC.cagr(1000, 1500, 4) - 10.668192) < 1e-6);
+  assert.ok(Number.isNaN(PC.cagr(0, 100, 2)));
+  assert.ok(Number.isNaN(PC.cagr(100, 200, 0)));
+  assert.ok(Number.isNaN(PC.cagr(100, -1, 2)));
+});
+
+test('ora v1.2: highlight terms, recent searches (free); Markdown table (Pro)', () => {
+  assert.deepEqual(OL.terms('Unique  constraint'), ['unique', 'constraint']);
+  assert.deepEqual(OL.terms('942'), []);
+  assert.deepEqual(OL.terms('ORA-06512: at line 5'), []);
+  assert.deepEqual(OL.highlight('Unique constraint violated; UNIQUE', ['unique']),
+    [{ t: 'Unique', hit: true }, { t: ' constraint violated; ', hit: false }, { t: 'UNIQUE', hit: true }]);
+  assert.deepEqual(OL.highlight('abc', []), [{ t: 'abc', hit: false }]);
+  assert.deepEqual(OL.highlight('', ['x']), [{ t: '', hit: false }]);
+  let r = OL.addRecent([], ' deadlock ');
+  r = OL.addRecent(r, '942'); r = OL.addRecent(r, 'DEADLOCK');
+  assert.deepEqual(r, ['DEADLOCK', '942']);
+  assert.deepEqual(OL.addRecent(r, 'ORA-1\nORA-2'), r);
+  assert.deepEqual(OL.addRecent(r, 'x'.repeat(61)), r);
+  let many = [];
+  for (let i = 0; i < 12; i++) many = OL.addRecent(many, 'q' + i);
+  assert.equal(many.length, 8);
+  assert.equal(OL.toMarkdownTable([{ code: 'ORA-1', title: 'a|b', cause: 'line1\nline2', fix: 'x\\y' }]),
+    '| Code | Title | Cause | Fix |\n| --- | --- | --- | --- |\n| ORA-1 | a\\|b | line1 line2 | x\\\\y |\n');
+  const t = OL.toMarkdownTable(OL.search(OD, 'ORA-00942 ORA-00001').slice(0, 2));
+  assert.equal(t.trim().split('\n').length, 4);
+});
+
+test('text v1.2: line filters, prefix/suffix (free); regex filter and text diff (Pro)', () => {
+  const t = 'Apple pie\nbanana\napricot jam\n\nCherry';
+  assert.equal(T.filterLines(t, 'ap', true, { ignoreCase: true }), 'Apple pie\napricot jam');
+  assert.equal(T.filterLines(t, 'ap', true), 'apricot jam');
+  assert.equal(T.filterLines(t, 'an', false), 'Apple pie\napricot jam\n\nCherry');
+  assert.equal(T.filterLines(t, '', true), t);
+  assert.equal(T.filterLines('id 12\nname\nid 7', '^id \\d+$', false, { regex: true }), 'name');
+  assert.equal(T.filterLines('Мир\nмир\nдом', 'МИР', true, { regex: true, ignoreCase: true }), 'Мир\nмир');
+  assert.throws(() => T.filterLines('a', '(', true, { regex: true }));
+  assert.equal(T.affixLines('a\n\n  \nb', '- ', ';'), '- a;\n\n  \n- b;');
+  assert.equal(T.diffText('a\nb\nc\nd', 'a\nc\nx\nd'), '  a\n- b\n  c\n+ x\n  d');
+  assert.equal(T.diffText('same', 'same'), '  same');
+  assert.deepEqual(T.diffLines('', 'new'), [{ op: '-', line: '' }, { op: '+', line: 'new' }]);
+  const d = T.diffLines('1\n2\n3\n4\n5', '0\n1\n3\n4\n5\n6');
+  assert.deepEqual(d.map(x => x.op).join(''), '+ -   +');
+  assert.throws(() => T.diffLines('x\n'.repeat(3001), 'y'));
+});

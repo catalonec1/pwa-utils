@@ -37,7 +37,39 @@
     return scored.sort((a, b) => b[0] - a[0] || a[1].code.localeCompare(b[1].code)).slice(0, lim).map(x => x[1]);
   }
   function toMarkdown(e) { return `**${e.code}: ${e.title}**\n\nCause: ${e.cause}\n\nFix: ${e.fix}\n`; }
-  const OraLookup = { codeOf, codesIn, search, toMarkdown, entry };
+  /* Words that a word search matched on (none for code searches or pasted stacks). */
+  function terms(q) {
+    const s = String(q || '').trim();
+    if (!s || codeOf(s) || codesIn(s).length) return [];
+    return [...new Set(norm(s).split(/\s+/).filter(w => w.length > 1))];
+  }
+  /* Splits text into [{t, hit}] parts marking every occurrence of the terms (case-insensitive). */
+  function highlight(text, words) {
+    text = String(text || '');
+    const ws = (words || []).filter(Boolean);
+    if (!ws.length) return [{ t: text, hit: false }];
+    const low = text.toLowerCase(), marks = new Array(text.length).fill(false);
+    for (const w of ws) { let i = low.indexOf(w); while (i >= 0) { for (let k = i; k < i + w.length; k++) marks[k] = true; i = low.indexOf(w, i + w.length); } }
+    const out = [];
+    for (let i = 0; i < text.length; i++) {
+      if (out.length && out[out.length - 1].hit === marks[i]) out[out.length - 1].t += text[i];
+      else out.push({ t: text[i], hit: marks[i] });
+    }
+    return out.length ? out : [{ t: '', hit: false }];
+  }
+  /* Recent searches: newest first, unique (case-insensitive), single-line and short only. */
+  function addRecent(list, q, max) {
+    const s = String(q || '').replace(/\s+/g, ' ').trim();
+    if (!s || s.length > 60 || /\n/.test(String(q).trim())) return list;
+    return [s].concat((list || []).filter(x => x.toLowerCase() !== s.toLowerCase())).slice(0, max || 8);
+  }
+  /* Markdown table of entries (pipes escaped, newlines flattened). */
+  function toMarkdownTable(entries) {
+    const c = v => String(v).replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/\s*\n\s*/g, ' ');
+    return ['| Code | Title | Cause | Fix |', '| --- | --- | --- | --- |']
+      .concat(entries.map(e => `| ${c(e.code)} | ${c(e.title)} | ${c(e.cause)} | ${c(e.fix)} |`)).join('\n') + '\n';
+  }
+  const OraLookup = { terms, highlight, addRecent, toMarkdownTable, codeOf, codesIn, search, toMarkdown, entry };
   if (typeof module !== 'undefined' && module.exports) module.exports = OraLookup;
   else global.OraLookup = OraLookup;
 })(typeof window !== 'undefined' ? window : globalThis);
