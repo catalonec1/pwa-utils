@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Regex Tester</title>
+<meta name="description" content="Offline JavaScript regular expression tester: live match highlighting, capture groups, clear errors, replace preview, plain-language explanation and test cases.">
+<meta name="theme-color" content="#9c36b5">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+  :root { --accent: #9c36b5; --mk1: #f3d9fa; --mk2: #c5f6fa; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --accent: #e599f7; --mk1: #5f2a6e; --mk2: #0b5563; } }
+  :root[data-theme="dark"] { --accent: #e599f7; --mk1: #5f2a6e; --mk2: #0b5563; }
+  main { max-width: 900px; }
+  h2.t { font-size: 1rem; margin: 0 0 8px; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+  .mono, #pattern, #repl, #hl, #replOut, code { font-family: ui-monospace, Consolas, monospace; }
+  .rx { display: flex; align-items: center; gap: 6px; }
+  .rx span { color: var(--muted); font: 1.3rem ui-monospace, Consolas, monospace; }
+  .rx input { flex: 1; min-width: 0; font-size: 1.05rem; }
+  .flags { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; }
+  .flags label, label.chk { display: inline-flex; align-items: center; gap: 5px; margin: 0; color: var(--text); font-size: .9rem; cursor: pointer; }
+  .flags input, label.chk input { width: auto; margin: 0; }
+  .flags b { font-family: ui-monospace, Consolas, monospace; }
+  #err { color: var(--warn); font-weight: 600; margin: 8px 0 0; overflow-wrap: anywhere; }
+  #status { margin: 6px 0 0; }
+  textarea#text { min-height: 130px; }
+  #hl, #replOut { white-space: pre-wrap; overflow-wrap: anywhere; border: 1px solid var(--border); border-radius: 10px; padding: 9px 11px; background: var(--bg); min-height: 44px; max-height: 280px; overflow: auto; margin: 6px 0 0; font-size: .92rem; }
+  #hl mark { background: var(--mk1); color: inherit; border-radius: 3px; box-shadow: inset 0 -2px 0 var(--accent); }
+  #hl mark.alt { background: var(--mk2); }
+  #hl mark.z { display: inline-block; width: 2px; height: 1.1em; vertical-align: text-bottom; background: var(--accent); }
+  .lbl2 { margin-top: 12px; }
+  .scroll { overflow-x: auto; }
+  table.ml { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  table.ml th, table.ml td { text-align: left; padding: 5px 6px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.ml td { font-family: ui-monospace, Consolas, monospace; overflow-wrap: anywhere; white-space: pre-wrap; }
+  table.ml td.n { color: var(--muted); white-space: nowrap; }
+  .grp { display: block; }
+  .grp i { color: var(--muted); font-style: normal; }
+  ol.ex { list-style: none; padding: 0; margin: 0; }
+  ol.ex li { display: flex; gap: 10px; padding: 4px 0; border-bottom: 1px solid var(--border); }
+  ol.ex code { flex: 0 0 auto; max-width: 45%; overflow-wrap: anywhere; color: var(--accent); font-weight: 600; }
+  ol.ex li.fl code { color: var(--muted); }
+  ul.tr { list-style: none; padding: 0; margin: 8px 0 0; }
+  ul.tr li { padding: 3px 0; font-family: ui-monospace, Consolas, monospace; font-size: .9rem; overflow-wrap: anywhere; }
+  .pass { color: var(--ok); } .fail { color: var(--warn); }
+  .tools { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tools button { flex: 0 0 auto; }
+  #libPat { display: block; margin: 8px 0; padding: 8px 10px; background: var(--bg); border-radius: 8px; overflow-wrap: anywhere; min-height: 2.2em; }
+  ul.plain li span { overflow-wrap: anywhere; min-width: 0; }
+  ul.plain li code { color: var(--muted); font-size: .85rem; }
+  ul.plain li button { padding: 4px 10px; flex: 0 0 auto; }
+</style>
+</head>
+<body>
+<header class="bar">
+  <h1 data-i18n="appName">Regex Tester</h1>
+  <select id="lang" data-i18n-aria="language" aria-label="Language">
+    <option value="ro">RO</option><option value="en">EN</option><option value="ru">RU</option>
+  </select>
+  <button id="theme" data-i18n-aria="theme" aria-label="Theme">◐</button>
+</header>
+<main>
+  <section class="card">
+    <label for="pattern" data-i18n="patLabel">Regular expression</label>
+    <div class="rx"><span>/</span><input id="pattern" spellcheck="false" autocomplete="off" autocapitalize="off"><span id="flagsShow">/g</span></div>
+    <div class="flags" id="flags"></div>
+    <p id="err" class="hidden" role="alert"></p>
+    <p class="muted" id="status" aria-live="polite"></p>
+  </section>
+  <section class="card">
+    <label for="text" data-i18n="textLabel">Test text</label>
+    <textarea id="text" spellcheck="false"></textarea>
+    <label class="lbl2" data-i18n="hlLabel">Matches in the text</label>
+    <div id="hl" aria-live="off"></div>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="listTitle">Matches</span> <span class="muted" id="count"></span></h2>
+    <div class="scroll"><table class="ml" id="list"></table></div>
+    <p class="muted hidden" id="more" style="margin:6px 0 0"></p>
+    <div class="tools" style="margin-top:10px">
+      <button id="csvBtn" data-i18n="csv">Save CSV</button>
+      <button id="jsonBtn" data-i18n="json">Save JSON</button>
+      <span class="pro-badge" style="align-self:center">PRO</span>
+    </div>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="replTitle">Replace preview</span> <span class="pro-badge">PRO</span></h2>
+    <label for="repl" data-i18n="replLabel">Replace with ($1, $&lt;name&gt;, $&amp; = whole match)</label>
+    <input id="repl" spellcheck="false" autocomplete="off">
+    <div id="replOut"></div>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="exTitle">Explanation</span> <span class="pro-badge">PRO</span></h2>
+    <ol class="ex" id="explain"></ol>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="tTitle">Test cases</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row">
+      <div><label for="tYes" data-i18n="tYes">Should match (one per line)</label><textarea id="tYes" spellcheck="false" style="min-height:90px"></textarea></div>
+      <div><label for="tNo" data-i18n="tNo">Should not match (one per line)</label><textarea id="tNo" spellcheck="false" style="min-height:90px"></textarea></div>
+    </div>
+    <label class="chk" style="margin-top:8px"><input type="checkbox" id="tWhole"> <span data-i18n="tWhole">The whole line must match</span></label>
+    <p class="muted" id="tSum" style="margin:8px 0 0"></p>
+    <ul class="tr" id="tOut"></ul>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="libTitle">Pattern library</span> <span class="pro-badge">PRO</span></h2>
+    <label for="libSel" data-i18n="libLabel">Ready-made patterns</label>
+    <select id="libSel"></select>
+    <code id="libPat"></code>
+    <div class="tools">
+      <button id="libUse" data-i18n="libUse">Use pattern</button>
+      <button id="libSample" data-i18n="libSample">Use with example text</button>
+    </div>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="savedTitle">Saved patterns</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row">
+      <div style="flex:3 1 200px"><label for="saveName" data-i18n="saveName">Name</label><input id="saveName" autocomplete="off"></div>
+      <button id="saveBtn" style="flex:1 1 120px" data-i18n="save">Save current</button>
+    </div>
+    <ul class="plain" id="savedList" style="margin-top:8px"></ul>
+  </section>
+  <section class="card pro-box hidden" id="proBox">
+    <h2 class="t" style="margin-bottom:6px" data-i18n="proTitle">Pro version</h2>
+    <p class="muted" data-i18n="proPitch">Replace preview, plain-language explanation, 34 ready-made patterns, saved patterns, test cases and CSV/JSON export.</p>
+    <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
+    <p class="muted" id="proStatus"></p>
+  </section>
+  <p class="muted" style="text-align:center"><span data-i18n="note">Uses your browser's JavaScript regex engine.</span> <span data-i18n="offline">Works offline too.</span></p>
+</main>
+<footer><a href="../privacy.html" data-i18n="privacy">Privacy</a></footer>
+<script src="../shared/core.js"></script>
+<script src="logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
