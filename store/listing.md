@@ -337,4 +337,17 @@ Pro (разовая покупка): причины и решения для в�
 Независимый инструмент, не связан с Oracle.
 **Функция:** Причины и решения ошибок ORA- и PLS-, офлайн, можно вставить весь стек ошибок
 
+**Update 1.2 — What's new:**
+EN: Word searches now highlight the matching words, and your recent searches are one tap away. Pro: copy all results (for example every error in a pasted stack) as a Markdown table with code, title, cause and fix.
+RO: Căutările după cuvinte evidențiază acum cuvintele găsite, iar căutările recente sunt la un clic distanță. Pro: copiezi toate rezultatele (de exemplu fiecare eroare dintr-un mesaj lipit) ca tabel Markdown cu cod, titlu, cauză și soluție.
+RU: Поиск по словам теперь подсвечивает найденные слова, а недавние запросы доступны в один клик. Pro: копирование всех результатов (например, каждой ошибки из вставленного стека) таблицей Markdown с кодом, названием, причиной и решением.
+
+**Updated description lines (1.2):**
+EN: • Matching words highlighted, recent searches one tap away
+EN: Pro (one-time add-on): causes and fixes for all 251 errors, favorites, copy as Markdown and copy all results as a Markdown table.
+RO: • Cuvintele găsite sunt evidențiate, căutările recente la un clic distanță
+RO: Pro (cumpărare unică): cauze și soluții pentru toate cele 251 de erori, favorite, copiere ca Markdown și copierea tuturor rezultatelor ca tabel Markdown.
+RU: • Подсветка найденных слов, недавние запросы в один клик
+RU: Pro (разовая покупка): причины и решения для всех 251 ошибок, избранное, копирование в Markdown и копирование всех результатов таблицей Markdown.
+
 **Pro add-on listing:** name „ORA Error Helper Pro”; EN: One-time purchase: causes and fixes for all 251 errors, favorites and copy as Markdown. RO: Cumpărare unică: cauze și soluții pentru toate cele 251 de erori, favorite și copiere ca Markdown. RU: Разовая покупка: причины и решения для всех 251 ошибок, избранное и копирование в Markdown.

@@ -452,3 +452,25 @@ test('pct v1.2: percentage points and proportion (free), CAGR (Pro)', () => {
   assert.ok(Number.isNaN(PC.cagr(100, 200, 0)));
   assert.ok(Number.isNaN(PC.cagr(100, -1, 2)));
 });
+
+test('ora v1.2: highlight terms, recent searches (free); Markdown table (Pro)', () => {
+  assert.deepEqual(OL.terms('Unique  constraint'), ['unique', 'constraint']);
+  assert.deepEqual(OL.terms('942'), []);
+  assert.deepEqual(OL.terms('ORA-06512: at line 5'), []);
+  assert.deepEqual(OL.highlight('Unique constraint violated; UNIQUE', ['unique']),
+    [{ t: 'Unique', hit: true }, { t: ' constraint violated; ', hit: false }, { t: 'UNIQUE', hit: true }]);
+  assert.deepEqual(OL.highlight('abc', []), [{ t: 'abc', hit: false }]);
+  assert.deepEqual(OL.highlight('', ['x']), [{ t: '', hit: false }]);
+  let r = OL.addRecent([], ' deadlock ');
+  r = OL.addRecent(r, '942'); r = OL.addRecent(r, 'DEADLOCK');
+  assert.deepEqual(r, ['DEADLOCK', '942']);
+  assert.deepEqual(OL.addRecent(r, 'ORA-1\nORA-2'), r);
+  assert.deepEqual(OL.addRecent(r, 'x'.repeat(61)), r);
+  let many = [];
+  for (let i = 0; i < 12; i++) many = OL.addRecent(many, 'q' + i);
+  assert.equal(many.length, 8);
+  assert.equal(OL.toMarkdownTable([{ code: 'ORA-1', title: 'a|b', cause: 'line1\nline2', fix: 'x\\y' }]),
+    '| Code | Title | Cause | Fix |\n| --- | --- | --- | --- |\n| ORA-1 | a\\|b | line1 line2 | x\\\\y |\n');
+  const t = OL.toMarkdownTable(OL.search(OD, 'ORA-00942 ORA-00001').slice(0, 2));
+  assert.equal(t.trim().split('\n').length, 4);
+});

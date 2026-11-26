@@ -646,6 +646,40 @@ async function newPage(browser, base, opts = {}) {
     await ctx.close();
   });
 
+  await check('ora v1.2: highlights and recent searches (free), results as Markdown table (Pro)', async () => {
+    let { ctx, page } = await newPage(browser, base);
+    await page.goto(base + 'ora/');
+    await page.fill('#q', 'unique constraint');
+    assert.equal(await page.textContent('#results .err h3 mark'), 'Unique');
+    assert.ok((await page.locator('#results mark').count()) >= 2);
+    await page.waitForSelector('#recent button');
+    assert.match(await page.textContent('#recent'), /Recent:unique constraint/);
+    await page.fill('#q', '942');
+    assert.equal(await page.locator('#results mark').count(), 0);
+    assert.ok(await page.isDisabled('#copyTable'));
+    await page.reload();
+    await page.click('#recent button:has-text("unique constraint")');
+    assert.equal(await page.inputValue('#q'), 'unique constraint');
+    await page.click('#recent button:has-text("Clear")');
+    assert.equal(await page.locator('#recent button').count(), 0);
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+    ({ ctx, page } = await newPage(browser, base, { pro: true }));
+    await ctx.grantPermissions(['clipboard-read', 'clipboard-write']);
+    await page.goto(base + 'ora/');
+    await page.fill('#q', 'ORA-06512: at "HR.PAY", line 4\nORA-01403: no data found');
+    await page.waitForFunction(() => !document.getElementById('copyTable').disabled);
+    await page.click('#copyTable');
+    const md = await page.evaluate(() => navigator.clipboard.readText());
+    const lines = md.trim().split('\n');
+    assert.equal(lines[0], '| Code | Title | Cause | Fix |');
+    assert.equal(lines.length, 4);
+    assert.match(lines[2], /^\| ORA-06512 \| /);
+    assert.match(lines[3], /^\| ORA-01403 \| /);
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
   await browser.close();
   srv.close();
   console.log(`\n${passed} passed, ${failed} failed`);
