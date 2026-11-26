@@ -283,6 +283,19 @@ Pro (cumpărare unică): TVA și taxe, bacșiș și împărțirea notei, marjă 
 Pro (разовая покупка): НДС и налоги, чаевые и деление счёта, маржа и наценка, сложный процент и история с экспортом CSV.
 **Функция:** Процент от числа, изменение в процентах, скидки, НДС, чаевые, маржа и наценка
 
+**Update 1.2 — What's new:**
+EN: New free calculators: percentage points vs percent (5% → 7% is +2 pp, a 40% increase) and proportions (rule of three). Pro: average yearly growth rate (CAGR) from a start value, an end value and the number of years.
+RO: Calculatoare gratuite noi: puncte procentuale vs procente (5% → 7% înseamnă +2 pp, o creștere de 40%) și proporții (regula de trei simplă). Pro: rata medie de creștere anuală (CAGR) dintr-o valoare inițială, una finală și numărul de ani.
+RU: Новые бесплатные калькуляторы: процентные пункты и проценты (5% → 7% — это +2 п. п., рост на 40%) и пропорции (тройное правило). Pro: среднегодовой темп роста (CAGR) по начальному и конечному значению и числу лет.
+
+**Updated description lines (1.2):**
+EN: • Percentage points vs percent, and proportions (rule of three)
+EN: Pro (one-time add-on): VAT and sales tax, tip and bill split, margin and markup, compound growth, average yearly growth (CAGR) and a history with CSV export.
+RO: • Puncte procentuale vs procente și proporții (regula de trei simplă)
+RO: Pro (cumpărare unică): TVA și taxe, bacșiș și împărțirea notei, marjă și adaos, creștere compusă, creștere medie anuală (CAGR) și istoric cu export CSV.
+RU: • Процентные пункты и проценты, пропорции (тройное правило)
+RU: Pro (разовая покупка): НДС и налоги, чаевые и деление счёта, маржа и наценка, сложный процент, среднегодовой рост (CAGR) и история с экспортом CSV.
+
 **Pro add-on listing:** name „Percentage Calculator Pro”; EN: One-time purchase: VAT and sales tax, tip and bill split, margin and markup, compound growth and a history with CSV export. RO: Cumpărare unică: TVA și taxe, bacșiș și împărțirea notei, marjă și adaos, creștere compusă și istoric cu export CSV. RU: Разовая покупка: НДС и налоги, чаевые и деление счёта, маржа и наценка, сложный процент и история с экспортом CSV.
 
 ## 7. ORA Error Helper

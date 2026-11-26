@@ -577,6 +577,34 @@ async function newPage(browser, base, opts = {}) {
     await ctx.close();
   });
 
+  await check('pct v1.2: percentage points and proportion (free), CAGR (Pro)', async () => {
+    let { ctx, page } = await newPage(browser, base);
+    await page.goto(base + 'pct/');
+    assert.equal(await page.textContent('#ppOut'), '+2 pp (percentage points)');
+    assert.equal(await page.textContent('#ppRel'), 'Relative: 40% increase');
+    await page.fill('#ppA', '7'); await page.fill('#ppB', '6,5');
+    assert.equal(await page.textContent('#ppOut'), '−0.5 pp (percentage points)');
+    assert.equal(await page.textContent('#prOut'), '3 : 450 = 5 : 750');
+    await page.fill('#prA', '0');
+    assert.equal(await page.textContent('#prOut'), '—');
+    assert.ok(await page.isDisabled('#caS'));
+    assert.equal(await page.textContent('#caOut'), '');
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+    ({ ctx, page } = await newPage(browser, base, { pro: true }));
+    await page.goto(base + 'pct/');
+    await page.waitForFunction(() => !document.getElementById('caS').disabled);
+    assert.equal(await page.textContent('#caOut'), 'CAGR 10.67% per year');
+    await page.fill('#caY', '0');
+    assert.equal(await page.textContent('#caOut'), '—');
+    await page.fill('#caY', '2'); await page.fill('#caE', '1210');
+    assert.equal(await page.textContent('#caOut'), 'CAGR 10% per year');
+    await page.click('#histSave');
+    assert.match(await page.textContent('#histList'), /CAGR 10% per year/);
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
   await check('ora: search by code, words and pasted stack; Pro locked', async () => {
     const { ctx, page } = await newPage(browser, base);
     await page.goto(base + 'ora/');

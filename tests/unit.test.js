@@ -436,3 +436,19 @@ test('days v1.2: age (free) and custom weekend days (Pro)', () => {
   assert.equal(DC.fmt(DC.addWorkdays(p('2026-12-03'), 1)), '2026-12-04');
   assert.equal(DC.addWorkdays(p('2026-12-03'), 3, [], [0, 1, 2, 3, 4, 5, 6]), null);
 });
+
+test('pct v1.2: percentage points and proportion (free), CAGR (Pro)', () => {
+  assert.deepEqual(PC.points(5, 7), { pp: 2, rel: 40 });
+  assert.deepEqual(PC.points(0.1, 0.3), { pp: 0.2, rel: 200 });
+  assert.ok(Number.isNaN(PC.points(0, 3).rel));
+  assert.equal(PC.proportion(3, 450, 5), 750);
+  assert.equal(PC.proportion(4, 1, 2), 0.5);
+  assert.ok(Number.isNaN(PC.proportion(0, 1, 2)));
+  assert.equal(PC.cagr(1000, 1210, 2), 10);
+  assert.equal(PC.cagr(100, 100, 5), 0);
+  assert.equal(PC.cagr(200, 100, 1), -50);
+  assert.ok(Math.abs(PC.cagr(1000, 1500, 4) - 10.668192) < 1e-6);
+  assert.ok(Number.isNaN(PC.cagr(0, 100, 2)));
+  assert.ok(Number.isNaN(PC.cagr(100, 200, 0)));
+  assert.ok(Number.isNaN(PC.cagr(100, -1, 2)));
+});
