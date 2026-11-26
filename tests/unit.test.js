@@ -334,3 +334,93 @@ test('text v1.1: shuffle, sort by length (free); CSV ↔ JSON, HTML escape (Pro)
   assert.equal(T.pro.csvToJson(T.pro.jsonToCsv('[{"q":"say \\"hi\\"\\nnow"}]')), JSON.stringify([{ q: 'say "hi"\nnow' }], null, 2));
   assert.equal(T.pro.htmlEscape('<a href="x">Tom & \'Jerry\'</a>'), '&lt;a href=&quot;x&quot;&gt;Tom &amp; &#39;Jerry&#39;&lt;/a&gt;');
 });
+
+const HK = require('../hash/logic.js');
+const hx = (alg, s) => HK.toHex(HK.hashBytes(alg, typeof s === 'string' ? HK.utf8(s) : s));
+const rep = (b, n) => new Uint8Array(n).fill(b);
+const MLN_A = HK.utf8('a'.repeat(1000000));
+test('hash: MD5 test suite (RFC 1321)', () => {
+  assert.equal(hx('md5', ''), 'd41d8cd98f00b204e9800998ecf8427e');
+  assert.equal(hx('md5', 'a'), '0cc175b9c0f1b6a831c399e269772661');
+  assert.equal(hx('md5', 'abc'), '900150983cd24fb0d6963f7d28e17f72');
+  assert.equal(hx('md5', 'message digest'), 'f96b697d7cb7938d525a2f31aaf161d0');
+  assert.equal(hx('md5', 'abcdefghijklmnopqrstuvwxyz'), 'c3fcd3d76192e4007dfb496cca67e13b');
+  assert.equal(hx('md5', 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 'd174ab98d277d9f5a5611c2c9f419d9f');
+  assert.equal(hx('md5', '1234567890'.repeat(8)), '57edf4a22be3c955ac49da2e2107b67a');
+});
+test('hash: CRC32 check values (IEEE 802.3)', () => {
+  assert.equal(hx('crc32', '123456789'), 'cbf43926');
+  assert.equal(hx('crc32', ''), '00000000');
+  assert.equal(hx('crc32', 'The quick brown fox jumps over the lazy dog'), '414fa339');
+});
+test('hash: SHA-1 and SHA-2 (FIPS 180 examples)', () => {
+  const m448 = 'abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq';
+  const m896 = 'abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu';
+  assert.equal(hx('sha1', ''), 'da39a3ee5e6b4b0d3255bfef95601890afd80709');
+  assert.equal(hx('sha1', 'abc'), 'a9993e364706816aba3e25717850c26c9cd0d89d');
+  assert.equal(hx('sha1', m448), '84983e441c3bd26ebaae4aa1f95129e5e54670f1');
+  assert.equal(hx('sha1', MLN_A), '34aa973cd4c4daa4f61eeb2bdbad27316534016f');
+  assert.equal(hx('sha256', ''), 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855');
+  assert.equal(hx('sha256', 'abc'), 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad');
+  assert.equal(hx('sha256', m448), '248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1');
+  assert.equal(hx('sha256', MLN_A), 'cdc76e5c9914fb9281a1c7e284d73e67f1809a48a497200e046d39ccc7112cd0');
+  assert.equal(hx('sha384', ''), '38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b');
+  assert.equal(hx('sha384', 'abc'), 'cb00753f45a35e8bb5a03d699ac65007272c32ab0eded1631a8b605a43ff5bed8086072ba1e7cc2358baeca134c825a7');
+  assert.equal(hx('sha384', m896), '09330c33f71147e83d192fc782cd1b4753111b173b3b05d22fa08086e3b0f712fcc7c71a557e2db966c3e9fa91746039');
+  assert.equal(hx('sha512', ''), 'cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e');
+  assert.equal(hx('sha512', 'abc'), 'ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f');
+  assert.equal(hx('sha512', m896), '8e959b75dae313da8cf4f72814fc143f8f7779c6eb9f7fa17299aeadb6889018501d289e4900f7e4331b99dec4b5433ac7d329eeb6dd26545e96e55b874be909');
+});
+test('hash: chunked updates equal one-shot, Web Crypto path equals own code', async () => {
+  const data = new Uint8Array(5000).map((_, i) => (i * 131 + 7) & 255);
+  for (const alg of HK.ALGS) {
+    const h = HK.createHasher(alg);
+    for (let i = 0, k = 1; i < data.length; i += k, k = (k * 7) % 191 + 1) h.update(data.subarray(i, i + k));
+    assert.equal(HK.toHex(h.digest()), hx(alg, data), alg);
+    for (const n of [55, 56, 63, 64, 111, 112, 128]) assert.equal(HK.toHex(await HK.digest(alg, data.subarray(0, n))), hx(alg, data.subarray(0, n)), alg + ' ' + n);
+  }
+});
+test('hash: HMAC test cases (RFC 4231)', async () => {
+  const cases = [
+    [rep(0x0b, 20), HK.utf8('Hi There'), 'b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7',
+      'afd03944d84895626b0825f4ab46907f15f9dadbe4101ec682aa034c7cebc59cfaea9ea9076ede7f4af152e8b2fa9cb6',
+      '87aa7cdea5ef619d4ff0b4241a1d6cb02379f4e2ce4ec2787ad0b30545e17cdedaa833b7d6b8a702038b274eaea3f4e4be9d914eeb61f1702e696c203a126854'],
+    [HK.utf8('Jefe'), HK.utf8('what do ya want for nothing?'), '5bdcc146bf60754e6a042426089575c75a003f089d2739839dec58b964ec3843',
+      'af45d2e376484031617f78d2b58a6b1b9c7ef464f5a01b47e42ec3736322445e8e2240ca5e69e2c78b3239ecfab21649',
+      '164b7a7bfcf819e2e395fbe73b56e0a387bd64222e831fd610270cd7ea2505549758bf75c05a994a6d034f65f8f0e6fdcaeab1a34d4a6b4b636e070a38bce737'],
+    [rep(0xaa, 20), rep(0xdd, 50), '773ea91e36800e46854db8ebd09181a72959098b3ef8c122d9635514ced565fe', null, null],
+    [rep(0xaa, 131), HK.utf8('Test Using Larger Than Block-Size Key - Hash Key First'), '60e431591ee0b67f0d8a26aacbf5b77f8e0bc6213728c5140546040f0ee37f54', null,
+      '80b24263c7c1a3ebb71493c1dd7be8b49b46d1f41b4aeec1121b013783f8f3526b56d037e05f2598bd0fd2215d6a1e5295e64f73f63f0aec8b915a985d786598'],
+    [rep(0xaa, 131), HK.utf8('This is a test using a larger than block-size key and a larger than block-size data. The key needs to be hashed before being used by the HMAC algorithm.'),
+      '9b09ffa71b942fcb27635fbcd5b0e944bfdc63644f0713938a7f51535c3a35e2', null, null]
+  ];
+  for (const [key, msg, ...exp] of cases) {
+    ['sha256', 'sha384', 'sha512'].forEach((alg, i) => { if (exp[i]) assert.equal(HK.toHex(HK.hmacSync(alg, key, msg)), exp[i], alg); });
+    assert.equal(HK.toHex(await HK.hmac('sha256', key, msg)), exp[0]);
+  }
+  assert.equal(HK.toHex(HK.hmacSync('sha256', rep(0x0c, 20), HK.utf8('Test With Truncation'))).slice(0, 32), 'a3b6167473100ee06e0c796c2955552b');
+  assert.equal(HK.toHex(await HK.hmac('sha256', new Uint8Array(0), new Uint8Array(0))), 'b613679a0814d9ec772f95d778c35fc5ff1697c493715653c6c712144292c5ad');
+});
+test('hash: formats, checksum lists, compare, batch and CSV', () => {
+  const abc = HK.hashBytes('sha256', HK.utf8('abc'));
+  assert.equal(HK.toBase64(abc), 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=');
+  assert.equal(HK.toBase64(HK.utf8('ab')), 'YWI=');
+  assert.equal(HK.format(HK.hashBytes('crc32', HK.utf8('123456789')), 'hex', true), 'CBF43926');
+  assert.deepEqual(Array.from(HK.fromHex('0a ff')), [10, 255]);
+  assert.equal(HK.fromHex('abc'), null);
+  const sums = HK.parseSums('# list\n' + HK.toHex(abc) + '  dist/app.zip\n' + 'd41d8cd98f00b204e9800998ecf8427e *empty.bin\nSHA512 (x.iso) = ' + 'ab'.repeat(64) + '\nnot a hash line\n' + 'A'.repeat(39));
+  assert.deepEqual(sums.map(e => [e.alg, e.name]), [['sha256', 'dist/app.zip'], ['md5', 'empty.bin'], ['sha512', 'x.iso']]);
+  assert.equal(HK.entryFor(sums, 'app.zip').alg, 'sha256');
+  assert.equal(HK.entryFor(sums, 'EMPTY.BIN').alg, 'md5');
+  assert.equal(HK.entryFor(sums, 'other.txt'), null);
+  assert.equal(HK.entryFor(HK.parseSums(HK.toHex(abc).toUpperCase()), 'any.file').hash, HK.toHex(abc));
+  const res = {}; for (const a of HK.ALGS) res[a] = HK.hashBytes(a, HK.utf8('abc'));
+  assert.deepEqual(HK.compare(' ' + HK.toHex(abc).toUpperCase() + ' ', res), { alg: 'sha256', match: true });
+  assert.deepEqual(HK.compare('900150983cd24fb0d6963f7d28e17f72  abc.txt', res), { alg: 'md5', match: true });
+  assert.deepEqual(HK.compare('900150983cd24fb0d6963f7d28e17f73', res), { alg: 'md5', match: false });
+  assert.deepEqual(HK.compare('ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=', res), { alg: 'sha256', match: true });
+  assert.equal(HK.compare('hello world', res), null);
+  assert.equal(HK.compare('', res), null);
+  assert.deepEqual(HK.batch('abc\r\n\n123456789', 'crc32', 'hex', false), [{ line: 'abc', hash: '352441c2' }, { line: '123456789', hash: 'cbf43926' }]);
+  assert.equal(HK.toCsv(['text', 'hash'], [['=1+1', 'a"b'], ['x,y', 1]]), 'text,hash\r\n\'=1+1,"a""b"\r\n"x,y",1\r\n');
+});

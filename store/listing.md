@@ -273,3 +273,41 @@ Pro (разовая покупка): причины и решения для в�
 **Функция:** Причины и решения ошибок ORA- и PLS-, офлайн, можно вставить весь стек ошибок
 
 **Pro add-on listing:** name „ORA Error Helper Pro”; EN: One-time purchase: causes and fixes for all 251 errors, favorites and copy as Markdown. RO: Cumpărare unică: cauze și soluții pentru toate cele 251 de erori, favorite și copiere ca Markdown. RU: Разовая покупка: причины и решения для всех 251 ошибок, избранное и копирование в Markdown.
+
+## 8. Stelar Hash Generator (`hash/`)
+
+**EN — short description:** SHA-256, SHA-1, SHA-512, MD5 and CRC32 hashes of text. Compare hashes. Works offline.
+**EN — description:**
+A fast, private checksum and hash tool that works on your device.
+• SHA-256, SHA-1, SHA-384, SHA-512, MD5 and CRC32 of any text, all at once
+• Hex or Base64 output, uppercase option, one-click copy
+• Compare with an expected hash: see at once if it matches and which algorithm it is
+• Light and dark theme, English, Romanian and Russian. No account, ads or tracking, works offline
+Pro (one-time add-on): hash files of any size (drag and drop, read in pieces with progress; files never leave your device), verify files against a pasted checksum, a .sha256 file or a SHA256SUMS list, HMAC-SHA-256/384/512 with a secret key, and batch hashing of many lines with CSV export.
+MD5, SHA-1 and CRC32 are suitable for detecting damaged files, not for security.
+**Feature:** SHA-256, SHA-1, SHA-512, MD5 and CRC32 of text and files, checksum verification, HMAC
+**Keywords:** hash generator, checksum, SHA-256, SHA256SUMS, MD5, SHA-1, SHA-512, CRC32, HMAC, verify download
+
+**RO — descriere scurtă:** Hash SHA-256, SHA-1, SHA-512, MD5 și CRC32 pentru text. Compară hash-uri. Funcționează offline.
+**RO — descriere:**
+Un instrument rapid și privat pentru checksum-uri și hash-uri, direct pe dispozitivul tău.
+• SHA-256, SHA-1, SHA-384, SHA-512, MD5 și CRC32 pentru orice text, toate deodată
+• Rezultat hex sau Base64, opțiune pentru majuscule, copiere dintr-un clic
+• Compară cu un hash așteptat: vezi imediat dacă se potrivește și ce algoritm este
+• Temă luminoasă și întunecată, română, engleză și rusă. Fără cont, reclame sau urmărire, funcționează offline
+Pro (cumpărare unică): hash pentru fișiere de orice mărime (trage și plasează, citire pe bucăți cu progres; fișierele nu părăsesc dispozitivul), verificarea fișierelor cu un checksum lipit, un fișier .sha256 sau o listă SHA256SUMS, HMAC-SHA-256/384/512 cu cheie secretă și hash pe loturi de linii cu export CSV.
+MD5, SHA-1 și CRC32 sunt potrivite pentru a găsi fișiere deteriorate, nu pentru securitate.
+**Funcție:** SHA-256, SHA-1, SHA-512, MD5 și CRC32 pentru text și fișiere, verificare checksum, HMAC
+
+**RU — краткое описание:** Хеши SHA-256, SHA-1, SHA-512, MD5 и CRC32 для текста. Сравнение хешей. Работает офлайн.
+**RU — описание:**
+Быстрый и приватный инструмент для контрольных сумм и хешей прямо на вашем устройстве.
+• SHA-256, SHA-1, SHA-384, SHA-512, MD5 и CRC32 для любого текста, все сразу
+• Вывод в hex или Base64, заглавные буквы, копирование в один клик
+• Сравнение с ожидаемым хешем: сразу видно, совпадает ли он и какой это алгоритм
+• Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, работает офлайн
+Pro (разовая покупка): хеши файлов любого размера (перетаскивание, чтение по частям с прогрессом; файлы не покидают устройство), проверка файлов по вставленной контрольной сумме, файлу .sha256 или списку SHA256SUMS, HMAC-SHA-256/384/512 с секретным ключом и пакетное хеширование строк с экспортом CSV.
+MD5, SHA-1 и CRC32 подходят для поиска повреждённых файлов, но не для защиты.
+**Функция:** SHA-256, SHA-1, SHA-512, MD5 и CRC32 для текста и файлов, проверка контрольных сумм, HMAC
+
+**Pro add-on listing:** name „Stelar Hash Generator Pro”; EN: One-time purchase: hash and verify files of any size, SHA256SUMS lists, HMAC with a secret key and batch hashing with CSV export. RO: Cumpărare unică: hash și verificare pentru fișiere de orice mărime, liste SHA256SUMS, HMAC cu cheie secretă și hash pe loturi cu export CSV. RU: Разовая покупка: хеш и проверка файлов любого размера, списки SHA256SUMS, HMAC с секретным ключом и пакетное хеширование с экспортом CSV.

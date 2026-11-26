@@ -94,6 +94,19 @@ module.exports = {
       color: '#c92a2a',
       glyph: 'ORA',
       assets: ['./', 'index.html', 'app.js', 'logic.js', 'data.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
+    },
+    {
+      dir: 'hash',
+      storeId: 'TBD',
+      packageId: 'TBD',
+      id: 'hash-generator',
+      name: 'Stelar Hash Generator',
+      short_name: 'Hash',
+      description: 'Offline hash generator: SHA-256, SHA-1, SHA-384, SHA-512, MD5 and CRC32 of text, hex or Base64, compare hashes. Pro: hash and verify files, SHA256SUMS lists, HMAC, batch lines, CSV.',
+      categories: ['developer tools', 'utilities', 'security'],
+      color: '#a61e4d',
+      glyph: '#',
+      assets: ['./', 'index.html', 'app.js', 'logic.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
     }
   ]
 };

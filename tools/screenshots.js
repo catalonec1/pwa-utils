@@ -14,6 +14,7 @@ const SAMPLE = {
   },
   days: { daysCd: JSON.stringify([{ name: 'New Year', date: '2027-01-01' }, { name: 'Vacation', date: '2027-07-15' }]), daysHol: '2026-12-25\n2027-01-01' },
   pct: { pctHist: JSON.stringify([{ time: '2026-11-24 10:15', calc: 'Profit 40 · margin 40% · markup 66.67%', result: '66.67%' }]) },
+  hash: { hashText: 'Hello, world!', hashCmp: '315f5bdb76d078c43b8ac0064e4a0164612b1fce77c869345bfc94c75894edd3', hashBatch: 'alpha\nbeta\ngamma' },
   ora: { oraQ: 'ORA-06512: at "HR.PAYROLL", line 42\nORA-01403: no data found' },
   pass: { passOpts: JSON.stringify({ length: 20, lower: true, upper: true, digits: true, symbols: true, noSimilar: false }) },
   text: { text: 'Grădina de stele — notes\n\nbanana\napple\nbanana\nCherry\nΣ unicode ✓ привет мир\n\nPaste any text here: count words, change case, sort and clean lines.' }
