@@ -375,7 +375,7 @@ async function newPage(browser, base, opts = {}) {
   await check('hub and privacy pages load', async () => {
     const { ctx, page } = await newPage(browser, base);
     await page.goto(base);
-    assert.equal(await page.locator('.apps a').count(), 8);
+    assert.equal(await page.locator('.apps a').count(), 14);
     for (const img of await page.locator('.apps img').all()) assert.ok(await img.evaluate(i => i.naturalWidth > 0));
     await page.goto(base + 'privacy.html');
     assert.match(await page.textContent('h1'), /Privacy/);

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Color Converter</title>
+<meta name="description" content="Offline color converter for designers and developers: HEX, RGB, HSL, HWB and CMYK, WCAG contrast checker, palettes, OKLCH and LAB, CSS color names and colorblindness previews.">
+<meta name="theme-color" content="#c2255c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+  :root { --accent: #c2255c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --accent: #faa2c1; } }
+  :root[data-theme="dark"] { --accent: #faa2c1; }
+  h2.t { font-size: 1rem; margin: 0 0 8px; }
+  .pick { display: flex; gap: 8px; align-items: end; }
+  .pick > div { flex: 1 1 auto; min-width: 0; }
+  input[type="color"] { width: 52px; height: 42px; padding: 3px; flex: 0 0 52px; cursor: pointer; }
+  .swatch { height: 110px; border-radius: 12px; border: 1px solid var(--border); margin-top: 12px; display: flex; align-items: end; padding: 10px 12px; font: 700 1.1rem ui-monospace, Consolas, monospace; }
+  .err { color: var(--warn); margin: 6px 0 0; font-size: .88rem; }
+  ul.fmts { list-style: none; padding: 0; margin: 0; }
+  ul.fmts li { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  ul.fmts li:last-child { border-bottom: 0; }
+  ul.fmts .k { width: 64px; flex: 0 0 64px; font-weight: 600; font-size: .85rem; color: var(--muted); }
+  ul.fmts code { flex: 1; min-width: 0; overflow-wrap: anywhere; font-size: .95rem; }
+  ul.fmts button, .sm { padding: 4px 10px; font-size: .85rem; }
+  .locked { color: var(--muted); font-style: italic; font-family: inherit; }
+  .preview { border-radius: 12px; border: 1px solid var(--border); padding: 14px 16px; margin: 12px 0 8px; }
+  .preview .lg { font-size: 1.5rem; font-weight: 700; margin: 0 0 4px; }
+  .preview p { margin: 0; }
+  .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .badge { padding: 3px 9px; border-radius: 8px; font-size: .85rem; font-weight: 600; border: 1px solid var(--border); }
+  .badge.pass { color: var(--ok); border-color: var(--ok); }
+  .badge.fail { color: var(--warn); border-color: var(--warn); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .chip { flex: 1 1 72px; min-width: 64px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; padding: 0; background: var(--card); text-align: left; }
+  .chip span { display: block; height: 54px; }
+  .chip code { display: block; padding: 4px 6px; font-size: .78rem; }
+  .named { display: flex; gap: 12px; align-items: center; }
+  .named .sw { width: 54px; height: 54px; border-radius: 10px; border: 1px solid var(--border); flex: 0 0 54px; }
+  .saved { padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .saved .head { display: flex; gap: 8px; align-items: center; }
+  .saved .head strong { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+  .strip { display: flex; height: 26px; border-radius: 8px; overflow: hidden; margin-top: 6px; border: 1px solid var(--border); }
+  .strip span { flex: 1; }
+  .cvd { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+  .cvd > div { border: 1px solid var(--border); border-radius: 10px; padding: 8px; }
+  .cvd .sw { height: 46px; border-radius: 8px; margin: 6px 0; }
+  .cvd .tx { border-radius: 8px; padding: 6px 8px; font-weight: 700; }
+  .cvd h3 { font-size: .88rem; margin: 0; }
+  textarea#expOut { min-height: 140px; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header class="bar">
+  <h1 data-i18n="appName">Color Converter</h1>
+  <select id="lang" data-i18n-aria="language" aria-label="Language">
+    <option value="ro">RO</option><option value="en">EN</option><option value="ru">RU</option>
+  </select>
+  <button id="theme" data-i18n-aria="theme" aria-label="Theme">◐</button>
+</header>
+<main>
+  <section class="card">
+    <div class="pick">
+      <div><label for="color" data-i18n="colorLabel">Color in any format</label><input id="color" spellcheck="false" autocomplete="off" value="#3d5afe"></div>
+      <input type="color" id="picker" value="#3d5afe" data-i18n-aria="pick" aria-label="Pick a color">
+    </div>
+    <p class="muted" style="margin:6px 0 0" data-i18n="formatsHint">HEX, rgb(), hsl(), hwb(), cmyk(), oklch(), lab() or a CSS name.</p>
+    <p class="err" id="err" aria-live="polite"></p>
+    <div class="swatch" id="swatch"></div>
+  </section>
+  <section class="card">
+    <h2 class="t" data-i18n="fmtTitle">Formats</h2>
+    <ul class="fmts" id="fmts"></ul>
+  </section>
+  <section class="card">
+    <h2 class="t" data-i18n="ctTitle">Contrast checker (WCAG)</h2>
+    <div class="row">
+      <div class="pick"><div><label for="fg" data-i18n="fgLabel">Text</label><input id="fg" spellcheck="false" autocomplete="off" value="#1b1f2a"></div><input type="color" id="fgPick" value="#1b1f2a" data-i18n-aria="fgLabel" aria-label="Text"></div>
+      <div class="pick"><div><label for="bg" data-i18n="bgLabel">Background</label><input id="bg" spellcheck="false" autocomplete="off" value="#ffffff"></div><input type="color" id="bgPick" value="#ffffff" data-i18n-aria="bgLabel" aria-label="Background"></div>
+    </div>
+    <p class="row" style="margin:8px 0 0"><button id="swap" class="sm" data-i18n="swap">⇅ Swap</button><button id="useFg" class="sm" data-i18n="useFg">Current color as text</button><button id="useBg" class="sm" data-i18n="useBg">Current color as background</button></p>
+    <div class="preview" id="preview"><p class="lg" data-i18n="sampleLarge">Large text 24px</p><p data-i18n="sampleNormal">Normal body text is easier to read with enough contrast.</p></div>
+    <p class="big" style="margin:4px 0 0" id="ratio" aria-live="polite"></p>
+    <div class="badges" id="badges"></div>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="nameTitle">Nearest CSS color name</span> <span class="pro-badge">PRO</span></h2>
+    <div id="nameOut"></div>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="palTitle">Palette generator</span> <span class="pro-badge">PRO</span></h2>
+    <div class="tabs" id="schemes" role="tablist"></div>
+    <div class="chips" id="palette"></div>
+    <p class="muted" style="margin:6px 0 10px" data-i18n="palHint">Click a color to copy its HEX.</p>
+    <div class="row">
+      <div><label for="palName" data-i18n="palName">Palette name</label><input id="palName" maxlength="40" value=""></div>
+      <button id="palSave" style="flex:0 0 auto" data-i18n="palSave">Save palette</button>
+    </div>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="savedTitle">Saved palettes and export</span> <span class="pro-badge">PRO</span></h2>
+    <div id="saved"></div>
+    <div class="row" style="margin-top:12px">
+      <div><label for="expFmt" data-i18n="expFmt">Export as</label>
+        <select id="expFmt"><option value="css" data-i18n="fmtCss">CSS variables</option><option value="json">JSON</option><option value="tw" data-i18n="fmtTw">Tailwind config</option></select></div>
+      <button id="expCopy" style="flex:0 0 auto" data-i18n="copy">Copy</button>
+      <button id="expFile" style="flex:0 0 auto" data-i18n="saveFile">Save file</button>
+    </div>
+    <textarea id="expOut" readonly spellcheck="false" data-i18n-aria="expFmt" aria-label="Export"></textarea>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="cvdTitle">Colorblindness preview</span> <span class="pro-badge">PRO</span></h2>
+    <p class="muted" style="margin:0 0 10px" data-i18n="cvdHint">How the current color and the contrast pair look with each type of color vision deficiency (simulation).</p>
+    <div class="cvd" id="cvd"></div>
+  </section>
+  <section class="card pro-box hidden" id="proBox">
+    <h2 class="t" style="margin-bottom:6px" data-i18n="proTitle">Pro version</h2>
+    <p class="muted" data-i18n="proPitch">Palette generator, nearest CSS color name, OKLCH and LAB, saved palettes with CSS, JSON and Tailwind export, and colorblindness previews.</p>
+    <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
+    <p class="muted" id="proStatus"></p>
+  </section>
+  <p class="muted" style="text-align:center" data-i18n="offline">Works offline too.</p>
+</main>
+<footer><a href="../privacy.html" data-i18n="privacy">Privacy</a></footer>
+<script src="../shared/core.js"></script>
+<script src="logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
