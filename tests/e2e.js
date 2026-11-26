@@ -375,7 +375,7 @@ async function newPage(browser, base, opts = {}) {
   await check('hub and privacy pages load', async () => {
     const { ctx, page } = await newPage(browser, base);
     await page.goto(base);
-    assert.equal(await page.locator('.apps a').count(), 7);
+    assert.equal(await page.locator('.apps a').count(), 8);
     for (const img of await page.locator('.apps img').all()) assert.ok(await img.evaluate(i => i.naturalWidth > 0));
     await page.goto(base + 'privacy.html');
     assert.match(await page.textContent('h1'), /Privacy/);
@@ -465,6 +465,81 @@ async function newPage(browser, base, opts = {}) {
     assert.equal(await page.inputValue('#q'), 'PLS-201');
     await page.click('#favs .err button:has-text("Scoate")');
     assert.match(await page.textContent('#favs'), /Apasă ☆/);
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
+  await check('habit: free check-off, streak, week, heat map, limit of 3 and Pro locked', async () => {
+    const { ctx, page } = await newPage(browser, base);
+    page.on('dialog', d => d.accept());
+    await page.goto(base + 'habit/');
+    assert.match(await page.textContent('#todayMsg'), /Add your first habit/);
+    for (const n of ['Read', 'Walk', 'Water']) { await page.fill('#hName', n); await page.click('#hAdd'); }
+    assert.equal(await page.locator('#todayList li').count(), 3);
+    assert.match(await page.textContent('#todayMsg'), /A fresh day: 3 to go/);
+    assert.ok(await page.isDisabled('#hAdd'), 'free limit');
+    assert.match(await page.textContent('#hMsg'), /up to 3 habits/);
+    await page.click('#todayList li:nth-child(1) .chk');
+    assert.match(await page.textContent('#todayMsg'), /1 of 3 done\. Still to do: Walk, Water\./);
+    assert.match(await page.textContent('#todayList li:nth-child(1)'), /1-day streak · best 1/);
+    // ieri, din vederea săptămânii (sau săptămâna trecută dacă azi e luni)
+    const y = await page.evaluate(() => HabitLogic.addDays(HabitLogic.key(), -1));
+    if (await page.locator(`#week button[data-k="${y}"]`).count() === 0) await page.click('#wPrev');
+    await page.locator(`#week button[data-k="${y}"]`).first().click();
+    assert.match(await page.textContent('#todayList li:nth-child(1)'), /2-day streak · best 2/);
+    const td = await page.evaluate(() => HabitLogic.key());
+    assert.match(await page.getAttribute(`#heat div[data-k="${td}"]`, 'class'), /l1/);
+    for (const n of [2, 3]) await page.click(`#todayList li:nth-child(${n}) .chk`);
+    assert.match(await page.textContent('#todayMsg'), /All done for today/);
+    assert.match(await page.getAttribute(`#heat div[data-k="${td}"]`, 'class'), /l4/);
+    for (const id of ['hSched', 'hColor', 'hEmoji', 'nText', 'nSave', 'bJson', 'bImport', 'bCsv']) assert.ok(await page.isDisabled('#' + id), id + ' should be locked');
+    assert.equal(await page.textContent('#stats'), '');
+    await page.click('#hList li:nth-child(3) button:has-text("Delete")');
+    assert.equal(await page.locator('#todayList li').count(), 2);
+    assert.ok(!(await page.isDisabled('#hAdd')));
+    await page.reload();
+    assert.match(await page.textContent('#todayList'), /Read.*2-day streak/s, 'data kept');
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
+  await check('habit: Pro schedules, colors, notes, stats, backup and CSV', async () => {
+    const { ctx, page } = await newPage(browser, base, { pro: true, locale: 'ro-RO' });
+    page.on('dialog', d => d.accept());
+    await page.goto(base + 'habit/');
+    await page.waitForFunction(() => !document.getElementById('hSched').disabled);
+    for (const n of ['Citit', 'Apă', 'Plimbare']) { await page.fill('#hName', n); await page.click('#hAdd'); }
+    await page.fill('#hName', 'Sală'); await page.selectOption('#hSched', 'days');
+    await page.check('#hDays input[value="1"]'); await page.check('#hDays input[value="4"]');
+    await page.fill('#hEmoji', '🏋️'); await page.fill('#hColor', '#1971c2');
+    await page.click('#hAdd');
+    await page.fill('#hName', 'Alergat'); await page.selectOption('#hSched', 'times'); await page.fill('#hTimes', '3');
+    await page.click('#hAdd');
+    assert.equal(await page.locator('#todayList li').count(), 5, 'no limit in Pro');
+    assert.match(await page.textContent('#todayList li:nth-child(5)'), /de 3 ori pe săptămână · 0\/3 acum/);
+    assert.match(await page.textContent('#todayList li:nth-child(4)'), /🏋️/);
+    assert.match(await page.textContent('#hList li:nth-child(4)'), /lun\.?, jo/i);
+    await page.click('#todayList li:nth-child(1) .chk');
+    assert.match(await page.textContent('#stats'), /Citit.*Cea mai bună zi/s);
+    await page.selectOption('#nHabit', { label: 'Citit' });
+    await page.fill('#nText', '20 de pagini, "super"');
+    await page.click('#nSave');
+    assert.match(await page.textContent('#nList'), /20 de pagini/);
+    const [dl] = await Promise.all([page.waitForEvent('download'), page.click('#bCsv')]);
+    assert.match(fs.readFileSync(await dl.path(), 'utf8'), /^date,habit,done,note\r\n\d{4}-\d\d-\d\d,Citit,1,"20 de pagini, ""super"""\r\n$/);
+    const [dj] = await Promise.all([page.waitForEvent('download'), page.click('#bJson')]);
+    const backup = fs.readFileSync(await dj.path(), 'utf8');
+    assert.equal(JSON.parse(backup).habits.length, 5);
+    await page.click('#hList li:nth-child(1) button:has-text("Șterge")');
+    assert.equal(await page.locator('#todayList li').count(), 4);
+    await page.setInputFiles('#bFile', { name: 'b.json', mimeType: 'application/json', buffer: Buffer.from(backup) });
+    await page.waitForFunction(() => document.getElementById('bMsg').textContent.includes('5'));
+    assert.equal(await page.locator('#todayList li').count(), 5, 'restored');
+    await page.setInputFiles('#bFile', { name: 'x.json', mimeType: 'application/json', buffer: Buffer.from('{"nope":1}') });
+    await page.waitForFunction(() => /nu este o copie/.test(document.getElementById('bMsg').textContent));
+    await page.reload();
+    await page.waitForFunction(() => !document.getElementById('nSave').disabled);
+    assert.match(await page.textContent('#nList'), /20 de pagini/, 'note kept');
     assert.deepEqual(page.errors, []);
     await ctx.close();
   });

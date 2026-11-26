@@ -19,6 +19,41 @@ const SAMPLE = {
   text: { text: 'Grădina de stele — notes\n\nbanana\napple\nbanana\nCherry\nΣ unicode ✓ привет мир\n\nPaste any text here: count words, change case, sort and clean lines.' }
 };
 
+/* habit: ~6 weeks of history relative to today, deterministic pseudo-random, Pro shown (colors, emoji, stats) */
+function habitSample() {
+  const p2 = n => String(n).padStart(2, '0');
+  const key = d => `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}`;
+  let seed = 7;
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const defs = [
+    { id: 'read', name: { en: 'Read 20 pages', ro: 'Citit 20 de pagini', ru: 'Читать 20 страниц' }, emoji: '📚', color: '#d6336c', p: 0.85, sched: { t: 'daily' } },
+    { id: 'walk', name: { en: 'Walk 30 minutes', ro: 'Plimbare 30 de minute', ru: 'Прогулка 30 минут' }, emoji: '🚶', color: '#2b8a3e', p: 0.75, sched: { t: 'daily' } },
+    { id: 'water', name: { en: '8 glasses of water', ro: '8 pahare de apă', ru: '8 стаканов воды' }, emoji: '💧', color: '#1971c2', p: 0.9, sched: { t: 'daily' } },
+    { id: 'gym', name: { en: 'Gym', ro: 'Sală', ru: 'Спортзал' }, emoji: '🏋️', color: '#e8590c', p: 0.9, sched: { t: 'days', d: [1, 3, 5] } },
+    { id: 'lang', name: { en: 'Spanish lesson', ro: 'Lecție de spaniolă', ru: 'Урок испанского' }, emoji: '🗣️', color: '#7048e8', p: 0.45, sched: { t: 'times', n: 3 } }
+  ];
+  const now = new Date(), start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 44);
+  const created = key(start);
+  const out = {};
+  for (const lang of ['en', 'ro', 'ru']) {
+    seed = 7;
+    const habits = defs.map(h => ({ id: h.id, name: h.name[lang], emoji: h.emoji, color: h.color, sched: h.sched, created, done: {}, notes: {} }));
+    for (let i = 0; i <= 44; i++) {
+      const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i), k = key(d);
+      defs.forEach((h, j) => {
+        const r = rnd();
+        if (h.sched.t === 'days' && !h.sched.d.includes(d.getDay())) return;
+        if (i === 44 && j >= 2) return; // azi: încă de făcut
+        if (r < h.p || (i > 36 && j < 2)) habits[j].done[k] = 1;
+      });
+    }
+    habits[0].notes[key(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1))] = { en: 'Finished the first part of the book.', ro: 'Am terminat prima parte a cărții.', ru: 'Дочитал первую часть книги.' }[lang];
+    out[lang] = { hbData: JSON.stringify({ v: 1, habits }), 'pro:pro': '1' };
+  }
+  return out;
+}
+const HABIT = habitSample();
+
 (async () => {
   const srv = http.createServer((req, res) => {
     let p = path.join(ROOT, decodeURIComponent(new URL(req.url, 'http://x').pathname));
@@ -32,7 +67,7 @@ const SAMPLE = {
 
   async function shot(a, lang, w, h, file, theme) {
     const ctx = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 1, locale: lang, serviceWorkers: 'block', colorScheme: theme || 'light' });
-    const data = Object.assign({ lang }, SAMPLE[a.dir]);
+    const data = Object.assign({ lang }, a.dir === 'habit' ? HABIT[lang] : SAMPLE[a.dir]);
     await ctx.addInitScript(d => { for (const k in d) localStorage.setItem(k, d[k]); }, data);
     const page = await ctx.newPage();
     await page.goto(base + a.dir + '/');

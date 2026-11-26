@@ -334,3 +334,130 @@ test('text v1.1: shuffle, sort by length (free); CSV ↔ JSON, HTML escape (Pro)
   assert.equal(T.pro.csvToJson(T.pro.jsonToCsv('[{"q":"say \\"hi\\"\\nnow"}]')), JSON.stringify([{ q: 'say "hi"\nnow' }], null, 2));
   assert.equal(T.pro.htmlEscape('<a href="x">Tom & \'Jerry\'</a>'), '&lt;a href=&quot;x&quot;&gt;Tom &amp; &#39;Jerry&#39;&lt;/a&gt;');
 });
+
+const H = require('../habit/logic.js');
+/* rulează fn cu un fus orar dat (Node recitește process.env.TZ la fiecare schimbare) */
+function inTz(tz, fn) {
+  const old = process.env.TZ;
+  process.env.TZ = tz;
+  try { fn(); } finally { if (old === undefined) delete process.env.TZ; else process.env.TZ = old; }
+}
+const hab = (done, extra) => Object.assign({ id: 'a', name: 'A', created: '2026-01-01', done: Object.fromEntries(done.map(k => [k, 1])), notes: {} }, extra);
+
+test('habit: day keys are local and DST-safe', () => {
+  inTz('Europe/Bucharest', () => {
+    assert.equal(new Date(2026, 2, 29, 12).getTimezoneOffset(), -180, 'TZ switch works');
+    // DST începe 29 martie 2026 (03:00 → 04:00), se termină 25 octombrie 2026
+    assert.equal(H.key(new Date(2026, 2, 29, 0, 30)), '2026-03-29');
+    assert.equal(H.key(new Date(2026, 2, 29, 23, 59)), '2026-03-29');
+    assert.equal(H.key(new Date(2026, 9, 25, 23, 30)), '2026-10-25');
+    assert.equal(H.key(new Date(2026, 9, 26, 0, 5)), '2026-10-26');
+    // ziua de 23 h și cea de 25 h sunt tot câte o zi
+    assert.equal(H.addDays('2026-03-28', 1), '2026-03-29');
+    assert.equal(H.addDays('2026-03-29', 1), '2026-03-30');
+    assert.equal(H.addDays('2026-10-25', 1), '2026-10-26');
+    assert.equal(H.diff('2026-03-01', '2026-04-01'), 31);
+    assert.equal(H.diff('2026-10-01', '2026-11-01'), 31);
+    // un timestamp de miezul nopții + 24 h ar cădea greșit; cheile nu
+    const mid = new Date(2026, 9, 25).getTime();
+    assert.equal(H.key(new Date(mid + 24 * 3600e3)), '2026-10-25', 'naive +24h stays on the 25-hour day');
+  });
+  inTz('America/New_York', () => {
+    assert.equal(H.key(new Date(2026, 2, 8, 1, 59)), '2026-03-08');
+    assert.equal(H.key(new Date(2026, 10, 1, 23, 0)), '2026-11-01');
+    assert.equal(H.addDays('2026-11-01', 1), '2026-11-02');
+  });
+  inTz('America/Santiago', () => {
+    // în Chile ora se schimbă la miezul nopții: 6 sept 2026 00:00 nu există
+    assert.equal(H.key(new Date(2026, 8, 6)), '2026-09-06');
+    assert.equal(H.key(new Date(2026, 8, 5, 23, 30)), '2026-09-05');
+  });
+  inTz('Pacific/Kiritimati', () => assert.equal(H.key(new Date(Date.UTC(2026, 0, 1, 10, 30))), '2026-01-02'));
+  assert.equal(H.dow('1970-01-01'), 4);
+  assert.equal(H.dow('2026-11-26'), 4);
+  assert.equal(H.dow('1969-12-28'), 0);
+  assert.equal(H.weekStart('2026-11-26'), '2026-11-23');
+  assert.equal(H.weekStart('2026-11-29'), '2026-11-23');
+  assert.equal(H.weekStart('2026-11-30'), '2026-11-30');
+  assert.equal(H.monthDays(2028, 2), 29);
+  assert.equal(H.monthDays(2026, 2), 28);
+  assert.deepEqual(H.addMonths(2026, 12, 1), { y: 2027, m: 1 });
+  assert.deepEqual(H.addMonths(2026, 1, -1), { y: 2025, m: 12 });
+  const g = H.monthGrid(2026, 3);
+  assert.equal(g[0].indexOf('2026-03-01'), 6, 'March 2026 starts on Sunday');
+  assert.equal(g.flat().filter(Boolean).length, 31);
+  assert.ok(g.every(w => w.length === 7));
+  assert.ok(H.valid('2028-02-29') && !H.valid('2026-02-29') && !H.valid('2026-1-5') && !H.valid(null));
+});
+
+test('habit: daily streaks across DST, today not done does not break', () => {
+  const days = []; for (let k = '2026-03-25'; k <= '2026-04-02'; k = H.addDays(k, 1)) days.push(k);
+  const h = hab(days.concat(['2026-03-10', '2026-03-11']));
+  assert.deepEqual(H.streaks(h, '2026-04-02'), { current: 9, best: 9, unit: 'd' });
+  assert.deepEqual(H.streaks(h, '2026-04-03'), { current: 9, best: 9, unit: 'd' }, 'today still open');
+  assert.deepEqual(H.streaks(h, '2026-04-04'), { current: 0, best: 9, unit: 'd' }, 'missed yesterday');
+  const fall = hab(['2026-10-24', '2026-10-25', '2026-10-26']);
+  assert.equal(H.streaks(fall, '2026-10-26').current, 3);
+  assert.deepEqual(H.streaks(hab([]), '2026-04-04'), { current: 0, best: 0, unit: 'd' });
+  assert.equal(H.start(hab(['2025-12-30']), '2026-02-01'), '2025-12-30', 'backfilled day before creation counts');
+});
+
+test('habit: weekday and N-per-week schedules (Pro)', () => {
+  // Lu, Mi, Vi
+  const mwf = hab(['2026-11-02', '2026-11-04', '2026-11-06', '2026-11-09', '2026-11-11', '2026-11-13', '2026-11-16'], { sched: { t: 'days', d: [1, 3, 5] } });
+  assert.ok(H.scheduled(mwf, '2026-11-16') && !H.scheduled(mwf, '2026-11-17'));
+  assert.equal(H.streaks(mwf, '2026-11-17').current, 7, 'Tuesday is not scheduled');
+  assert.equal(H.streaks(mwf, '2026-11-18').current, 7, 'Wednesday not yet done');
+  assert.equal(H.streaks(mwf, '2026-11-19').current, 0, 'missed Wednesday');
+  assert.equal(H.dueToday(mwf, '2026-11-17'), false);
+  // de 3 ori pe săptămână, în săptămâni (luni–duminică)
+  const t3 = hab(['2026-11-02', '2026-11-03', '2026-11-08', '2026-11-10', '2026-11-12', '2026-11-14', '2026-11-16'], { sched: { t: 'times', n: 3 } });
+  assert.equal(H.weekCount(t3, '2026-11-12'), 3);
+  assert.deepEqual(H.streaks(t3, '2026-11-17'), { current: 2, best: 2, unit: 'w' }, 'current week still open');
+  assert.equal(H.streaks(t3, '2026-11-24').current, 0, 'last week had only 1');
+  assert.equal(H.dueToday(t3, '2026-11-13'), false, 'goal already met this week');
+  assert.equal(H.dueToday(t3, '2026-11-14'), true, 'done today still shows');
+  assert.deepEqual(H.sched({ sched: { t: 'days', d: [] } }), { t: 'daily' });
+  assert.deepEqual(H.sched({ sched: { t: 'times', n: 9 } }), { t: 'daily' });
+  assert.deepEqual(H.sched({ sched: { t: 'days', d: [5, 1, 1, 9] } }), { t: 'days', d: [1, 5] });
+});
+
+test('habit: today summary, heat levels, month stats, best weekday', () => {
+  const a = hab(['2026-11-26'], { id: 'a', name: 'Read' }), b = hab([], { id: 'b', name: 'Walk' }), c = hab([], { id: 'c', name: 'Gym', sched: { t: 'days', d: [1] } });
+  assert.deepEqual(H.summary([a, b, c], '2026-11-26'), { due: 2, done: 1, left: ['Walk'] });
+  assert.deepEqual(H.summary([], '2026-11-26'), { due: 0, done: 0, left: [] });
+  assert.equal(H.dayRate([a, b, c], '2026-11-26', '2026-11-26'), 0.5);
+  assert.equal(H.dayRate([a, b], '2026-11-27', '2026-11-26'), null, 'future');
+  assert.equal(H.dayRate([hab([], { created: '2026-11-20' })], '2026-11-10', '2026-11-26'), null, 'before start');
+  assert.deepEqual([null, 0, 0.2, 0.5, 0.9, 1].map(H.level), [0, 0, 1, 2, 3, 4]);
+  // noiembrie 2026 până pe 26: 26 de zile, 13 bifate
+  const done = []; for (let i = 1; i <= 26; i += 2) done.push('2026-11-' + String(i).padStart(2, '0'));
+  assert.deepEqual(H.monthStats(hab(done), 2026, 11, '2026-11-26'), { done: 13, due: 26, pct: 50 });
+  assert.deepEqual(H.monthStats(hab(done), 2026, 12, '2026-11-26'), { done: 0, due: 0, pct: null });
+  assert.deepEqual(H.monthStats(hab(['2026-11-02', '2026-11-03'], { sched: { t: 'days', d: [1] } }), 2026, 11, '2026-11-26'), { done: 1, due: 4, pct: 25 });
+  assert.deepEqual(H.monthStats(hab(done.slice(0, 6), { sched: { t: 'times', n: 2 } }), 2026, 11, '2026-11-14'), { done: 6, due: 4, pct: 100 });
+  // doar luni bifate
+  const mon = hab(['2026-11-02', '2026-11-09', '2026-11-16', '2026-11-23'], { created: '2026-11-01' });
+  const w = H.weekdayRates([mon], '2026-11-01', '2026-11-26');
+  assert.equal(w.best, 1); assert.equal(w.rates[1], 1); assert.equal(w.rates[2], 0);
+  assert.equal(H.weekdayRates([hab([])], '2026-11-01', '2026-11-26').best, null);
+});
+
+test('habit: free limit, backup JSON round trip, CSV', () => {
+  assert.ok(H.canAdd([1, 2], false)); assert.ok(!H.canAdd([1, 2, 3], false)); assert.ok(H.canAdd([1, 2, 3, 4], true));
+  const data = { habits: [
+    { id: 'x', name: ' Read ', sched: { t: 'days', d: [1, 3] }, color: '#AA0011', emoji: '📚📚📚', created: '2026-11-01', done: { '2026-11-02': 1, '2026-11-31': 1, bad: 1 }, notes: { '2026-11-02': ' 20 pages, "great" ' } },
+    { id: 'x', name: 'Walk, outside', done: { '2026-11-01': 1 } },
+    { name: '' }, null
+  ] };
+  const n = H.normalize(data);
+  assert.equal(n.habits.length, 2);
+  assert.notEqual(n.habits[1].id, 'x', 'duplicate id replaced');
+  assert.deepEqual(n.habits[0], { id: 'x', name: 'Read', sched: { t: 'days', d: [1, 3] }, color: '#aa0011', emoji: '📚📚', created: '2026-11-01', done: { '2026-11-02': 1 }, notes: { '2026-11-02': '20 pages, "great"' } });
+  const back = H.importJson(H.exportJson(n, '2026-11-26'));
+  assert.deepEqual(back, n);
+  assert.throws(() => H.importJson('not json'), /format/);
+  assert.throws(() => H.importJson('{"foo":1}'), /format/);
+  assert.equal(H.toCsv(n.habits), 'date,habit,done,note\r\n2026-11-01,"Walk, outside",1,\r\n2026-11-02,Read,1,"20 pages, ""great"""\r\n');
+  const h = hab([]); assert.equal(H.toggle(h, '2026-11-26'), true); assert.equal(H.toggle(h, '2026-11-26'), false); assert.deepEqual(h.done, {});
+});

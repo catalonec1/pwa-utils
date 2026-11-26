@@ -273,3 +273,41 @@ Pro (разовая покупка): причины и решения для в�
 **Функция:** Причины и решения ошибок ORA- и PLS-, офлайн, можно вставить весь стек ошибок
 
 **Pro add-on listing:** name „ORA Error Helper Pro”; EN: One-time purchase: causes and fixes for all 251 errors, favorites and copy as Markdown. RO: Cumpărare unică: cauze și soluții pentru toate cele 251 de erori, favorite și copiere ca Markdown. RU: Разовая покупка: причины и решения для всех 251 ошибок, избранное и копирование в Markdown.
+
+## 8. Stelar Habit Tracker
+
+**EN — short description:** Simple offline habit tracker: daily check-off, streaks, week view and a month heat map.
+**EN — description:**
+A calm, simple habit tracker that keeps everything on your device.
+• Up to 3 habits free, checked off with one tap
+• Current and best streak for every habit; a day not yet done never breaks your streak
+• Week view to fill in days you missed, and a month calendar heat map
+• A gentle "today" summary: what is done and what is left
+• Light and dark theme, English, Romanian and Russian. No account, ads or tracking, works offline
+Pro (one-time add-on): unlimited habits, habits on specific weekdays or N times per week, a note for each day, statistics (completion per habit per month, best day of the week), backup to a JSON file and restore, CSV export, a color and an emoji for each habit.
+**Feature:** Daily check-off, streaks, week view and month heat map, offline
+**Keywords:** habit tracker, habits, streak, daily goals, routine, check list, heat map, self-improvement
+
+**RO — descriere scurtă:** Jurnal de obiceiuri simplu și offline: bifezi zilnic, vezi seriile, săptămâna și harta lunii.
+**RO — descriere:**
+Un jurnal de obiceiuri liniștit și simplu, cu totul pe dispozitivul tău.
+• Până la 3 obiceiuri gratuit, bifate dintr-o atingere
+• Seria curentă și recordul pentru fiecare obicei; o zi încă nebifată nu îți strică seria
+• Vederea săptămânii, ca să completezi zilele uitate, și calendarul lunii ca hartă de culori
+• Un rezumat blând pentru azi: ce ai făcut și ce mai ai
+• Temă luminoasă și întunecată, română, engleză și rusă. Fără cont, reclame sau urmărire, funcționează offline
+Pro (cumpărare unică): obiceiuri nelimitate, obiceiuri în anumite zile sau de N ori pe săptămână, o notiță pentru fiecare zi, statistici (procent pe obicei pe lună, cea mai bună zi a săptămânii), copie de siguranță JSON și restaurare, export CSV, culoare și emoji pentru fiecare obicei.
+**Funcție:** Bifare zilnică, serii, vederea săptămânii și harta lunii, offline
+
+**RU — краткое описание:** Простой офлайн-трекер привычек: отметки за день, серии, неделя и тепловая карта месяца.
+**RU — описание:**
+Спокойный и простой трекер привычек, все данные остаются на вашем устройстве.
+• До 3 привычек бесплатно, отметка одним касанием
+• Текущая серия и рекорд для каждой привычки; ещё не отмеченный сегодняшний день не прерывает серию
+• Вид недели, чтобы отметить пропущенные дни, и календарь месяца в виде тепловой карты
+• Мягкая сводка на сегодня: что сделано и что осталось
+• Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки, работает офлайн
+Pro (разовая покупка): неограниченное число привычек, привычки в определённые дни или N раз в неделю, заметка на каждый день, статистика (процент выполнения по месяцам, лучший день недели), резервная копия JSON и восстановление, экспорт CSV, цвет и эмодзи для каждой привычки.
+**Функция:** Отметки за день, серии, вид недели и тепловая карта месяца, офлайн
+
+**Pro add-on listing:** name „Habit Tracker Pro”; EN: One-time purchase: unlimited habits, weekday or N-per-week schedules, daily notes, statistics, backup, CSV export, colors and emoji. RO: Cumpărare unică: obiceiuri nelimitate, anumite zile sau de N ori pe săptămână, notițe zilnice, statistici, copie de siguranță, export CSV, culori și emoji. RU: Разовая покупка: неограниченные привычки, дни недели или N раз в неделю, заметки, статистика, резервная копия, экспорт CSV, цвета и эмодзи.

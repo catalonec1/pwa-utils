@@ -94,6 +94,19 @@ module.exports = {
       color: '#c92a2a',
       glyph: 'ORA',
       assets: ['./', 'index.html', 'app.js', 'logic.js', 'data.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
+    },
+    {
+      dir: 'habit',
+      storeId: 'TBD',
+      packageId: 'TBD',
+      id: 'habit-tracker',
+      name: 'Stelar Habit Tracker',
+      short_name: 'Habits',
+      description: 'Offline habit tracker: up to 3 habits, daily check-off, streaks, week view and month heat map. Pro: unlimited habits, weekday or N-per-week goals, notes, stats, backup, CSV, colors.',
+      categories: ['productivity', 'lifestyle', 'health'],
+      color: '#d6336c',
+      glyph: '✓',
+      assets: ['./', 'index.html', 'app.js', 'logic.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', '../shared/core.js', '../shared/base.css']
     }
   ]
 };
