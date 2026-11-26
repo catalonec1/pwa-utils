@@ -271,6 +271,50 @@ async function newPage(browser, base, opts = {}) {
     await ctx.close();
   });
 
+  await check('focus v1.2: tasks and auto-start (free), ambient noise and tasks CSV (Pro)', async () => {
+    let { ctx, page } = await newPage(browser, base);
+    await page.clock.install({ time: new Date('2026-11-04T10:00:00') });
+    await page.goto(base + 'focus/');
+    await page.fill('#taskText', 'Write report'); await page.press('#taskText', 'Enter');
+    await page.fill('#taskText', 'Read, "notes"'); await page.click('#taskAdd');
+    assert.equal(await page.locator('#tasks li').count(), 2);
+    assert.equal(await page.textContent('#phase'), 'Focus · Write report');
+    await page.check('#autoStart');
+    await page.click('#start');
+    await page.clock.runFor(25 * 60 * 1000 + 500);
+    assert.equal(await page.textContent('#phase'), 'Short break');
+    assert.equal(await page.textContent('#start'), 'Pause', 'break should auto-start');
+    assert.match(await page.textContent('#tasks li:first-child'), /1 sess\./);
+    await page.click('#tasks li:nth-child(2) .name');
+    await page.check('#tasks li:first-child input');
+    await page.click('#clearDone');
+    assert.equal(await page.locator('#tasks li').count(), 1);
+    assert.ok(await page.isDisabled('#tasksCsv'));
+    assert.ok(await page.isDisabled('#ambKind'));
+    await page.reload();
+    assert.ok(await page.isChecked('#autoStart'));
+    assert.match(await page.textContent('#tasks'), /Read, "notes"/);
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+    ({ ctx, page } = await newPage(browser, base, { pro: true }));
+    await page.clock.install({ time: new Date('2026-11-04T10:00:00') });
+    await page.goto(base + 'focus/');
+    await page.waitForFunction(() => !document.getElementById('ambKind').disabled);
+    await page.fill('#taskText', '=SUM(A1)'); await page.press('#taskText', 'Enter');
+    await page.selectOption('#ambKind', 'brown');
+    assert.equal(await page.evaluate(() => document.body.dataset.ambient), '');
+    await page.click('#start');
+    assert.equal(await page.evaluate(() => document.body.dataset.ambient), 'brown');
+    await page.click('#start');
+    assert.equal(await page.evaluate(() => document.body.dataset.ambient), '');
+    const [dl] = await Promise.all([page.waitForEvent('download'), page.click('#tasksCsv')]);
+    assert.equal(fs.readFileSync(await dl.path(), 'utf8'), "task,done,sessions,minutes\n'=SUM(A1),no,0,0\n");
+    await page.reload();
+    assert.equal(await page.inputValue('#ambKind'), 'brown');
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
   await check('text: stats, operations and undo', async () => {
     const { ctx, page } = await newPage(browser, base);
     await page.goto(base + 'text/');

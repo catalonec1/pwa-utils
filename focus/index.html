@@ -24,6 +24,13 @@
   progress#goalBar { display: block; width: 100%; height: 10px; accent-color: var(--accent); }
   .bars { display: flex; gap: 6px; align-items: end; height: 120px; padding-top: 8px; }
   .bars div { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: end; height: 100%; font-size: .72rem; color: var(--muted); }
+  .tasks li { align-items: center; }
+  .tasks li input[type=checkbox] { width: auto; flex: 0 0 auto; }
+  .tasks .name { flex: 1; text-align: left; border: none; background: none; padding: 4px; min-width: 0; overflow-wrap: anywhere; }
+  .tasks li.current .name { font-weight: 700; color: var(--accent); }
+  .tasks li.done .name { text-decoration: line-through; color: var(--muted); }
+  .tasks .n { color: var(--muted); font-size: .85rem; white-space: nowrap; }
+  .tasks .del { padding: 2px 9px; }
   .bars span.b { width: 100%; background: var(--accent); border-radius: 6px 6px 0 0; min-height: 2px; }
 </style>
 </head>
@@ -48,7 +55,23 @@
     <div class="goal"><label for="goal" data-i18n="goal">Daily goal (sessions)</label><input id="goal" type="number" min="1" max="16"></div>
     <progress id="goalBar" value="0" max="4" aria-labelledby="streak"></progress>
     <p class="muted" style="text-align:center;margin-top:4px" id="streak"></p>
-    <label style="display:flex;gap:8px;align-items:center;justify-content:center;color:var(--text)"><input type="checkbox" id="sound" style="width:auto" checked> <span data-i18n="sound">Sound</span></label>
+    <div style="display:flex;gap:18px;justify-content:center;flex-wrap:wrap">
+      <label style="display:flex;gap:8px;align-items:center;color:var(--text)"><input type="checkbox" id="sound" style="width:auto" checked> <span data-i18n="sound">Sound</span></label>
+      <label style="display:flex;gap:8px;align-items:center;color:var(--text)"><input type="checkbox" id="autoStart" style="width:auto"> <span data-i18n="autoStart">Start next phase automatically</span></label>
+    </div>
+  </section>
+  <section class="card">
+    <h2 style="font-size:1rem;margin:0 0 8px" data-i18n="tasks">Tasks</h2>
+    <form class="row" id="taskForm">
+      <div style="flex:1 1 200px"><label for="taskText" data-i18n="taskLabel">What are you working on?</label><input id="taskText" maxlength="120" autocomplete="off"></div>
+      <div style="flex:0 0 auto"><button class="primary" id="taskAdd" type="submit" data-i18n="add">Add</button></div>
+    </form>
+    <ul class="plain tasks" id="tasks"></ul>
+    <p class="muted" id="tasksHint" data-i18n="tasksHint">Tap a task to make it current: each finished focus session is counted on it.</p>
+    <div class="controls" style="justify-content:flex-start">
+      <button id="clearDone" data-i18n="clearDone">Remove done</button>
+      <button id="tasksCsv"><span data-i18n="tasksCsv">Export tasks CSV</span> <span class="pro-badge">PRO</span></button>
+    </div>
   </section>
   <section class="card">
     <h2 style="font-size:1rem;margin:0 0 8px"><span data-i18n="settings">Durations (minutes)</span> <span class="pro-badge">PRO</span></h2>
@@ -60,13 +83,22 @@
     </div>
   </section>
   <section class="card">
+    <h2 style="font-size:1rem;margin:0 0 8px"><span data-i18n="ambient">Ambient sound</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row">
+      <div><label for="ambKind" data-i18n="ambKind">Noise while you focus</label>
+        <select id="ambKind"><option value="off" data-i18n="ambOff">Off</option><option value="white" data-i18n="ambWhite">White noise</option><option value="pink" data-i18n="ambPink">Pink noise (rain-like)</option><option value="brown" data-i18n="ambBrown">Brown noise (deep rumble)</option></select></div>
+      <div><label for="ambVol" data-i18n="ambVol">Volume</label><input id="ambVol" type="range" min="0" max="100" step="5"></div>
+    </div>
+    <p class="muted" data-i18n="ambHint">Plays only while a focus session is running and stops on breaks. Generated on your device, no files.</p>
+  </section>
+  <section class="card">
     <h2 style="font-size:1rem;margin:0 0 8px"><span data-i18n="stats">Last 7 days</span> <span class="pro-badge">PRO</span></h2>
     <div class="bars" id="bars"></div>
     <p><button id="csv" data-i18n="csv">Export CSV</button></p>
   </section>
   <section class="card pro-box hidden" id="proBox">
     <h2 style="font-size:1rem;margin:0 0 6px" data-i18n="proTitle">Pro version</h2>
-    <p class="muted" data-i18n="proPitch">Custom durations, 7-day statistics and CSV export.</p>
+    <p class="muted" data-i18n="proPitch">Custom durations, ambient sounds while you focus, 7-day statistics and CSV export of statistics and tasks.</p>
     <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
     <p class="muted" id="proStatus"></p>
   </section>

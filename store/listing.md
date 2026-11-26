@@ -96,6 +96,19 @@ Pro (cumpărare unică): durate proprii, grafic pe 7 zile și export CSV al stat
 • Светлая и тёмная тема, русский, английский и румынский. Без аккаунта, рекламы и слежки
 Pro (разовая покупка): свои длительности, график за 7 дней и экспорт статистики в CSV.
 
+**Update 1.2 — What's new:**
+EN: New free task list: pick the task you are working on and every finished focus session is counted on it; the next phase can now start automatically. Pro: ambient white, pink or brown noise while you focus (generated on your device) and CSV export of your tasks.
+RO: Listă de sarcini nouă, gratuită: alegi sarcina la care lucrezi și fiecare sesiune de concentrare încheiată se numără la ea; etapa următoare poate porni automat. Pro: zgomot ambiental alb, roz sau maro în timpul concentrării (generat pe dispozitiv) și export CSV al sarcinilor.
+RU: Новый бесплатный список задач: выберите текущую задачу, и каждая завершённая сессия фокуса засчитывается ей; следующий этап может запускаться автоматически. Pro: фоновый белый, розовый или коричневый шум во время фокуса (создаётся на устройстве) и экспорт задач в CSV.
+
+**Updated description lines (1.2):**
+EN: • Task list: each finished focus session is counted on the current task; optional auto-start of the next phase
+EN: Pro (one-time add-on): your own durations, ambient noise while you focus, a 7-day focus chart and CSV export of your statistics and tasks.
+RO: • Listă de sarcini: fiecare sesiune încheiată se numără la sarcina curentă; pornire automată opțională a etapei următoare
+RO: Pro (cumpărare unică): durate proprii, zgomot ambiental în timpul concentrării, grafic pe 7 zile și export CSV al statisticilor și sarcinilor.
+RU: • Список задач: каждая завершённая сессия засчитывается текущей задаче; по желанию автоматический запуск следующего этапа
+RU: Pro (разовая покупка): свои длительности, фоновый шум во время фокуса, график за 7 дней и экспорт статистики и задач в CSV.
+
 ---
 
 ## 3. Stelar Text Toolbox (`text/`)

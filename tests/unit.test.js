@@ -366,3 +366,35 @@ test('converter v1.2: number bases, new units (free); pace and data rate (Pro)',
   assert.equal(U.categories(false).includes('pace'), false);
   assert.equal(U.categories(false).includes('datarate'), false);
 });
+
+test('focus v1.2: tasks (free), noise generator and tasks CSV (Pro)', () => {
+  let t = F.addTask([], '  Write   report ', 'a');
+  t = F.addTask(t, '', 'x');
+  t = F.addTask(t, 'Read, "notes"', 'b');
+  assert.deepEqual(t.map(x => x.text), ['Write report', 'Read, "notes"']);
+  assert.equal(F.addTask([], 'x'.repeat(500), 'c')[0].text.length, F.TASK_LEN);
+  let many = [];
+  for (let i = 0; i < 60; i++) many = F.addTask(many, 't' + i, i);
+  assert.equal(many.length, F.TASK_MAX);
+  t = F.creditTask(F.creditTask(t, 'a'), 'a');
+  assert.equal(t[0].pomos, 2);
+  t = F.toggleTask(t, 'b');
+  assert.equal(t[1].done, true);
+  assert.equal(F.tasksCSV(t, 25), 'task,done,sessions,minutes\nWrite report,no,2,50\n"Read, ""notes""",yes,0,0\n');
+  assert.equal(F.tasksCSV(F.addTask([], '=1+1', 'z')), "task,done,sessions,minutes\n'=1+1,no,0,0\n");
+  assert.deepEqual(F.clearDone(t).map(x => x.id), ['a']);
+  assert.deepEqual(F.removeTask(t, 'a').map(x => x.id), ['b']);
+  assert.deepEqual(F.sanitizeTasks([{ id: 1, text: 'ok', pomos: '3' }, null, { text: 5 }]), [{ id: '1', text: 'ok', done: false, pomos: 3 }]);
+  assert.deepEqual(F.sanitizeTasks('nope'), []);
+  let seed = 1;
+  const rand = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+  const roughness = a => { let d = 0; for (let i = 1; i < a.length; i++) d += Math.abs(a[i] - a[i - 1]); return d / a.length; };
+  const r = {};
+  for (const k of F.NOISES) {
+    const a = F.fillNoise(k, new Float32Array(20000), rand);
+    assert.ok(a.every(v => v >= -1 && v <= 1), k);
+    assert.ok(Math.abs(a[a.length - 1] - a[0]) < 1e-6, k + ' loops without a jump');
+    r[k] = roughness(a);
+  }
+  assert.ok(r.white > r.pink && r.pink > r.brown, JSON.stringify(r));
+});
