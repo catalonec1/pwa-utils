@@ -50,5 +50,6 @@ async function build(a) {
 
 (async () => {
   const only = process.argv[2] || "";
-  for (const a of cfg.apps) if (!only || only === a.dir) await build(a);
+  /* aplicațiile fără identitate rezervată (packageId 'TBD') nu au încă pachete Store */
+  for (const a of cfg.apps) if ((!only || only === a.dir) && a.packageId !== 'TBD') await build(a);
 })().catch(e => { console.error(e.message); process.exit(1); });
