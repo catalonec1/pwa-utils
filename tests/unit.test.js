@@ -1242,3 +1242,19 @@ test('json v1.1: structure and types (free), TypeScript interfaces (Pro)', () =>
   assert.equal(JF.toTypeScript(5), 'export type Root = number;\n');
   assert.equal(JF.toTypeScript({ '2d': { 'ăb-c': 1 } }), 'export interface Root {\n  "2d": T2d;\n}\n\nexport interface T2d {\n  "ăb-c": number;\n}\n');
 });
+
+test('sql v1.1: fill lists up to a line width (free), compare two versions (Pro)', () => {
+  const q = "select e.employee_id, e.last_name as name, d.department_name, e.salary, e.hire_date, e.email, e.phone_number, case when e.salary > 10000 then 'senior' else 'regular' end as band, count(*) over (partition by d.department_id) dept_size from employees e order by e.last_name, e.first_name;";
+  assert.equal(SQ.format(q, { width: 80 }),
+    'SELECT\n  e.employee_id, e.last_name AS name, d.department_name, e.salary, e.hire_date,\n  e.email, e.phone_number,\n' +
+    "  CASE\n    WHEN e.salary > 10000 THEN 'senior'\n    ELSE 'regular'\n  END AS band,\n  COUNT(*) OVER (PARTITION BY d.department_id) dept_size\nFROM\n  employees e\nORDER BY\n  e.last_name, e.first_name;");
+  assert.equal(SQ.format('select a, b, c, d from t', { width: 0 }), 'SELECT\n  a,\n  b,\n  c,\n  d\nFROM\n  t');
+  assert.equal(SQ.format('select aaaa, bbbb, cccc, dddd from t', { width: 20, commaStyle: 'leading' }), 'SELECT\n  aaaa, bbbb, cccc\n  , dddd\nFROM\n  t');
+  assert.equal(SQ.format("update t set a = 1, b = 'x,y', c = 3 -- c\n, d = 4 where id = 1", { width: 80 }), "UPDATE t\nSET\n  a = 1, b = 'x,y',\n  c = 3, -- c\n  d = 4\nWHERE\n  id = 1");
+  assert.equal(SQ.format('select a, b from t', { width: 80, minify: true }), 'SELECT a, b FROM t');
+  assert.equal(SQ.wrapLists('x\n  a,\n  b', 5), 'x\n  a,\n  b', 'width below 20 is ignored');
+  assert.equal(SQ.compare('select a,b from t where x=1', 'SELECT a, c FROM t WHERE x = 1').map(d => d.op + d.line).join('|'), ' SELECT|   a,|-  b|+  c| FROM|   t| WHERE|   x = 1');
+  assert.ok(SQ.compare('select 1 from dual', 'SELECT 1\nFROM   dual').every(d => d.op === ' '));
+  assert.deepEqual(SQ.diffLines('a', 'a\nb'), [{ op: ' ', line: 'a' }, { op: '+', line: 'b' }]);
+  assert.throws(() => SQ.diffLines('x\n'.repeat(3001), 'y'));
+});

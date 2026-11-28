@@ -1386,6 +1386,41 @@ async function newPage(browser, base, opts = {}) {
     await ctx.close();
   });
 
+  await check('sql v1.1: fill lists up to a line width (free), compare two versions (Pro)', async () => {
+    let { ctx, page } = await newPage(browser, base);
+    await page.goto(base + 'sql/');
+    await page.fill('#src', 'select aaaa, bbbb, cccc, dddd, eeee, ffff, gggg, hhhh, iiii, jjjj, kkkk, llll, mmmm, nnnn, oooo, pppp from t order by aaaa, bbbb');
+    assert.match(await page.textContent('#out'), /^SELECT\n  aaaa,\n  bbbb,/);
+    await page.selectOption('#width', '80');
+    assert.equal(await page.textContent('#out'), 'SELECT\n  aaaa, bbbb, cccc, dddd, eeee, ffff, gggg, hhhh, iiii, jjjj, kkkk, llll, mmmm,\n  nnnn, oooo, pppp\nFROM\n  t\nORDER BY\n  aaaa, bbbb');
+    assert.equal(await page.textContent('#out .k'), 'SELECT');
+    assert.ok(await page.isDisabled('#cmpSrc'));
+    assert.equal(await page.textContent('#cmpOut'), 'Available in Pro.');
+    await page.reload();
+    assert.equal(await page.inputValue('#width'), '80', 'width not kept');
+    await page.selectOption('#lang', 'ro');
+    assert.equal(await page.textContent('#width option[value="100"]'), 'Umple până la 100 de caractere');
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+    ({ ctx, page } = await newPage(browser, base, { pro: true }));
+    await page.goto(base + 'sql/');
+    await page.waitForFunction(() => !document.getElementById('cmpSrc').disabled);
+    assert.equal(await page.textContent('#cmpSum'), 'Paste the second version to compare it.');
+    await page.fill('#src', 'select a, b from t where x = 1');
+    await page.fill('#cmpSrc', 'SELECT a,\n       c\nFROM   t\nWHERE  x = 1');
+    assert.equal(await page.textContent('#cmpSum'), '1 lines added · 1 removed');
+    assert.deepEqual(await page.locator('#cmpOut .dR').allTextContents(), ['-   b']);
+    assert.deepEqual(await page.locator('#cmpOut .dA').allTextContents(), ['+   c']);
+    await page.fill('#cmpSrc', 'SELECT a,b FROM t WHERE x=1');
+    assert.equal(await page.textContent('#cmpSum'), 'Same after formatting.');
+    await page.reload();
+    await page.waitForFunction(() => !document.getElementById('cmpSrc').disabled);
+    assert.equal(await page.inputValue('#cmpSrc'), 'SELECT a,b FROM t WHERE x=1', 'second SQL not kept');
+    assert.equal(await page.textContent('#cmpSum'), 'Same after formatting.');
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
   await check('ora v1.2: highlights and recent searches (free), results as Markdown table (Pro)', async () => {
     let { ctx, page } = await newPage(browser, base);
     await page.goto(base + 'ora/');

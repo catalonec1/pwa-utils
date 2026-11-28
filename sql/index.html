@@ -38,6 +38,9 @@
   ol.stm code { font-size: .85rem; overflow-wrap: anywhere; }
   ol.stm button, ul.plain button { padding: 4px 10px; }
   ul.plain li span { overflow-wrap: anywhere; }
+  pre .dA { color: var(--ok); background: color-mix(in srgb, var(--ok) 12%, transparent); display: block; }
+  pre .dR { color: var(--warn); background: color-mix(in srgb, var(--warn) 12%, transparent); display: block; }
+  textarea#cmpSrc { min-height: 140px; white-space: pre; overflow-wrap: normal; overflow-x: auto; }
   .kind { font-size: .72rem; font-weight: 700; padding: 1px 6px; border-radius: 6px; border: 1px solid var(--border); color: var(--muted); }
 </style>
 </head>
@@ -60,6 +63,8 @@
         <select id="commas"><option value="trailing" data-i18n="trailing">Trailing (a,)</option><option value="leading" data-i18n="leading">Leading (, a)</option></select></div>
       <div><label for="indent" data-i18n="indent">Indent</label>
         <select id="indent"><option value="2" data-i18n="sp2">2 spaces</option><option value="4" data-i18n="sp4">4 spaces</option></select></div>
+      <div><label for="width" data-i18n="width">Lists (columns, SET, ORDER BY)</label>
+        <select id="width"><option value="0" data-i18n="w0">One item per line</option><option value="80" data-i18n="w80">Fill up to 80 characters</option><option value="100" data-i18n="w100">Fill up to 100 characters</option><option value="120" data-i18n="w120">Fill up to 120 characters</option></select></div>
     </div>
     <div class="io">
       <div>
@@ -100,6 +105,13 @@
     <pre class="code small" id="code" style="margin-top:10px"></pre>
   </section>
   <section class="card">
+    <h2 class="t"><span data-i18n="cmpTitle">Compare two versions</span> <span class="pro-badge">PRO</span></h2>
+    <label for="cmpSrc" data-i18n="cmpLabel">Second SQL, compared with the input above after formatting both the same way</label>
+    <textarea id="cmpSrc" spellcheck="false" autocomplete="off"></textarea>
+    <p class="muted" id="cmpSum" aria-live="polite" style="margin:8px 0"></p>
+    <pre class="code small" id="cmpOut"></pre>
+  </section>
+  <section class="card">
     <h2 class="t"><span data-i18n="snipTitle">Saved snippets</span> <span class="pro-badge">PRO</span></h2>
     <div class="row">
       <div><label for="snipName" data-i18n="snipName">Name</label><input id="snipName" maxlength="80"></div>
@@ -109,7 +121,7 @@
   </section>
   <section class="card pro-box hidden" id="proBox">
     <h2 class="t" style="margin-bottom:6px" data-i18n="proTitle">Pro version</h2>
-    <p class="muted" data-i18n="proPitch">PL/SQL block indentation, identifier case, aligned aliases, splitting a script into statements, copy as a Java, C#, Python or PL/SQL string with bind hints, and saved snippets.</p>
+    <p class="muted" data-i18n="proPitch">PL/SQL block indentation, identifier case, aligned aliases, splitting a script into statements, copy as a Java, C#, Python or PL/SQL string with bind hints, comparing two versions, and saved snippets.</p>
     <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
     <p class="muted" id="proStatus"></p>
   </section>

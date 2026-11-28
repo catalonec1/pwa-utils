@@ -684,3 +684,12 @@ Pro (разовая покупка): неограниченное число п�
 **Функция:** Отметки за день, серии, вид недели и тепловая карта месяца, офлайн
 
 **Pro add-on listing:** name „Habit Tracker Pro”; EN: One-time purchase: unlimited habits, weekday or N-per-week schedules, daily notes, statistics, backup, CSV export, colors and emoji. RO: Cumpărare unică: obiceiuri nelimitate, anumite zile sau de N ori pe săptămână, notițe zilnice, statistici, copie de siguranță, export CSV, culori și emoji. RU: Разовая покупка: неограниченные привычки, дни недели или N раз в неделю, заметки, статистика, резервная копия, экспорт CSV, цвета и эмодзи.
+
+---
+
+## Stelar SQL Formatter (`sql/`)
+
+**Update 1.1 — What's new:**
+EN: New free option for long lists (columns, SET, ORDER BY): fill each line up to 80, 100 or 120 characters instead of one item per line. Pro: compare two versions of a statement; both are formatted the same way first, so only real changes are shown.
+RO: Opțiune gratuită nouă pentru liste lungi (coloane, SET, ORDER BY): umple fiecare rând până la 80, 100 sau 120 de caractere în loc de un element pe rând. Pro: compară două variante ale unei instrucțiuni; ambele sunt formatate la fel înainte, deci se văd doar schimbările reale.
+RU: Новая бесплатная настройка для длинных списков (столбцы, SET, ORDER BY): заполнять строку до 80, 100 или 120 символов вместо одного элемента на строку. Pro: сравнение двух версий запроса; обе сначала форматируются одинаково, поэтому видны только реальные изменения.
