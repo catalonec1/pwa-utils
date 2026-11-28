@@ -2,12 +2,12 @@
   'use strict';
   const SKU = 'pro';
   const DICT = {
-    ro: { appName: 'Alegere aleatorie', listTitle: 'Alege din listă', listLabel: 'Câte un nume sau o variantă pe rând', howMany: 'Câte', noRepeats: 'Fără repetări', pick: 'Alege', shuffle: 'Amestecă lista', wheel: 'Roata norocului', toolsTitle: 'Unelte pentru listă', weighted: 'Cu ponderi (scrie „Nume *3”)', elim: 'Scoate din listă numele alese', restore: 'Pune-le pe toate înapoi', listName: 'Numele listei', saveList: 'Salvează lista', savedLists: 'Liste salvate', choose: '— alege —', del: 'Șterge', teamsTitle: 'Echipe și grupe', split: 'Împarte în', byCount: 'număr de echipe', bySize: 'persoane pe echipă', number: 'Număr', makeTeams: 'Fă echipele', team: 'Echipa {n}', coinTitle: 'Cap sau pajură', flip: 'Aruncă moneda', heads: 'Cap', tails: 'Pajură', tally: 'Cap {h} · Pajură {t}', diceTitle: 'Zaruri', diceCount: 'Zaruri', sides: 'Fețe', roll: 'Aruncă', sum: 'Suma: {s}', numTitle: 'Număr aleatoriu', min: 'De la', max: 'Până la', generate: 'Generează', badNum: 'Scrie numere întregi.', histTitle: 'Istoric', histHint: 'Fiecare rezultat se salvează aici, cele mai noi primele.', csv: 'Salvează CSV', emptyHist: 'Nimic încă.', proPitch: 'Echipe și grupe, alegere cu ponderi, scoaterea numelor alese (pentru clase și tombole), liste salvate și istoric cu export CSV.', fair: 'Folosește generatorul securizat de numere aleatorii al dispozitivului, fără bias de modulo.',
-      names: '{n} nume', namesW: '{n} nume · ponderi în total {w}', emptyList: 'Adaugă câteva nume în listă.', removed: 'Scos din listă · rămân {n}', allBack: 'Lista completă a fost pusă înapoi.', saved: 'Salvată.', h_pick: 'Alegere', h_shuffle: 'Amestecare', h_teams: 'Echipe', h_coin: 'Monedă', h_dice: 'Zaruri', h_number: 'Număr' },
-    en: { appName: 'Random Picker', listTitle: 'Pick from a list', listLabel: 'One name or option per line', howMany: 'How many', noRepeats: 'No repeats', pick: 'Pick', shuffle: 'Shuffle list', wheel: 'Spinning wheel', toolsTitle: 'List tools', weighted: 'Weighted (write “Name *3”)', elim: 'Remove picked names from the list', restore: 'Put back all', listName: 'List name', saveList: 'Save list', savedLists: 'Saved lists', choose: '— choose —', del: 'Delete', teamsTitle: 'Teams and groups', split: 'Split into', byCount: 'number of teams', bySize: 'people per team', number: 'Number', makeTeams: 'Make teams', team: 'Team {n}', coinTitle: 'Coin flip', flip: 'Flip a coin', heads: 'Heads', tails: 'Tails', tally: 'Heads {h} · Tails {t}', diceTitle: 'Dice', diceCount: 'Dice', sides: 'Sides', roll: 'Roll', sum: 'Sum: {s}', numTitle: 'Random number', min: 'From', max: 'To', generate: 'Generate', badNum: 'Enter whole numbers.', histTitle: 'History', histHint: 'Every result is saved here, newest first.', csv: 'Save CSV', emptyHist: 'Nothing yet.', proPitch: 'Teams and groups, weighted picks, remove picked names (for classrooms and raffles), saved lists and a history with CSV export.', fair: "Uses your device's secure random number generator, without modulo bias.",
-      names: '{n} names', namesW: '{n} names · total weight {w}', emptyList: 'Add a few names to the list.', removed: 'Removed from the list · {n} left', allBack: 'The full list is back.', saved: 'Saved.', h_pick: 'Pick', h_shuffle: 'Shuffle', h_teams: 'Teams', h_coin: 'Coin', h_dice: 'Dice', h_number: 'Number' },
-    ru: { appName: 'Случайный выбор', listTitle: 'Выбор из списка', listLabel: 'Одно имя или вариант на строку', howMany: 'Сколько', noRepeats: 'Без повторов', pick: 'Выбрать', shuffle: 'Перемешать', wheel: 'Колесо', toolsTitle: 'Инструменты списка', weighted: 'С весами (пишите «Имя *3»)', elim: 'Убирать выбранных из списка', restore: 'Вернуть всех', listName: 'Название списка', saveList: 'Сохранить список', savedLists: 'Сохранённые списки', choose: '— выберите —', del: 'Удалить', teamsTitle: 'Команды и группы', split: 'Разделить на', byCount: 'число команд', bySize: 'человек в команде', number: 'Число', makeTeams: 'Разделить', team: 'Команда {n}', coinTitle: 'Монетка', flip: 'Подбросить', heads: 'Орёл', tails: 'Решка', tally: 'Орёл {h} · Решка {t}', diceTitle: 'Кубики', diceCount: 'Кубики', sides: 'Граней', roll: 'Бросить', sum: 'Сумма: {s}', numTitle: 'Случайное число', min: 'От', max: 'До', generate: 'Сгенерировать', badNum: 'Введите целые числа.', histTitle: 'История', histHint: 'Здесь сохраняется каждый результат, новые сверху.', csv: 'Сохранить CSV', emptyHist: 'Пока пусто.', proPitch: 'Команды и группы, выбор с весами, удаление выбранных (для класса и розыгрышей), сохранённые списки и история с экспортом CSV.', fair: 'Использует защищённый генератор случайных чисел устройства, без смещения по модулю.',
-      names: 'Имён: {n}', namesW: 'Имён: {n} · общий вес {w}', emptyList: 'Добавьте в список несколько имён.', removed: 'Убрано из списка · осталось {n}', allBack: 'Весь список возвращён.', saved: 'Сохранено.', h_pick: 'Выбор', h_shuffle: 'Перемешивание', h_teams: 'Команды', h_coin: 'Монетка', h_dice: 'Кубики', h_number: 'Число' }
+    ro: { appName: 'Alegere aleatorie', listTitle: 'Alege din listă', listLabel: 'Câte un nume sau o variantă pe rând', howMany: 'Câte', noRepeats: 'Fără repetări', pick: 'Alege', shuffle: 'Amestecă lista', wheel: 'Roata norocului', toolsTitle: 'Unelte pentru listă', weighted: 'Cu ponderi (scrie „Nume *3”)', elim: 'Scoate din listă numele alese', restore: 'Pune-le pe toate înapoi', listName: 'Numele listei', saveList: 'Salvează lista', savedLists: 'Liste salvate', choose: '— alege —', del: 'Șterge', teamsTitle: 'Echipe și grupe', split: 'Împarte în', byCount: 'număr de echipe', bySize: 'persoane pe echipă', number: 'Număr', makeTeams: 'Fă echipele', team: 'Echipa {n}', coinTitle: 'Cap sau pajură', flip: 'Aruncă moneda', heads: 'Cap', tails: 'Pajură', tally: 'Cap {h} · Pajură {t}', diceTitle: 'Zaruri', diceCount: 'Zaruri', sides: 'Fețe', roll: 'Aruncă', sum: 'Suma: {s}', numTitle: 'Număr aleatoriu', min: 'De la', max: 'Până la', generate: 'Generează', badNum: 'Scrie numere întregi.', histTitle: 'Istoric', histHint: 'Fiecare rezultat se salvează aici, cele mai noi primele.', csv: 'Salvează CSV', emptyHist: 'Nimic încă.', proPitch: 'Echipe și grupe, turnee eliminatorii, alegere cu ponderi, scoaterea numelor alese (pentru clase și tombole), liste salvate și istoric cu export CSV.', fair: 'Folosește generatorul securizat de numere aleatorii al dispozitivului, fără bias de modulo.',
+      names: '{n} nume', namesW: '{n} nume · ponderi în total {w}', emptyList: 'Adaugă câteva nume în listă.', removed: 'Scos din listă · rămân {n}', allBack: 'Lista completă a fost pusă înapoi.', saved: 'Salvată.', h_pick: 'Alegere', h_shuffle: 'Amestecare', h_teams: 'Echipe', h_coin: 'Monedă', h_dice: 'Zaruri', h_number: 'Număr', quickTitle: 'Decizie rapidă', yesNo: 'Da sau nu?', yes: 'Da', no: 'Nu', rpsTitle: 'Piatră, foarfecă, hârtie cu aplicația', rock: 'Piatră', paper: 'Hârtie', scissors: 'Foarfecă', rpsRes: 'Tu: {a} · Aplicația: {b}', rpsWin: 'Ai câștigat!', rpsLose: 'A câștigat aplicația.', rpsDraw: 'Egal.', rpsScore: 'Tu {w} · Aplicația {l} · Egal {d}', brTitle: 'Turneu eliminatoriu', brHint: 'Formează perechi la întâmplare din toată lista. Atinge un nume ca să-l trimiți în turul următor.', brNew: 'Fă tabloul', brRand: 'Decide restul la întâmplare', brRound: 'Turul {n}', brSemi: 'Semifinale', brFinal: 'Finala', brBye: '(trece direct)', brTbd: '…', brChamp: 'Câștigător: {n}', brNeed: 'Pentru turneu sunt necesare cel puțin 2 nume.', h_yesno: 'Da/Nu', h_rps: 'Piatră-foarfecă-hârtie', h_bracket: 'Turneu' },
+    en: { appName: 'Random Picker', listTitle: 'Pick from a list', listLabel: 'One name or option per line', howMany: 'How many', noRepeats: 'No repeats', pick: 'Pick', shuffle: 'Shuffle list', wheel: 'Spinning wheel', toolsTitle: 'List tools', weighted: 'Weighted (write “Name *3”)', elim: 'Remove picked names from the list', restore: 'Put back all', listName: 'List name', saveList: 'Save list', savedLists: 'Saved lists', choose: '— choose —', del: 'Delete', teamsTitle: 'Teams and groups', split: 'Split into', byCount: 'number of teams', bySize: 'people per team', number: 'Number', makeTeams: 'Make teams', team: 'Team {n}', coinTitle: 'Coin flip', flip: 'Flip a coin', heads: 'Heads', tails: 'Tails', tally: 'Heads {h} · Tails {t}', diceTitle: 'Dice', diceCount: 'Dice', sides: 'Sides', roll: 'Roll', sum: 'Sum: {s}', numTitle: 'Random number', min: 'From', max: 'To', generate: 'Generate', badNum: 'Enter whole numbers.', histTitle: 'History', histHint: 'Every result is saved here, newest first.', csv: 'Save CSV', emptyHist: 'Nothing yet.', proPitch: 'Teams and groups, tournament brackets, weighted picks, remove picked names (for classrooms and raffles), saved lists and a history with CSV export.', fair: "Uses your device's secure random number generator, without modulo bias.",
+      names: '{n} names', namesW: '{n} names · total weight {w}', emptyList: 'Add a few names to the list.', removed: 'Removed from the list · {n} left', allBack: 'The full list is back.', saved: 'Saved.', h_pick: 'Pick', h_shuffle: 'Shuffle', h_teams: 'Teams', h_coin: 'Coin', h_dice: 'Dice', h_number: 'Number', quickTitle: 'Quick decision', yesNo: 'Yes or no?', yes: 'Yes', no: 'No', rpsTitle: 'Rock, paper, scissors against the app', rock: 'Rock', paper: 'Paper', scissors: 'Scissors', rpsRes: 'You: {a} · App: {b}', rpsWin: 'You win!', rpsLose: 'The app wins.', rpsDraw: 'Draw.', rpsScore: 'You {w} · App {l} · Draws {d}', brTitle: 'Tournament bracket', brHint: 'Pairs everyone from the list at random. Tap a name to send it to the next round.', brNew: 'Make bracket', brRand: 'Decide the rest randomly', brRound: 'Round {n}', brSemi: 'Semifinals', brFinal: 'Final', brBye: '(bye)', brTbd: '…', brChamp: 'Winner: {n}', brNeed: 'A tournament needs at least 2 names.', h_yesno: 'Yes/No', h_rps: 'Rock-paper-scissors', h_bracket: 'Tournament' },
+    ru: { appName: 'Случайный выбор', listTitle: 'Выбор из списка', listLabel: 'Одно имя или вариант на строку', howMany: 'Сколько', noRepeats: 'Без повторов', pick: 'Выбрать', shuffle: 'Перемешать', wheel: 'Колесо', toolsTitle: 'Инструменты списка', weighted: 'С весами (пишите «Имя *3»)', elim: 'Убирать выбранных из списка', restore: 'Вернуть всех', listName: 'Название списка', saveList: 'Сохранить список', savedLists: 'Сохранённые списки', choose: '— выберите —', del: 'Удалить', teamsTitle: 'Команды и группы', split: 'Разделить на', byCount: 'число команд', bySize: 'человек в команде', number: 'Число', makeTeams: 'Разделить', team: 'Команда {n}', coinTitle: 'Монетка', flip: 'Подбросить', heads: 'Орёл', tails: 'Решка', tally: 'Орёл {h} · Решка {t}', diceTitle: 'Кубики', diceCount: 'Кубики', sides: 'Граней', roll: 'Бросить', sum: 'Сумма: {s}', numTitle: 'Случайное число', min: 'От', max: 'До', generate: 'Сгенерировать', badNum: 'Введите целые числа.', histTitle: 'История', histHint: 'Здесь сохраняется каждый результат, новые сверху.', csv: 'Сохранить CSV', emptyHist: 'Пока пусто.', proPitch: 'Команды и группы, турнирные сетки, выбор с весами, удаление выбранных (для класса и розыгрышей), сохранённые списки и история с экспортом CSV.', fair: 'Использует защищённый генератор случайных чисел устройства, без смещения по модулю.',
+      names: 'Имён: {n}', namesW: 'Имён: {n} · общий вес {w}', emptyList: 'Добавьте в список несколько имён.', removed: 'Убрано из списка · осталось {n}', allBack: 'Весь список возвращён.', saved: 'Сохранено.', h_pick: 'Выбор', h_shuffle: 'Перемешивание', h_teams: 'Команды', h_coin: 'Монетка', h_dice: 'Кубики', h_number: 'Число', quickTitle: 'Быстрое решение', yesNo: 'Да или нет?', yes: 'Да', no: 'Нет', rpsTitle: 'Камень, ножницы, бумага с приложением', rock: 'Камень', paper: 'Бумага', scissors: 'Ножницы', rpsRes: 'Вы: {a} · Приложение: {b}', rpsWin: 'Вы выиграли!', rpsLose: 'Выиграло приложение.', rpsDraw: 'Ничья.', rpsScore: 'Вы {w} · Приложение {l} · Ничьи {d}', brTitle: 'Турнирная сетка', brHint: 'Случайно разбивает весь список на пары. Нажмите на имя, чтобы провести его в следующий круг.', brNew: 'Создать сетку', brRand: 'Остальное — случайно', brRound: 'Круг {n}', brSemi: 'Полуфиналы', brFinal: 'Финал', brBye: '(без пары)', brTbd: '…', brChamp: 'Победитель: {n}', brNeed: 'Для турнира нужно минимум 2 имени.', h_yesno: 'Да/Нет', h_rps: 'Камень-ножницы-бумага', h_bracket: 'Турнир' }
   };
   const R = RandomPick;
   const $ = id => document.getElementById(id);
@@ -19,7 +19,8 @@
 
   let isPro = false, spinning = false, last = json('pickLast', null), hist = json('pickHist', []), saved = json('pickSaved', {});
   const opts = Object.assign({ count: 1, unique: true, weighted: false, elim: false, teamMode: 'count', teamN: 2, diceN: 2, diceS: '6', numMin: '1', numMax: '100' }, json('pickOpts', {}));
-  const tally = { heads: 0, tails: 0 };
+  const tally = { heads: 0, tails: 0 }, score = { w: 0, l: 0, d: 0 };
+  let br = json('pickBracket', null), rpsLast = null, ynLast = null;
 
   /* ---------- lista ---------- */
   const weightedOn = () => isPro && $('weighted').checked;
@@ -184,6 +185,58 @@
     $('diceSum').textContent = n > 1 ? Core.t('sum', { s: r.sum }) : '';
     addHist('dice', `${n}d${s}: ${r.rolls.join(' + ')}${n > 1 ? ' = ' + r.sum : ''}`);
   }
+  function doYesNo() {
+    ynLast = R.yesNo();
+    $('ynOut').textContent = Core.t(ynLast);
+    addHist('yesno', Core.t(ynLast));
+  }
+  function renderRps() {
+    if (!rpsLast) return;
+    const { me, app, w } = rpsLast;
+    $('rpsOut').textContent = Core.t('rpsRes', { a: Core.t(me), b: Core.t(app) }) + ' — ' + Core.t(['rpsDraw', 'rpsWin', 'rpsLose'][w]);
+    $('rpsScore').textContent = Core.t('rpsScore', score);
+  }
+  function doRps(me) {
+    const app = R.rps(), w = R.rpsWinner(me, app);
+    score[['d', 'w', 'l'][w]]++;
+    rpsLast = { me, app, w }; renderRps();
+    addHist('rps', $('rpsOut').textContent);
+  }
+
+  /* ---------- turneu (Pro) ---------- */
+  function roundName(r, total) { return r === total - 1 ? Core.t('brFinal') : r === total - 2 ? Core.t('brSemi') : Core.t('brRound', { n: r + 1 }); }
+  function setBracket(v, logChamp) {
+    const before = br && R.champion(br);
+    br = v; Core.store('pickBracket', JSON.stringify(v)); renderBracket();
+    const c = br && R.champion(br);
+    if (logChamp && c != null && c !== before) addHist('bracket', Core.t('brChamp', { n: c }));
+  }
+  function renderBracket() {
+    const box = $('brOut'), ch = $('brChamp'); box.textContent = ''; ch.textContent = '';
+    if (!isPro || !br) return;
+    const rounds = R.bracketRounds(br);
+    rounds.forEach((ms, r) => {
+      const col = el('div', null, 'rd');
+      col.append(el('h3', roundName(r, rounds.length)));
+      ms.forEach((x, m) => {
+        const d = el('div', null, 'm');
+        [x.a, x.b].forEach((name, side) => {
+          const b = el('button', name === null ? (r === 0 ? Core.t('brBye') : Core.t('brTbd')) : name);
+          b.disabled = name === null || x.a === null || x.b === null;
+          const ws = r === 0 && x.b === null ? 0 : br.picks[r][m];
+          if (x.w !== null && name !== null) b.classList.add(side === ws ? 'w' : 'lost');
+          b.title = name || '';
+          b.addEventListener('click', () => setBracket(R.bracketPick(br, r, m, side), true));
+          d.append(b);
+        });
+        col.append(d);
+      });
+      box.append(col);
+    });
+    const c = R.champion(br);
+    if (c != null) ch.textContent = '🏆 ' + Core.t('brChamp', { n: c });
+  }
+
   function intOf(s) { const t = String(s).replace(/\s/g, ''); return /^[-+]?\d+$/.test(t) && Number.isSafeInteger(+t) ? +t : NaN; }
   function doNumber() {
     saveOpts();
@@ -203,9 +256,9 @@
     s.value = sel && saved[sel] != null ? sel : '';
   }
 
-  function all() { listInfo(); draw(); renderResult(); renderHist(); renderSaved($('listSel').value); if ($('coinOut').dataset.v) { $('coinOut').textContent = Core.t($('coinOut').dataset.v); $('coinTally').textContent = Core.t('tally', { h: tally.heads, t: tally.tails }); } }
+  function all() { if (ynLast) $('ynOut').textContent = Core.t(ynLast); renderRps(); renderBracket(); listInfo(); draw(); renderResult(); renderHist(); renderSaved($('listSel').value); if ($('coinOut').dataset.v) { $('coinOut').textContent = Core.t($('coinOut').dataset.v); $('coinTally').textContent = Core.t('tally', { h: tally.heads, t: tally.tails }); } }
   function lockPro() {
-    ['weighted', 'elim', 'restore', 'listName', 'listSave', 'listSel', 'listDel', 'teamMode', 'teamN', 'teamGo', 'histCsv', 'histClear'].forEach(id => { $(id).disabled = !isPro; });
+    ['weighted', 'elim', 'restore', 'listName', 'listSave', 'listSel', 'listDel', 'teamMode', 'teamN', 'teamGo', 'brNew', 'brRand', 'histCsv', 'histClear'].forEach(id => { $(id).disabled = !isPro; });
     if (!isPro) $('teamsOut').textContent = '';
     all();
   }
@@ -228,6 +281,15 @@
   $('coinBtn').addEventListener('click', doCoin);
   $('diceBtn').addEventListener('click', doDice);
   $('numBtn').addEventListener('click', doNumber);
+  $('ynBtn').addEventListener('click', doYesNo);
+  document.querySelectorAll('.rpsb button').forEach(b => b.addEventListener('click', () => doRps(b.dataset.move)));
+  $('brNew').addEventListener('click', () => {
+    if (!isPro) return;
+    const names = items().filter(x => x.w > 0).map(x => x.name);
+    if (names.length < 2) { setBracket(null); $('brChamp').textContent = Core.t('brNeed'); return; }
+    setBracket(R.bracket(names.slice(0, 256)), true);
+  });
+  $('brRand').addEventListener('click', () => { if (isPro && br) setBracket(R.bracketRandom(br), true); });
   ['count', 'unique', 'elim', 'teamMode', 'teamN', 'diceS'].forEach(id => $(id).addEventListener('change', saveOpts));
   $('weighted').addEventListener('change', () => { saveOpts(); wheel.hi = -1; listInfo(); draw(); });
   $('restore').addEventListener('click', () => {

@@ -1193,3 +1193,35 @@ test('text v1.2: line filters, prefix/suffix (free); regex filter and text diff 
   assert.deepEqual(d.map(x => x.op).join(''), '+ -   +');
   assert.throws(() => T.diffLines('x\n'.repeat(3001), 'y'));
 });
+
+test('pick v1.1: yes/no and rock-paper-scissors (free); tournament bracket (Pro)', () => {
+  assert.equal(RP.yesNo(seqSrc([0])), 'yes'); assert.equal(RP.yesNo(seqSrc([1])), 'no');
+  assert.deepEqual([0, 1, 2].map(v => RP.rps(seqSrc([v]))), ['rock', 'paper', 'scissors']);
+  assert.equal(RP.rpsWinner('rock', 'scissors'), 1); assert.equal(RP.rpsWinner('rock', 'paper'), 2);
+  assert.equal(RP.rpsWinner('paper', 'rock'), 1); assert.equal(RP.rpsWinner('scissors', 'paper'), 1);
+  assert.equal(RP.rpsWinner('paper', 'paper'), 0);
+  assert.throws(() => RP.rpsWinner('lizard', 'rock'));
+  assert.equal(RP.bracket(['solo']), null);
+  for (let n = 2; n <= 33; n++) {
+    const names = Array.from({ length: n }, (_, i) => 'p' + i), b = RP.bracket(names);
+    const size = b.slots.length;
+    assert.ok(size >= n && size < 2 * n && (size & (size - 1)) === 0, 'power of two');
+    assert.deepEqual(b.slots.filter(x => x !== null).sort(), names.slice().sort());
+    for (let m = 0; m < size / 2; m++) assert.notEqual(b.slots[2 * m], null, 'at most one bye per match');
+    assert.equal(b.picks.length, Math.log2(size));
+    const done = RP.bracketRandom(b);
+    assert.ok(names.includes(RP.champion(done)));
+    assert.equal(RP.champion(b), null, 'input not changed');
+  }
+  let b = { slots: ['A', 'B', 'C', null], picks: [[null, null], [null]] };
+  let rs = RP.bracketRounds(b);
+  assert.deepEqual(rs[0], [{ a: 'A', b: 'B', w: null }, { a: 'C', b: null, w: 'C' }]);
+  assert.deepEqual(rs[1][0], { a: null, b: 'C', w: null });
+  assert.equal(RP.bracketPick(b, 1, 0, 0), b, 'final not ready yet');
+  b = RP.bracketPick(b, 0, 0, 1);
+  b = RP.bracketPick(b, 1, 0, 0);
+  assert.equal(RP.champion(b), 'B');
+  b = RP.bracketPick(b, 0, 0, 0);
+  assert.deepEqual(RP.bracketRounds(b)[1][0], { a: 'A', b: 'C', w: null }, 'changing a result resets the next rounds');
+  assert.equal(RP.champion(RP.bracketRandom(b, seqSrc([1]))), 'C');
+});

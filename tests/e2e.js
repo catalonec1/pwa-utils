@@ -1041,6 +1041,47 @@ async function newPage(browser, base, opts = {}) {
     await ctx.close();
   });
 
+  await check('pick v1.1: yes/no and rock-paper-scissors (free), tournament bracket (Pro)', async () => {
+    let { ctx, page } = await newPage(browser, base);
+    await page.goto(base + 'pick/');
+    await page.click('#ynBtn');
+    assert.match(await page.textContent('#ynOut'), /^(Yes|No)$/);
+    await page.click('.rpsb button[data-move="rock"]');
+    assert.match(await page.textContent('#rpsOut'), /^You: Rock · App: (Rock — Draw\.|Paper — The app wins\.|Scissors — You win!)$/);
+    await page.click('.rpsb button[data-move="paper"]');
+    const sc = (await page.textContent('#rpsScore')).match(/^You (\d) · App (\d) · Draws (\d)$/);
+    assert.equal(+sc[1] + +sc[2] + +sc[3], 2);
+    for (const id of ['#brNew', '#brRand']) assert.ok(await page.isDisabled(id), id);
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+    ({ ctx, page } = await newPage(browser, base, { pro: true, locale: 'ro-RO' }));
+    await page.goto(base + 'pick/');
+    await page.waitForFunction(() => !document.getElementById('brNew').disabled);
+    await page.fill('#list', 'Solo');
+    await page.click('#brNew');
+    assert.match(await page.textContent('#brChamp'), /cel puțin 2 nume/);
+    await page.fill('#list', 'A\nB\nC\nD\nE');
+    await page.click('#brNew');
+    assert.equal(await page.locator('#brOut .rd').count(), 3);
+    assert.deepEqual(await page.locator('#brOut .rd h3').allTextContents(), ['Turul 1', 'Semifinale', 'Finala']);
+    assert.equal(await page.locator('#brOut .rd:first-child button:has-text("(trece direct)")').count(), 3);
+    const first = page.locator('#brOut .rd:first-child .m').filter({ hasNot: page.locator('button:has-text("(trece direct)")') }).first();
+    const winner = await first.locator('button').first().textContent();
+    await first.locator('button').first().click();
+    assert.equal(await first.locator('button.w').textContent(), winner);
+    assert.equal(await first.locator('button.lost').count(), 1);
+    await page.click('#brRand');
+    const champ = (await page.textContent('#brChamp')).replace('🏆 Câștigător: ', '');
+    assert.ok(['A', 'B', 'C', 'D', 'E'].includes(champ), champ);
+    assert.equal(await page.textContent('#brOut .rd:last-child button.w'), champ);
+    assert.match(await page.textContent('#histList'), /Turneu · Câștigător: /);
+    await page.reload();
+    await page.waitForFunction(() => document.getElementById('brChamp').textContent.includes('Câștigător'));
+    assert.equal(await page.locator('#brOut .rd').count(), 3, 'bracket kept');
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
   await check('regex: live matches, groups, errors, backtracking timeout; Pro locked', async () => {
     const { ctx, page } = await newPage(browser, base);
     await page.goto(base + 'regex/');

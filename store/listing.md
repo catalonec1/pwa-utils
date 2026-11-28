@@ -527,6 +527,19 @@ Pro (cumpărare unică): împărțire în echipe sau grupe echilibrate, alegere 
 Pro (разовая покупка): деление списка на равные команды или группы, выбор с весами, удаление выбранных (для класса и розыгрышей), сохранённые списки и история результатов с экспортом CSV.
 **Функция:** Колесо для выбора имён, монетка, кубики, случайные числа, команды
 
+**Update 1.1 — What's new:**
+EN: New free quick decisions: a yes-or-no answer and rock, paper, scissors against the app with a running score. Pro: tournament brackets that pair everyone from your list at random; tap the winner of each match or let the rest be decided randomly.
+RO: Decizii rapide noi, gratuite: un răspuns da sau nu și piatră, foarfecă, hârtie cu aplicația, cu scor. Pro: turnee eliminatorii care formează perechi la întâmplare din toată lista; atingi câștigătorul fiecărui meci sau lași restul la voia întâmplării.
+RU: Новые бесплатные быстрые решения: ответ «да или нет» и «камень, ножницы, бумага» с приложением со счётом. Pro: турнирные сетки, которые случайно разбивают весь список на пары; отмечайте победителя каждой встречи или доверьте остальное случаю.
+
+**Updated description lines (1.1):**
+EN: • Quick decisions: yes or no, and rock, paper, scissors against the app
+EN: Pro (one-time add-on): split a list into balanced teams or groups, tournament brackets, weighted picks, remove picked names (for classrooms and raffles), saved lists and a history of results with CSV export.
+RO: • Decizii rapide: da sau nu și piatră, foarfecă, hârtie cu aplicația
+RO: Pro (cumpărare unică): împărțire în echipe sau grupe echilibrate, turnee eliminatorii, alegere cu ponderi, scoaterea numelor alese (pentru clase și tombole), liste salvate și istoric al rezultatelor cu export CSV.
+RU: • Быстрые решения: да или нет и «камень, ножницы, бумага» с приложением
+RU: Pro (разовая покупка): деление списка на равные команды или группы, турнирные сетки, выбор с весами, удаление выбранных (для класса и розыгрышей), сохранённые списки и история результатов с экспортом CSV.
+
 **Pro add-on listing:** name „Random Picker Pro”; EN: One-time purchase: balanced teams and groups, weighted picks, remove picked names, saved lists and a history with CSV export. RO: Cumpărare unică: echipe și grupe echilibrate, alegere cu ponderi, scoaterea numelor alese, liste salvate și istoric cu export CSV. RU: Разовая покупка: равные команды и группы, выбор с весами, удаление выбранных, сохранённые списки и история с экспортом CSV.
 
 ## 8. Stelar Regex Tester (`regex/`)

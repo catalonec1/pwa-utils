@@ -82,7 +82,66 @@
     return { rolls, sum: rolls.reduce((s, x) => s + x, 0) };
   }
 
+  /* Decizii rapide: da/nu și piatră-foarfecă-hârtie (aplicația joacă împotriva ta). */
+  function yesNo(src) { return randInt(2, src) === 0 ? 'yes' : 'no'; }
+  const RPS = ['rock', 'paper', 'scissors'];
+  function rps(src) { return RPS[randInt(3, src)]; }
+  /* 0 = egal, 1 = câștigă a, 2 = câștigă b. */
+  function rpsWinner(a, b) {
+    const i = RPS.indexOf(a), j = RPS.indexOf(b);
+    if (i < 0 || j < 0) throw new RangeError('bad move');
+    return i === j ? 0 : (i - j + 3) % 3 === 1 ? 1 : 2;
+  }
+
   /* ---- Pro ---- */
+  /* Turneu eliminatoriu: lista amestecată pe locuri, completată până la o putere a lui 2 cu „bye” (null),
+     câte cel mult un bye în fiecare meci din primul tur. picks[r][m] = 0 (câștigă a), 1 (câștigă b) sau null. */
+  function bracket(names, src) {
+    const n = names.length;
+    if (n < 2) return null;
+    let size = 2; while (size < n) size *= 2;
+    const order = shuffle(names, src), pairs = size / 2, byes = size - n, slots = [];
+    const byeAt = new Set();
+    for (let k = 0; k < byes; k++) byeAt.add(Math.floor(k * pairs / byes));
+    let q = 0;
+    for (let m = 0; m < pairs; m++) { slots.push(order[q++]); slots.push(byeAt.has(m) ? null : order[q++]); }
+    const picks = [];
+    for (let len = pairs; len >= 1; len /= 2) picks.push(new Array(len).fill(null));
+    return { slots, picks };
+  }
+  /* Meciurile pe tururi: { a, b, w } — a/b null = încă nestabilit (sau bye în primul tur), w = câștigătorul sau null. */
+  function bracketRounds(br) {
+    const rounds = [];
+    let prev = null;
+    br.picks.forEach((row, r) => {
+      const ms = row.map((p, m) => {
+        const a = r ? prev[2 * m].w : br.slots[2 * m], b = r ? prev[2 * m + 1].w : br.slots[2 * m + 1];
+        let w = null;
+        if (r === 0 && b === null) w = a;
+        else if (a !== null && b !== null && (p === 0 || p === 1)) w = p ? b : a;
+        return { a, b, w };
+      });
+      rounds.push(ms); prev = ms;
+    });
+    return rounds;
+  }
+  function champion(br) { const rs = bracketRounds(br); return rs[rs.length - 1][0].w; }
+  /* Alege câștigătorul unui meci; meciurile următoare de pe același drum se resetează dacă se schimbă ceva. */
+  function bracketPick(br, r, m, side) {
+    const picks = br.picks.map(x => x.slice()), ms = bracketRounds(br)[r][m];
+    if (!ms || ms.a === null || ms.b === null || picks[r][m] === side) return br;
+    picks[r][m] = side;
+    for (let rr = r + 1, mm = m >> 1; rr < picks.length; rr++, mm >>= 1) picks[rr][mm] = null;
+    return { slots: br.slots, picks };
+  }
+  /* Decide aleator toate meciurile rămase, tur cu tur. */
+  function bracketRandom(br, src) {
+    for (let r = 0; r < br.picks.length; r++) {
+      const ms = bracketRounds(br)[r];
+      ms.forEach((x, m) => { if (x.w === null && x.a !== null && x.b !== null) br = bracketPick(br, r, m, randInt(2, src)); });
+    }
+    return br;
+  }
   /* Împarte lista în k echipe cu mărimi echilibrate (diferență de cel mult 1). bySize=true: k = câte persoane pe echipă. */
   function teams(list, k, bySize, src) {
     const n = list.length;
@@ -104,7 +163,7 @@
     return 'time,type,result\r\n' + rows.map(h => [h.time, h.type, h.result].map(cell).join(',')).join('\r\n') + (rows.length ? '\r\n' : '');
   }
 
-  const RandomPick = { limit, randInt, randRange, shuffle, parseList, pick, coin, dice, teams, toCsv, cryptoSource };
+  const RandomPick = { limit, randInt, randRange, shuffle, parseList, pick, coin, dice, yesNo, rps, rpsWinner, teams, bracket, bracketRounds, bracketPick, bracketRandom, champion, toCsv, cryptoSource };
   if (typeof module !== 'undefined' && module.exports) module.exports = RandomPick;
   else global.RandomPick = RandomPick;
 })(typeof window !== 'undefined' ? window : globalThis);
