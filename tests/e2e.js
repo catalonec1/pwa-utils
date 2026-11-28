@@ -1371,6 +1371,64 @@ async function newPage(browser, base, opts = {}) {
     await ctx.close();
   });
 
+  await check('habit v1.1: skip days keep the streak (free); monthly goal and year map (Pro)', async () => {
+    let { ctx, page } = await newPage(browser, base);
+    await page.goto(base + 'habit/');
+    await page.fill('#hName', 'Read'); await page.click('#hAdd');
+    const td = await page.evaluate(() => HabitLogic.key());
+    const y1 = await page.evaluate(() => HabitLogic.addDays(HabitLogic.key(), -1)), y2 = await page.evaluate(() => HabitLogic.addDays(HabitLogic.key(), -2));
+    // data creată acum 3 zile, ca zilele trecute să conteze
+    await page.evaluate(k => { const d = JSON.parse(localStorage.getItem('hbData')); d.habits[0].created = k; localStorage.setItem('hbData', JSON.stringify(d)); }, await page.evaluate(() => HabitLogic.addDays(HabitLogic.key(), -3)));
+    await page.reload();
+    const day = async k => { if (await page.locator(`#week button[data-k="${k}"]`).count() === 0) await page.click('#wPrev'); await page.locator(`#week button[data-k="${k}"]`).click(); };
+    await day(y2);
+    await page.click('#todayList .chk');
+    assert.match(await page.textContent('#todayList li'), /1-day streak · best 1/);
+    while (await page.locator(`#week button[data-k="${y1}"]`).count() === 0) await page.click(await page.isDisabled('#wNext') ? '#wPrev' : '#wNext');
+    await day(y1); await day(y1);
+    assert.equal(await page.textContent(`#week button[data-k="${y1}"]`), '–');
+    assert.match(await page.getAttribute(`#week button[data-k="${y1}"]`, 'class'), /sk/);
+    assert.match(await page.textContent('#todayList li'), /2-day streak · best 2/, 'skipped day keeps the streak');
+    await day(y1);
+    assert.match(await page.textContent('#todayList li'), /1-day streak/);
+    await page.click('#todayList .chk');
+    assert.ok(await page.locator('#todayList .skp').isVisible());
+    await page.click('#todayList .skp');
+    assert.equal(await page.textContent('#todayList .skp'), 'Skipped');
+    assert.match(await page.textContent('#todayList li'), /skipped today/);
+    assert.match(await page.textContent('#todayMsg'), /Nothing planned for today/);
+    await page.click('#todayList .chk');
+    assert.ok(await page.locator('#todayList .skp').isHidden(), 'done replaces skip');
+    for (const id of ['#hGoal', '#yPrev']) assert.ok(await page.isDisabled(id), id);
+    assert.equal(await page.locator('#year i').count(), 0);
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+    ({ ctx, page } = await newPage(browser, base, { pro: true, locale: 'ro-RO' }));
+    await page.goto(base + 'habit/');
+    await page.waitForFunction(() => !document.getElementById('hGoal').disabled);
+    await page.fill('#hName', 'Citit'); await page.fill('#hGoal', '20'); await page.click('#hAdd');
+    await page.click('#todayList .chk');
+    assert.match(await page.textContent('#todayList li'), /obiectiv 1\/20 luna asta/);
+    assert.match(await page.textContent('#stats'), /1 \/ 20/);
+    const yr = +td.slice(0, 4), days = (yr % 4 === 0 && yr % 100 !== 0) || yr % 400 === 0 ? 366 : 365;
+    assert.equal(await page.locator('#year i[data-k]').count(), days);
+    assert.match(await page.getAttribute(`#year i[data-k="${td}"]`, 'class'), /l4/);
+    assert.equal(await page.textContent('#yearSum'), 'Zile cu cel puțin o bifă: 1 · zile cu tot planul făcut: 1');
+    assert.equal(await page.textContent('#yearLabel'), String(yr));
+    assert.ok(await page.isDisabled('#yNext'));
+    await page.click('#yPrev');
+    assert.equal(await page.textContent('#yearLabel'), String(yr - 1));
+    assert.match(await page.textContent('#yearSum'), /: 0 · .*: 0$/);
+    await page.click('#hList li button:has-text("Editează")');
+    assert.equal(await page.inputValue('#hGoal'), '20');
+    await page.fill('#hGoal', ''); await page.click('#hAdd');
+    assert.doesNotMatch(await page.textContent('#todayList li'), /obiectiv/);
+    const sw = await page.evaluate(() => document.documentElement.scrollWidth);
+    assert.ok(sw <= 1280);
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
   await check('sql: Pro PL/SQL, split, code strings and snippets', async () => {
     const { ctx, page } = await newPage(browser, base, { pro: true, locale: 'ro-RO' });
     await ctx.grantPermissions(['clipboard-read', 'clipboard-write']);

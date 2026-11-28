@@ -683,4 +683,17 @@ Pro (cumpărare unică): obiceiuri nelimitate, obiceiuri în anumite zile sau de
 Pro (разовая покупка): неограниченное число привычек, привычки в определённые дни или N раз в неделю, заметка на каждый день, статистика (процент выполнения по месяцам, лучший день недели), резервная копия JSON и восстановление, экспорт CSV, цвет и эмодзи для каждой привычки.
 **Функция:** Отметки за день, серии, вид недели и тепловая карта месяца, офлайн
 
+**Update 1.1 — What's new:**
+EN: New free skip days: mark a day as skipped (rest, illness, travel) and your streak is kept; tap a day in the week view to cycle done, skipped and empty. Pro: a monthly goal for each habit (for example 20 times a month) with progress, and a year heat map of every day.
+RO: Zile sărite noi, gratuite: marchezi o zi ca sărită (odihnă, boală, drum) și seria rămâne; în vederea săptămânii, atingi o zi ca să treci prin făcut, sărit și gol. Pro: obiectiv lunar pentru fiecare obicei (de exemplu de 20 de ori pe lună) cu progres și harta anului, zi cu zi.
+RU: Новые бесплатные дни пропуска: отметьте день как пропущенный (отдых, болезнь, поездка), и серия сохранится; в виде недели нажатие на день переключает «сделано», «пропуск» и «пусто». Pro: цель на месяц для каждой привычки (например, 20 раз в месяц) с прогрессом и тепловая карта года по дням.
+
+**Updated description lines (1.1):**
+EN: • Skip days (rest, illness, travel) that keep your streak
+EN: Pro (one-time add-on): unlimited habits, habits on specific weekdays or N times per week, a monthly goal for each habit, a year heat map, a note for each day, statistics (completion per habit per month, best day of the week), backup to a JSON file and restore, CSV export, a color and an emoji for each habit.
+RO: • Zile sărite (odihnă, boală, drum) care îți păstrează seria
+RO: Pro (cumpărare unică): obiceiuri nelimitate, obiceiuri în anumite zile sau de N ori pe săptămână, obiectiv lunar pentru fiecare obicei, harta anului, o notiță pentru fiecare zi, statistici (procent pe obicei pe lună, cea mai bună zi a săptămânii), copie de siguranță JSON și restaurare, export CSV, culoare și emoji pentru fiecare obicei.
+RU: • Дни пропуска (отдых, болезнь, поездка), которые сохраняют серию
+RU: Pro (разовая покупка): неограниченное число привычек, привычки в определённые дни или N раз в неделю, цель на месяц для каждой привычки, тепловая карта года, заметка на каждый день, статистика (процент выполнения по месяцам, лучший день недели), резервная копия JSON и восстановление, экспорт CSV, цвет и эмодзи для каждой привычки.
+
 **Pro add-on listing:** name „Habit Tracker Pro”; EN: One-time purchase: unlimited habits, weekday or N-per-week schedules, daily notes, statistics, backup, CSV export, colors and emoji. RO: Cumpărare unică: obiceiuri nelimitate, anumite zile sau de N ori pe săptămână, notițe zilnice, statistici, copie de siguranță, export CSV, culori și emoji. RU: Разовая покупка: неограниченные привычки, дни недели или N раз в неделю, заметки, статистика, резервная копия, экспорт CSV, цвета и эмодзи.

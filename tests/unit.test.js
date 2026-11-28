@@ -1277,3 +1277,46 @@ test('hash v1.1: UUID v4 and random tokens (free); compare two files (Pro)', () 
   assert.equal(HK.compareFiles(f('abc', 'md5'), f('abc', 'sha1'), 'md5'), null);
   assert.equal(HK.compareFiles(null, f('abc', 'md5'), 'md5'), null);
 });
+
+test('habit v1.1: skipped days keep the streak (free); monthly goal and year map (Pro)', () => {
+  const today = '2026-11-20';
+  const h = { id: 'a', name: 'Run', created: '2026-11-10', done: {}, sched: { t: 'daily' } };
+  for (const k of ['2026-11-15', '2026-11-16', '2026-11-18', '2026-11-19']) H.toggle(h, k);
+  assert.deepEqual(H.streaks(h, today), { current: 2, best: 2, unit: 'd' });
+  assert.equal(H.toggleSkip(h, '2026-11-17'), true);
+  assert.deepEqual(H.streaks(h, today), { current: 4, best: 4, unit: 'd' }, 'a skipped day bridges the streak');
+  assert.equal(H.isSkip(h, '2026-11-17'), true);
+  assert.equal(H.dayRate([h], '2026-11-17', today), null, 'skipped day is not planned');
+  assert.equal(H.monthStats(h, 2026, 11, today).due, 10);
+  H.toggleSkip(h, today);
+  assert.equal(H.dueToday(h, today), false);
+  assert.deepEqual(H.summary([h], today), { due: 0, done: 0, left: [] });
+  H.toggle(h, today);
+  assert.equal(H.isSkip(h, today), false, 'done wins over skip');
+  assert.equal(h.skip[today], undefined);
+  const c = { done: {} }, k = '2026-11-01';
+  assert.deepEqual([H.cycle(c, k), H.cycle(c, k), H.cycle(c, k)], ['done', 'skip', 'none']);
+  assert.deepEqual([H.isDone(c, k), H.isSkip(c, k)], [false, false]);
+  // N ori pe săptămână: o săptămână cu zile sărite nu rupe seria
+  const t = { id: 't', name: 'Gym', created: '2026-11-02', done: {}, sched: { t: 'times', n: 2 } };
+  ['2026-11-02', '2026-11-04', '2026-11-16', '2026-11-18'].forEach(x => H.toggle(t, x));
+  assert.equal(H.streaks(t, today).current, 1);
+  H.toggleSkip(t, '2026-11-10');
+  assert.deepEqual(H.streaks(t, today), { current: 2, best: 2, unit: 'w' });
+  const n = H.normalize({ habits: [{ name: 'X', done: { '2026-11-01': 1 }, skip: { '2026-11-01': 1, '2026-11-02': 1, bad: 1 }, goal: 20 }, { name: 'Y', goal: 40 }] });
+  assert.deepEqual(n.habits[0].skip, { '2026-11-02': 1 });
+  assert.equal(n.habits[0].goal, 20);
+  assert.equal('goal' in n.habits[1], false);
+  const g = { done: { '2026-11-01': 1, '2026-11-03': 1, '2026-10-31': 1 }, goal: 2 };
+  assert.equal(H.monthCount(g, 2026, 11), 2);
+  assert.deepEqual(H.goalProgress(g, today), { done: 2, n: 2, pct: 100, met: true });
+  assert.equal(H.goalProgress({ done: {} }, today), null);
+  assert.deepEqual(H.goalProgress({ done: { '2026-11-05': 1 }, goal: 20 }, today), { done: 1, n: 20, pct: 5, met: false });
+  const y = H.yearGrid(2026), days = y.flat().filter(Boolean);
+  assert.equal(days.length, 365);
+  assert.equal(days[0], '2026-01-01'); assert.equal(days[364], '2026-12-31');
+  assert.equal(y[0].indexOf('2026-01-01'), 3, '1 Jan 2026 is a Thursday');
+  assert.ok(y.every(col => col.length === 7));
+  assert.equal(H.yearGrid(2028).flat().filter(Boolean).length, 366);
+  assert.deepEqual(H.yearSummary([h], 2026, today), { active: 5, perfect: 5 });
+});
