@@ -409,6 +409,19 @@ Pro (разовая покупка): полный помесячный граф�
 
 **Pro add-on listing:** name „Stelar Loan Calculator Pro”; EN: One-time purchase: full monthly schedule with CSV export, extra payments, rate changes, comparing up to 3 offers and saved loans. RO: Cumpărare unică: graficul lunar complet cu export CSV, plăți anticipate, schimbarea dobânzii, comparația a până la 3 oferte și credite salvate. RU: Разовая покупка: полный помесячный график с экспортом CSV, досрочные платежи, изменение ставки, сравнение до 3 предложений и сохранённые кредиты.
 
+**Update 1.1 — What's new:**
+EN: New free “How much can I borrow?” estimate: enter your monthly income, other loan payments and the share of income you allow, and see the payment limit and the loan amount it covers at the rate and term above. Pro: amortization chart with principal and interest paid each year and the remaining balance, including extra payments and rate changes.
+RO: Estimare gratuită nouă „Cât pot împrumuta?”: introdu venitul lunar, celelalte rate și partea din venit pe care o accepți și vezi rata maximă și suma de credit acoperită la dobânda și termenul de mai sus. Pro: graficul amortizării cu principalul și dobânda plătite în fiecare an și soldul rămas, inclusiv plățile anticipate și schimbarea dobânzii.
+RU: Новая бесплатная оценка «Сколько можно занять?»: введите ежемесячный доход, другие платежи по кредитам и допустимую долю дохода и узнайте предельный платёж и сумму кредита при ставке и сроке выше. Pro: график погашения с основным долгом и процентами за каждый год и остатком долга, с учётом досрочных платежей и изменения ставки.
+
+**Updated description lines (1.1):**
+EN: • How much can I borrow: an estimate from your income, other loan payments and the share of income you allow
+EN: Pro (one-time add-on): full monthly payment schedule with CSV export, amortization chart by year, extra payments (one-off and monthly) with interest saved and shorter term, rate change after a chosen month, comparing up to 3 offers including fees, and saved loans.
+RO: • Cât pot împrumuta: o estimare din venit, celelalte rate și partea din venit pe care o accepți
+RO: Pro (cumpărare unică): graficul lunar complet cu export CSV, graficul amortizării pe ani, plăți anticipate (unice și lunare) cu dobânda economisită și termenul scurtat, schimbarea dobânzii după o lună aleasă, comparația a până la 3 oferte cu comisioane și credite salvate.
+RU: • Сколько можно занять: оценка по доходу, другим платежам по кредитам и допустимой доле дохода
+RU: Pro (разовая покупка): полный помесячный график с экспортом CSV, график погашения по годам, досрочные платежи (разовые и ежемесячные) с экономией на процентах и сокращением срока, изменение ставки после выбранного месяца, сравнение до 3 предложений с комиссиями и сохранённые кредиты.
+
 ## 8. Stelar Color Converter
 
 **EN — short description:** Convert HEX, RGB, HSL, HWB and CMYK colors and check WCAG contrast. Works offline.
@@ -447,6 +460,19 @@ Pro (разовая покупка): генератор палитр (компл
 
 **Pro add-on listing:** name „Color Converter Pro”; EN: One-time purchase: palette generator, nearest CSS color name, OKLCH and LAB, saved palettes with CSS, JSON and Tailwind export, and colorblindness previews. RO: Cumpărare unică: generator de palete, cel mai apropiat nume de culoare CSS, OKLCH și LAB, palete salvate cu export CSS, JSON și Tailwind și previzualizare pentru daltonism. RU: Разовая покупка: генератор палитр, ближайшее имя цвета CSS, OKLCH и LAB, сохранённые палитры с экспортом в CSS, JSON и Tailwind и просмотр для дальтонизма.
 
+**Update 1.1 — What's new:**
+EN: New free CSS gradient maker: linear, radial or conic from the current color to a second one, with an angle, optional smooth OKLab midpoints, a live preview and a copy button. Pro: pick colors from your own image by clicking it; the image is opened only on your device and never uploaded.
+RO: Generator gratuit nou de gradiente CSS: liniar, radial sau conic, de la culoarea curentă la a doua, cu unghi, tranziție netedă OKLab opțională, previzualizare și buton de copiere. Pro: alege culori dintr-o imagine proprie apăsând pe ea; imaginea se deschide doar pe dispozitivul tău și nu se încarcă nicăieri.
+RU: Новый бесплатный генератор CSS-градиентов: линейный, радиальный или конический от текущего цвета ко второму, с углом, необязательным плавным переходом OKLab, предпросмотром и кнопкой копирования. Pro: выбор цвета из своего изображения щелчком; изображение открывается только на вашем устройстве и никуда не загружается.
+
+**Updated description lines (1.1):**
+EN: • CSS gradient maker: linear, radial or conic, with a live preview and copy button
+EN: Pro (one-time add-on): color picker from your own images (processed on your device), palette generator (complementary, analogous, triadic, tetradic, tints and shades), nearest of the 148 CSS named colors, OKLCH and LAB output, saved palettes with export as CSS variables, JSON or Tailwind config, and colorblindness previews (protanopia, deuteranopia, tritanopia).
+RO: • Generator de gradiente CSS: liniar, radial sau conic, cu previzualizare și buton de copiere
+RO: Pro (cumpărare unică): selector de culori din imaginile tale (procesate pe dispozitiv), generator de palete (complementară, analogă, triadică, tetradică, nuanțe deschise și închise), cea mai apropiată dintre cele 148 de culori CSS numite, OKLCH și LAB, palete salvate cu export ca variabile CSS, JSON sau configurație Tailwind și previzualizare pentru daltonism (protanopie, deuteranopie, tritanopie).
+RU: • Генератор CSS-градиентов: линейный, радиальный или конический, с предпросмотром и кнопкой копирования
+RU: Pro (разовая покупка): выбор цвета из ваших изображений (обработка на устройстве), генератор палитр (комплементарная, аналоговая, триада, тетрада, светлые и тёмные оттенки), ближайший из 148 именованных цветов CSS, OKLCH и LAB, сохранённые палитры с экспортом в CSS-переменные, JSON или конфигурацию Tailwind и просмотр для дальтонизма (протанопия, дейтеранопия, тританопия).
+
 ## 8. Stelar JSON Formatter (`json/`)
 
 **EN — short description:** Validate JSON with the exact error line and column, format, minify and browse it as a tree. Offline.
@@ -484,6 +510,19 @@ Pro (разовая покупка): запросы JSONPath с подстано
 **Функция:** Валидатор JSON с точной позицией ошибки, форматирование, сжатие и дерево
 
 **Pro add-on listing:** name „JSON Formatter Pro”; EN: One-time purchase: JSONPath queries with filters, JSON ↔ YAML and JSON ↔ CSV conversion, JSON diff, escape and unescape, saved snippets. RO: Cumpărare unică: interogări JSONPath cu filtre, conversie JSON ↔ YAML și JSON ↔ CSV, comparare JSON, escape și unescape, fragmente salvate. RU: Разовая покупка: запросы JSONPath с фильтрами, конвертация JSON ↔ YAML и JSON ↔ CSV, сравнение JSON, экранирование строк, сохранённые фрагменты.
+
+**Update 1.1 — What's new:**
+EN: New free “Structure and types” panel: every path in your JSON with its types, marking keys that are missing in some objects. Pro: convert JSON to TypeScript interfaces, with nested interfaces, optional properties and union types inferred from the data.
+RO: Panou gratuit nou „Structură și tipuri”: fiecare cale din JSON cu tipurile ei, cu marcarea cheilor care lipsesc din unele obiecte. Pro: conversie JSON în interfețe TypeScript, cu interfețe imbricate, proprietăți opționale și tipuri uniune deduse din date.
+RU: Новая бесплатная панель «Структура и типы»: каждый путь в JSON и его типы, с отметкой ключей, которых нет в некоторых объектах. Pro: конвертация JSON в интерфейсы TypeScript с вложенными интерфейсами, необязательными свойствами и объединёнными типами по данным.
+
+**Updated description lines (1.1):**
+EN: • Structure view: every path with its types and optional keys
+EN: Pro (one-time add-on): JSONPath queries with wildcards, recursive search and filters, JSON ↔ YAML and JSON ↔ CSV conversion, JSON to TypeScript interfaces, compare two JSON documents (added, removed and changed paths), escape and unescape JSON strings, saved snippets.
+RO: • Vizualizarea structurii: fiecare cale cu tipurile ei și cheile opționale
+RO: Pro (cumpărare unică): interogări JSONPath cu wildcard, căutare recursivă și filtre, conversie JSON ↔ YAML și JSON ↔ CSV, interfețe TypeScript din JSON, compararea a două documente JSON (căi adăugate, eliminate și modificate), escape și unescape pentru șiruri JSON, fragmente salvate.
+RU: • Структура: каждый путь с типами и необязательными ключами
+RU: Pro (разовая покупка): запросы JSONPath с подстановками, рекурсивным поиском и фильтрами, конвертация JSON ↔ YAML и JSON ↔ CSV, интерфейсы TypeScript из JSON, сравнение двух JSON (добавленные, удалённые и изменённые пути), экранирование строк JSON, сохранённые фрагменты.
 
 ## 8. Stelar Random Picker (`pick/`)
 
@@ -645,3 +684,12 @@ Pro (разовая покупка): неограниченное число п�
 **Функция:** Отметки за день, серии, вид недели и тепловая карта месяца, офлайн
 
 **Pro add-on listing:** name „Habit Tracker Pro”; EN: One-time purchase: unlimited habits, weekday or N-per-week schedules, daily notes, statistics, backup, CSV export, colors and emoji. RO: Cumpărare unică: obiceiuri nelimitate, anumite zile sau de N ori pe săptămână, notițe zilnice, statistici, copie de siguranță, export CSV, culori și emoji. RU: Разовая покупка: неограниченные привычки, дни недели или N раз в неделю, заметки, статистика, резервная копия, экспорт CSV, цвета и эмодзи.
+
+---
+
+## Stelar SQL Formatter (`sql/`)
+
+**Update 1.1 — What's new:**
+EN: New free option for long lists (columns, SET, ORDER BY): fill each line up to 80, 100 or 120 characters instead of one item per line. Pro: compare two versions of a statement; both are formatted the same way first, so only real changes are shown.
+RO: Opțiune gratuită nouă pentru liste lungi (coloane, SET, ORDER BY): umple fiecare rând până la 80, 100 sau 120 de caractere în loc de un element pe rând. Pro: compară două variante ale unei instrucțiuni; ambele sunt formatate la fel înainte, deci se văd doar schimbările reale.
+RU: Новая бесплатная настройка для длинных списков (столбцы, SET, ORDER BY): заполнять строку до 80, 100 или 120 символов вместо одного элемента на строку. Pro: сравнение двух версий запроса; обе сначала форматируются одинаково, поэтому видны только реальные изменения.

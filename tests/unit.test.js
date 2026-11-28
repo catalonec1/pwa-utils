@@ -1193,3 +1193,68 @@ test('text v1.2: line filters, prefix/suffix (free); regex filter and text diff 
   assert.deepEqual(d.map(x => x.op).join(''), '+ -   +');
   assert.throws(() => T.diffLines('x\n'.repeat(3001), 'y'));
 });
+
+test('loan v1.1: affordability estimate (free) and amortization chart data (Pro)', () => {
+  assert.deepEqual(LN.affordable(3000, 300, 40, 6.5, 300), { payment: 900, principal: 133292.43 });
+  assert.equal(LN.affordable(3000, NaN, 40, 6.5, 300).payment, 1200);
+  assert.deepEqual(LN.affordable(1000, 500, 40, 6.5, 300), { payment: 0, principal: 0 });
+  assert.equal(LN.affordable(0, 0, 40, 6.5, 300), null);
+  assert.equal(LN.affordable(3000, 0, 120, 6.5, 300), null);
+  assert.equal(LN.affordable(3000, 0, 40, 0, 120).principal, 144000);
+  const s = LN.schedule({ principal: 12000, rate: 6, months: 24, type: 'annuity' });
+  assert.deepEqual(LN.chartModel(s.rows), { years: [1, 2], principal: [5820.52, 6179.48], interest: [561.68, 202.69], balance: [12000, 6179.48, 0], maxPaid: 6382.2, start: 12000 });
+  const x = LN.chartModel(LN.schedule({ principal: 12000, rate: 6, months: 24, type: 'annuity', extras: [{ month: 1, amount: 1000 }] }).rows);
+  assert.equal(x.start, 12000);
+  assert.equal(LN.chartModel([]), null);
+});
+
+test('color v1.1: CSS gradient (free) and color from image pixels (Pro)', () => {
+  const a = CL.parse('#3d5afe'), b = CL.parse('tomato');
+  assert.equal(CL.gradientCss(a, b), 'linear-gradient(90deg, #3d5afe, #ff6347)');
+  assert.equal(CL.gradientCss(a, b, { type: 'radial', angle: 45 }), 'radial-gradient(circle, #3d5afe, #ff6347)');
+  assert.equal(CL.gradientCss(a, b, { type: 'conic', angle: -45 }), 'conic-gradient(from 315deg, #3d5afe, #ff6347)');
+  assert.equal(CL.gradientCss(a, b, { angle: '' }), 'linear-gradient(90deg, #3d5afe, #ff6347)');
+  assert.equal(CL.gradientCss(CL.parse('blue'), CL.parse('yellow'), { smooth: true, angle: '180' }), 'linear-gradient(180deg, #0000ff, #1d77e7, #6cabc7, #b5d797, #ffff00)');
+  assert.deepEqual(CL.blendOklab(CL.parse('#000'), CL.parse('#fff'), 1).map(CL.toHex), ['#636363']);
+  const d = new Uint8ClampedArray([255, 0, 0, 255, 0, 0, 255, 255, 0, 0, 0, 0, 0, 255, 0, 255]);
+  assert.deepEqual(CL.sampleAt(d, 2, 2, 0, 0, 0), { r: 255, g: 0, b: 0 });
+  assert.deepEqual(CL.sampleAt(d, 2, 2, 1.7, 0.2, 0), { r: 0, g: 0, b: 255 });
+  assert.deepEqual(CL.sampleAt(d, 2, 2, 0, 0, 1), { r: 85, g: 85, b: 85 });
+  assert.equal(CL.sampleAt(d, 2, 2, 0, 1, 0), null, 'transparent pixel');
+  assert.equal(CL.sampleAt(d, 2, 2, 2, 0), null);
+  assert.equal(CL.sampleAt(d, 2, 2, -1, 0), null);
+});
+
+test('json v1.1: structure and types (free), TypeScript interfaces (Pro)', () => {
+  const v = { id: 1, tags: ['a'], owner: { email: null }, items: [{ sku: 'A', qty: 3 }, { sku: 'B', qty: 0, note: 'n' }], 'first name': 'z', mixed: [1, 'a', null], empty: [] };
+  assert.deepEqual(JF.typeSummary(v).map(r => r.path + ' ' + r.types.join('|') + (r.optional ? '?' : '')), [
+    '$ object', '$.id number', '$.tags array', '$.tags[*] string', '$.owner object', '$.owner.email null',
+    '$.items array', '$.items[*] object', '$.items[*].sku string', '$.items[*].qty number', '$.items[*].note string?',
+    "$['first name'] string", '$.mixed array', '$.mixed[*] number|string|null', '$.empty array']);
+  assert.deepEqual(JF.typeSummary([1, { a: 1 }, { a: 'x' }]).map(r => r.path + ' ' + r.types.join('|') + (r.optional ? '?' : '')), ['$ array', '$[*] number|object', '$[*].a number|string']);
+  assert.equal(JF.typeSummary(v, 3).length, 3);
+  assert.equal(JF.toTypeScript(v),
+    'export interface Root {\n  id: number;\n  tags: string[];\n  owner: Owner;\n  items: Item[];\n  "first name": string;\n  mixed: (string | number | null)[];\n  empty: unknown[];\n}\n\n' +
+    'export interface Owner {\n  email: null;\n}\n\nexport interface Item {\n  sku: string;\n  qty: number;\n  note?: string;\n}\n');
+  assert.equal(JF.toTypeScript([{ a: 1 }, { a: 2, b: true }], 'order list'), 'export type OrderList = OrderListItem[];\n\nexport interface OrderListItem {\n  a: number;\n  b?: boolean;\n}\n');
+  assert.equal(JF.toTypeScript({ boxes: [{ x: 1 }], categories: [{}], user: { name: 'a' }, users: [{ id: 1 }] }),
+    'export interface Root {\n  boxes: Box[];\n  categories: Category[];\n  user: User;\n  users: User2[];\n}\n\nexport interface Box {\n  x: number;\n}\n\nexport interface Category {}\n\nexport interface User {\n  name: string;\n}\n\nexport interface User2 {\n  id: number;\n}\n');
+  assert.equal(JF.toTypeScript(5), 'export type Root = number;\n');
+  assert.equal(JF.toTypeScript({ '2d': { 'ăb-c': 1 } }), 'export interface Root {\n  "2d": T2d;\n}\n\nexport interface T2d {\n  "ăb-c": number;\n}\n');
+});
+
+test('sql v1.1: fill lists up to a line width (free), compare two versions (Pro)', () => {
+  const q = "select e.employee_id, e.last_name as name, d.department_name, e.salary, e.hire_date, e.email, e.phone_number, case when e.salary > 10000 then 'senior' else 'regular' end as band, count(*) over (partition by d.department_id) dept_size from employees e order by e.last_name, e.first_name;";
+  assert.equal(SQ.format(q, { width: 80 }),
+    'SELECT\n  e.employee_id, e.last_name AS name, d.department_name, e.salary, e.hire_date,\n  e.email, e.phone_number,\n' +
+    "  CASE\n    WHEN e.salary > 10000 THEN 'senior'\n    ELSE 'regular'\n  END AS band,\n  COUNT(*) OVER (PARTITION BY d.department_id) dept_size\nFROM\n  employees e\nORDER BY\n  e.last_name, e.first_name;");
+  assert.equal(SQ.format('select a, b, c, d from t', { width: 0 }), 'SELECT\n  a,\n  b,\n  c,\n  d\nFROM\n  t');
+  assert.equal(SQ.format('select aaaa, bbbb, cccc, dddd from t', { width: 20, commaStyle: 'leading' }), 'SELECT\n  aaaa, bbbb, cccc\n  , dddd\nFROM\n  t');
+  assert.equal(SQ.format("update t set a = 1, b = 'x,y', c = 3 -- c\n, d = 4 where id = 1", { width: 80 }), "UPDATE t\nSET\n  a = 1, b = 'x,y',\n  c = 3, -- c\n  d = 4\nWHERE\n  id = 1");
+  assert.equal(SQ.format('select a, b from t', { width: 80, minify: true }), 'SELECT a, b FROM t');
+  assert.equal(SQ.wrapLists('x\n  a,\n  b', 5), 'x\n  a,\n  b', 'width below 20 is ignored');
+  assert.equal(SQ.compare('select a,b from t where x=1', 'SELECT a, c FROM t WHERE x = 1').map(d => d.op + d.line).join('|'), ' SELECT|   a,|-  b|+  c| FROM|   t| WHERE|   x = 1');
+  assert.ok(SQ.compare('select 1 from dual', 'SELECT 1\nFROM   dual').every(d => d.op === ' '));
+  assert.deepEqual(SQ.diffLines('a', 'a\nb'), [{ op: ' ', line: 'a' }, { op: '+', line: 'b' }]);
+  assert.throws(() => SQ.diffLines('x\n'.repeat(3001), 'y'));
+});

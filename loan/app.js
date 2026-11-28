@@ -6,7 +6,9 @@
       solveTitle: 'Rată ↔ termen', solveMode: 'Află', solveTerm: 'termenul pentru o rată lunară', solveAmt: 'suma pentru o rată lunară', monthlyPay: 'Rata lunară', solveHint: 'Folosește suma, dobânda și termenul de mai sus (rate egale).', yearTitle: 'Rezumat pe ani',
       extraTitle: 'Plăți anticipate', recAmt: 'În plus în fiecare lună', fromMonth: 'Începând cu rata nr.', oneMonth: 'O singură dată: la rata nr.', oneAmt: 'Suma o singură dată', add: 'Adaugă', rcTitle: 'Schimbarea dobânzii (dobândă variabilă)', rcMonth: 'După rata nr.', rcRate: 'Dobânda nouă, % pe an', schedTitle: 'Graficul lunar de rambursare', csv: 'Salvează CSV',
       cmpTitle: 'Compară oferte', offerName: 'Numele ofertei', termYears: 'Termen, ani', fees: 'Comisioane inițiale', cmpHint: 'Folosește tipul de rate ales mai sus. Completează a treia ofertă doar dacă ai nevoie.', savedTitle: 'Credite salvate', saveName: 'Nume', saveNamePh: 'de ex. Apartament, mașină', save: 'Salvează creditul',
-      proPitch: 'Graficul lunar complet cu export CSV, plăți anticipate, schimbarea dobânzii, comparația a până la 3 oferte și credite salvate.', disclaimer: 'Doar estimări, nu sunt sfaturi financiare. Ofertele reale pot diferi din cauza comisioanelor, asigurărilor, rotunjirilor și regulilor băncii.',
+      affTitle: 'Cât pot împrumuta?', income: 'Venit net lunar', debts: 'Alte rate lunare la credite', share: 'Partea maximă din venit pentru rate, %', affHint: 'Folosește dobânda și termenul de mai sus (rate egale). Băncile aplică propriile reguli, deci este doar o estimare.', affRes: 'Rată de până la {p} pe lună · poți împrumuta aproximativ {x}', affNone: 'Celelalte rate folosesc deja toată partea din venit.', affEnter: 'Introdu venitul ca să vezi o estimare.',
+      chartTitle: 'Graficul amortizării', chartHint: 'Bare: principalul și dobânda plătite în fiecare an. Linie: soldul rămas.', proOnly: 'Disponibil în Pro.',
+      proPitch: 'Graficul lunar complet cu export CSV, graficul amortizării, plăți anticipate, schimbarea dobânzii, comparația a până la 3 oferte și credite salvate.', disclaimer: 'Doar estimări, nu sunt sfaturi financiare. Ofertele reale pot diferi din cauza comisioanelor, asigurărilor, rotunjirilor și regulilor băncii.',
       yearF: 'an|ani', monthF: 'lună|luni', payF: 'rată|rate', perMonth: '{x} pe lună', linNote: 'Prima rată {a}, ultima {b} (descrescătoare)', termRes: '{d} · {n}', invalid: 'Introdu o sumă > 0, dobânda ≥ 0 și un termen de cel mult 100 de ani.', solveTermRes: 'Achitat în {d} ({n})', solveAmtRes: 'Poți împrumuta până la {x}', tooLow: 'Rata nu acoperă nici dobânda lunară.',
       yrCol: 'An', paidCol: 'Plătit', princCol: 'Principal', intCol: 'Dobândă', extraCol: 'În plus', balCol: 'Sold', monthCol: 'Nr.', payCol: 'Rată', rateCol: 'Dobândă %', yearNote: 'Include plățile anticipate și schimbarea dobânzii.',
       extraRes: 'Economisești {s} la dobândă și termini cu {d} mai devreme ({n} mai puțin).', extraNone: 'Adaugă o plată lunară în plus sau una unică ca să vezi cât economisești.', oneItem: 'Rata nr. {m}: +{x}', remove: 'Șterge',
@@ -16,7 +18,9 @@
       solveTitle: 'Payment ↔ term', solveMode: 'Find', solveTerm: 'term for a monthly payment', solveAmt: 'loan amount for a monthly payment', monthlyPay: 'Monthly payment', solveHint: 'Uses the amount, rate and term above (equal payments).', yearTitle: 'Summary by year',
       extraTitle: 'Extra payments', recAmt: 'Extra every month', fromMonth: 'Starting with payment no.', oneMonth: 'One-off: at payment no.', oneAmt: 'One-off amount', add: 'Add', rcTitle: 'Rate change (variable rate)', rcMonth: 'After payment no.', rcRate: 'New rate, % per year', schedTitle: 'Monthly payment schedule', csv: 'Save CSV',
       cmpTitle: 'Compare offers', offerName: 'Offer name', termYears: 'Term, years', fees: 'Upfront fees', cmpHint: 'Uses the payment type chosen above. Fill the third offer only if you need it.', savedTitle: 'Saved loans', saveName: 'Name', saveNamePh: 'e.g. Apartment, car', save: 'Save current loan',
-      proPitch: 'Full monthly schedule with CSV export, extra payments, rate changes, comparing up to 3 offers and saved loans.', disclaimer: 'Estimates only, not financial advice. Real offers can differ because of fees, insurance, rounding and lender rules.',
+      affTitle: 'How much can I borrow?', income: 'Monthly net income', debts: 'Other loan payments per month', share: 'Max share of income for loans, %', affHint: 'Uses the rate and term above (equal payments). Lenders apply their own rules, so this is only an estimate.', affRes: 'Payment up to {p} a month · you could borrow about {x}', affNone: 'Your other payments already use the whole share of income.', affEnter: 'Enter your income to see an estimate.',
+      chartTitle: 'Amortization chart', chartHint: 'Bars: principal and interest paid each year. Line: remaining balance.', proOnly: 'Available in Pro.',
+      proPitch: 'Full monthly schedule with CSV export, amortization chart, extra payments, rate changes, comparing up to 3 offers and saved loans.', disclaimer: 'Estimates only, not financial advice. Real offers can differ because of fees, insurance, rounding and lender rules.',
       yearF: 'year|years', monthF: 'month|months', payF: 'payment|payments', perMonth: '{x} a month', linNote: 'First payment {a}, last {b} (decreasing)', termRes: '{d} · {n}', invalid: 'Enter an amount > 0, a rate ≥ 0 and a term of up to 100 years.', solveTermRes: 'Repaid in {d} ({n})', solveAmtRes: 'You can borrow up to {x}', tooLow: 'The payment does not even cover the monthly interest.',
       yrCol: 'Year', paidCol: 'Paid', princCol: 'Principal', intCol: 'Interest', extraCol: 'Extra', balCol: 'Balance', monthCol: 'No.', payCol: 'Payment', rateCol: 'Rate %', yearNote: 'Includes your extra payments and the rate change.',
       extraRes: 'You save {s} in interest and finish {d} earlier ({n} fewer).', extraNone: 'Add a monthly extra or a one-off payment to see how much you save.', oneItem: 'Payment no. {m}: +{x}', remove: 'Remove',
@@ -26,7 +30,9 @@
       solveTitle: 'Платёж ↔ срок', solveMode: 'Найти', solveTerm: 'срок для ежемесячного платежа', solveAmt: 'сумму для ежемесячного платежа', monthlyPay: 'Ежемесячный платёж', solveHint: 'Используются сумма, ставка и срок выше (равные платежи).', yearTitle: 'Итоги по годам',
       extraTitle: 'Досрочные платежи', recAmt: 'Дополнительно каждый месяц', fromMonth: 'Начиная с платежа №', oneMonth: 'Разово: в платёж №', oneAmt: 'Разовая сумма', add: 'Добавить', rcTitle: 'Изменение ставки (плавающая ставка)', rcMonth: 'После платежа №', rcRate: 'Новая ставка, % годовых', schedTitle: 'Помесячный график платежей', csv: 'Сохранить CSV',
       cmpTitle: 'Сравнение предложений', offerName: 'Название', termYears: 'Срок, лет', fees: 'Разовые комиссии', cmpHint: 'Используется тип платежей, выбранный выше. Третье предложение заполняйте только при необходимости.', savedTitle: 'Сохранённые кредиты', saveName: 'Название', saveNamePh: 'напр. Квартира, машина', save: 'Сохранить кредит',
-      proPitch: 'Полный помесячный график с экспортом CSV, досрочные платежи, изменение ставки, сравнение до 3 предложений и сохранённые кредиты.', disclaimer: 'Только оценка, не финансовая консультация. Реальные условия могут отличаться из-за комиссий, страховок, округлений и правил банка.',
+      affTitle: 'Сколько можно занять?', income: 'Чистый доход в месяц', debts: 'Другие платежи по кредитам в месяц', share: 'Максимальная доля дохода на кредиты, %', affHint: 'Используются ставка и срок выше (равные платежи). У банков свои правила, поэтому это лишь оценка.', affRes: 'Платёж до {p} в месяц · можно занять примерно {x}', affNone: 'Другие платежи уже занимают всю долю дохода.', affEnter: 'Введите доход, чтобы увидеть оценку.',
+      chartTitle: 'График погашения', chartHint: 'Столбцы: основной долг и проценты за каждый год. Линия: остаток долга.', proOnly: 'Доступно в Pro.',
+      proPitch: 'Полный помесячный график с экспортом CSV, график погашения, досрочные платежи, изменение ставки, сравнение до 3 предложений и сохранённые кредиты.', disclaimer: 'Только оценка, не финансовая консультация. Реальные условия могут отличаться из-за комиссий, страховок, округлений и правил банка.',
       yearF: 'год|года|лет', monthF: 'месяц|месяца|месяцев', payF: 'платёж|платежа|платежей', perMonth: '{x} в месяц', linNote: 'Первый платёж {a}, последний {b} (убывающие)', termRes: '{d} · {n}', invalid: 'Введите сумму > 0, ставку ≥ 0 и срок не более 100 лет.', solveTermRes: 'Погашение за {d} ({n})', solveAmtRes: 'Можно занять до {x}', tooLow: 'Платёж не покрывает даже ежемесячные проценты.',
       yrCol: 'Год', paidCol: 'Выплачено', princCol: 'Основной долг', intCol: 'Проценты', extraCol: 'Досрочно', balCol: 'Остаток', monthCol: '№', payCol: 'Платёж', rateCol: 'Ставка %', yearNote: 'С учётом досрочных платежей и изменения ставки.',
       extraRes: 'Экономия на процентах {s}, кредит закрыт на {d} раньше (на {n} меньше).', extraNone: 'Добавьте ежемесячный или разовый досрочный платёж, чтобы увидеть экономию.', oneItem: 'Платёж № {m}: +{x}', remove: 'Удалить',
@@ -36,7 +42,7 @@
   const L = LoanCalc;
   const $ = id => document.getElementById(id);
   const v = id => L.num($(id).value);
-  const FIELDS = ['amt', 'rate', 'term', 'termUnit', 'type', 'cur', 'solveMode', 'solvePay', 'recAmt', 'recFrom', 'rcMonth', 'rcRate'];
+  const FIELDS = ['amt', 'rate', 'term', 'termUnit', 'type', 'cur', 'solveMode', 'solvePay', 'recAmt', 'recFrom', 'rcMonth', 'rcRate', 'income', 'debts', 'share'];
   const OFFER = ['cName', 'cAmt', 'cRate', 'cYears', 'cFee'];
   let isPro = false, ones = [], saved = [], full = null;
   const load = (k, d) => { try { return JSON.parse(Core.store(k) || '') || d; } catch (e) { return d; } };
@@ -105,7 +111,7 @@
       ['payNote', 'totInt', 'totPaid', 'termOut', 'extraOut', 'rcOut'].forEach(id => { $(id).textContent = ''; });
       ['yearTable', 'schedTable'].forEach(id => { $(id).textContent = ''; });
       $('yearNote').textContent = '';
-      solve(); return;
+      solve(); afford(); drawChart(null); return;
     }
     const first = s.rows[0].payment, last = s.rows[s.rows.length - 1].payment;
     $('payOut').textContent = Core.t('perMonth', { x: money(first) });
@@ -113,7 +119,7 @@
     $('totInt').textContent = money(s.totalInterest);
     $('totPaid').textContent = money(s.totalPaid);
     $('termOut').textContent = Core.t('termRes', { d: dur(s.months), n: plural(s.months, 'payF') });
-    solve();
+    solve(); afford();
 
     let shown = s, note = '';
     $('extraOut').textContent = ''; $('rcOut').textContent = '';
@@ -142,6 +148,7 @@
       const head = ['monthCol', 'rateCol', 'payCol', 'intCol', 'princCol'].concat(hasEx ? ['extraCol'] : [], ['balCol']).map(k => Core.t(k));
       table($('schedTable'), head, shown.rows.map(r => [r.month, f(r.rate, 4), money(r.payment), money(r.interest), money(r.principal)].concat(hasEx ? [money(r.extra)] : [], [money(r.balance)])));
     } else $('schedTable').textContent = '';
+    drawChart(shown.rows);
   }
   function solve() {
     const P = v('amt'), r = v('rate'), pay = v('solvePay'), b = base(), out = $('solveOut');
@@ -153,6 +160,45 @@
       const x = L.principalFor(pay, r, b.months);
       out.textContent = Number.isFinite(x) ? Core.t('solveAmtRes', { x: money(x) }) : Core.t('bad');
     }
+  }
+  function afford() {
+    const out = $('affOut'), inc = v('income'), b = base();
+    if (!(inc > 0)) { out.textContent = Core.t('affEnter'); return; }
+    const a = L.affordable(inc, v('debts'), v('share'), b.rate, b.months);
+    out.textContent = !a || !Number.isFinite(a.principal) ? Core.t('bad') : a.payment > 0 ? Core.t('affRes', { p: money(a.payment), x: money(a.principal) }) : Core.t('affNone');
+  }
+  function drawChart(rows) {
+    const cv = $('chart'), lockMsg = $('chartLocked');
+    lockMsg.textContent = isPro ? '' : Core.t('proOnly');
+    const m = isPro && rows ? L.chartModel(rows) : null;
+    cv.classList.toggle('hidden', !m);
+    if (!m) return;
+    const css = getComputedStyle(document.documentElement), col = k => css.getPropertyValue(k).trim() || '#888';
+    const dpr = window.devicePixelRatio || 1, W = cv.clientWidth || 600, H = cv.clientHeight || 260;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+    const cP = col('--accent'), cI = col('--warn'), cB = col('--text'), cM = col('--muted'), cL = col('--border');
+    document.querySelectorAll('.legend .lgP').forEach(e => { e.style.background = cP; });
+    document.querySelectorAll('.legend .lgI').forEach(e => { e.style.background = cI; });
+    document.querySelectorAll('.legend .lgB').forEach(e => { e.style.background = cB; });
+    const padL = 8, padR = 8, padT = 18, padB = 20, pw = W - padL - padR, ph = H - padT - padB, n = m.years.length, bw = pw / n;
+    const short = x => new Intl.NumberFormat(Core.lang, { notation: 'compact', maximumFractionDigits: 1 }).format(x);
+    g.strokeStyle = cL; g.lineWidth = 1; g.beginPath(); g.moveTo(padL, padT + ph + .5); g.lineTo(W - padR, padT + ph + .5); g.stroke();
+    for (let i = 0; i < n; i++) {
+      const x = padL + i * bw + bw * 0.15, w = Math.max(1, bw * 0.7);
+      const hp = m.principal[i] / m.maxPaid * ph, hi = m.interest[i] / m.maxPaid * ph;
+      g.fillStyle = cP; g.fillRect(x, padT + ph - hp, w, hp);
+      g.fillStyle = cI; g.fillRect(x, padT + ph - hp - hi, w, hi);
+    }
+    g.strokeStyle = cB; g.lineWidth = 2; g.beginPath();
+    m.balance.forEach((b, i) => { const x = padL + i * bw, y = padT + ph - b / m.start * ph; if (i) g.lineTo(x, y); else g.moveTo(x, y); });
+    g.stroke();
+    g.fillStyle = cM; g.font = '11px system-ui, sans-serif'; g.textBaseline = 'alphabetic';
+    g.textAlign = 'left'; g.fillText(short(m.maxPaid) + ' / ' + Core.t('yrCol').toLowerCase(), padL, 12);
+    g.textAlign = 'right'; g.fillText(Core.t('balCol') + ' ' + short(m.start), W - padR, 12);
+    const every = Math.max(1, Math.ceil(n / Math.max(1, Math.floor(pw / 34))));
+    g.textAlign = 'center';
+    for (let i = 0; i < n; i += every) g.fillText(String(m.years[i]), padL + i * bw + bw / 2, H - 5);
   }
   function renderOnes() {
     const ul = $('oneList'); ul.textContent = '';
@@ -233,5 +279,10 @@
     if (saved.length > 50) saved = saved.slice(-50);
     Core.store('loanSaved', JSON.stringify(saved)); $('saveName').value = ''; renderSaved();
   });
+  let rt = 0;
+  const redraw = () => { clearTimeout(rt); rt = setTimeout(main, 120); };
+  window.addEventListener('resize', redraw);
+  $('theme').addEventListener('click', main);
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', main);
   Core.wirePro(SKU, owned => { isPro = owned; lockPro(); });
 })();

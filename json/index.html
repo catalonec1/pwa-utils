@@ -98,6 +98,15 @@
   </section>
 
   <section class="card">
+    <div class="row" style="align-items:center;margin-bottom:6px">
+      <h2 class="t" style="margin:0" data-i18n="tyTitle">Structure and types</h2>
+      <div style="flex:0 0 auto"><button id="tyCopy" data-i18n="copy">Copy</button></div>
+    </div>
+    <p class="muted" style="margin:0" data-i18n="tyHint">Every path with its JSON types. [*] means any item of a list; “optional” keys are missing in some objects.</p>
+    <pre id="tyOut"></pre>
+  </section>
+
+  <section class="card">
     <h2 class="t"><span data-i18n="qTitle">Query (JSONPath)</span> <span class="pro-badge">PRO</span></h2>
     <input id="qPath" class="mono" spellcheck="false" autocomplete="off" value="$" aria-label="JSONPath">
     <p class="muted" style="margin:6px 0 0" data-i18n="qHint">Examples: $.items[*].name · $..id · items[0] · items[-1] · $['a key'] · items[?(@.status=='active')]</p>
@@ -108,10 +117,10 @@
 
   <section class="card">
     <h2 class="t"><span data-i18n="cvTitle">Convert</span> <span class="pro-badge">PRO</span></h2>
-    <p class="muted" style="margin:0 0 8px" data-i18n="cvHint">Uses the text in the editor above. For YAML or CSV to JSON, paste YAML or CSV there.</p>
+    <p class="muted" style="margin:0 0 8px" data-i18n="cvHint">Uses the text in the editor above. For YAML or CSV to JSON, paste YAML or CSV there. TypeScript interfaces are inferred from the values in the data.</p>
     <div class="tools" style="margin-top:0">
       <select id="cvMode" data-i18n-aria="cvTitle" aria-label="Convert">
-        <option value="json2yaml">JSON → YAML</option><option value="yaml2json">YAML → JSON</option><option value="json2csv">JSON → CSV</option><option value="csv2json">CSV → JSON</option>
+        <option value="json2yaml">JSON → YAML</option><option value="yaml2json">YAML → JSON</option><option value="json2csv">JSON → CSV</option><option value="csv2json">CSV → JSON</option><option value="json2ts">JSON → TypeScript</option>
       </select>
       <button class="primary" id="cvRun" data-i18n="convert">Convert</button>
       <button id="cvCopy" data-i18n="copy">Copy</button>
@@ -151,7 +160,7 @@
 
   <section class="card pro-box hidden" id="proBox">
     <h2 class="t" style="margin-bottom:6px" data-i18n="proTitle">Pro version</h2>
-    <p class="muted" data-i18n="proPitch">JSONPath query with filters, JSON ↔ YAML and JSON ↔ CSV, compare two documents, escape and unescape strings, saved snippets.</p>
+    <p class="muted" data-i18n="proPitch">JSONPath query with filters, JSON ↔ YAML and JSON ↔ CSV, TypeScript interfaces from JSON, compare two documents, escape and unescape strings, saved snippets.</p>
     <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
     <p class="muted" id="proStatus"></p>
   </section>
