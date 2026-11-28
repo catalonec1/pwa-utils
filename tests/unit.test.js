@@ -1225,3 +1225,35 @@ test('pick v1.1: yes/no and rock-paper-scissors (free); tournament bracket (Pro)
   assert.deepEqual(RP.bracketRounds(b)[1][0], { a: 'A', b: 'C', w: null }, 'changing a result resets the next rounds');
   assert.equal(RP.champion(RP.bracketRandom(b, seqSrc([1]))), 'C');
 });
+
+test('regex v1.1: quick reference (free) and code snippets with correct escaping (Pro)', () => {
+  assert.ok(RX.CHEAT.length >= 30);
+  for (const c of RX.CHEAT) {
+    const tok = RX.explain(c.t.replace('…', 'x'), 'u').find(x => x.k !== 'xLit' || c.k === 'xLit');
+    assert.equal(tok.k, c.k, c.t);
+    const ins = /^[{*+?]/.test(c.ins) ? 'a' + c.ins : c.ins === '\\1' ? '(a)\\1' : c.ins;
+    assert.ok(!RX.compile(ins, 'u').error, c.ins);
+  }
+  const p = '(?<y>\\d{4})/"x"\'\\k<y>';
+  const js = RX.codeSnippet('js', p, 'gi').code;
+  assert.match(js, /^const re = \/\(\?<y>\\d\{4\}\)\\\/"x"'\\k<y>\/gi;\nconst matches = \[\.\.\.text\.matchAll\(re\)\];/);
+  const re = eval(js.split('\n')[0].replace('const re = ', '').replace(/;$/, ''));
+  assert.equal(re.source, new RegExp(p).source); assert.equal(re.flags, 'gi');
+  assert.equal(RX.codeSnippet('js', 'a\\/b', '').code.split('\n')[0], 'const re = /a\\/b/;', 'already escaped slash kept');
+  assert.equal(RX.codeSnippet('js', '', 'g').code.split('\n')[0], 'const re = /(?:)/g;');
+  const py = RX.codeSnippet('py', p, 'gims');
+  assert.match(py.code, /^import re\n\npattern = re\.compile\(r"\(\?P<y>\\d\{4\}\)\/\\"x\\"'\(\?P=y\)", re\.IGNORECASE \| re\.MULTILINE \| re\.DOTALL\)\nfor m in pattern\.finditer\(text\):/);
+  assert.deepEqual(py.warn.map(w => w.k), ['wUni']);
+  assert.deepEqual(RX.codeSnippet('py', '\\p{L}+', 'uy').warn, [{ k: 'wUnsupported', v: { lang: 'Python', t: '\\p{L}  y' } }]);
+  const java = RX.codeSnippet('java', p, 'i').code;
+  assert.ok(java.includes('Pattern.compile("(?<y>\\\\d{4})/\\"x\\"\'\\\\k<y>", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);\nMatcher m = p.matcher(text);\nif (m.find()) {'));
+  assert.deepEqual(RX.codeSnippet('java', '(?<first_name>\\w+)', '').warn, [{ k: 'wJavaName', v: {} }]);
+  const cs = RX.codeSnippet('cs', p, 'gm').code;
+  assert.ok(cs.includes('new Regex(@"(?<y>\\d{4})/""x""\'\\k<y>", RegexOptions.Multiline);\nforeach (Match m in re.Matches(text))'));
+  const ora = RX.codeSnippet('plsql', "it's \\d+", 'is');
+  assert.equal(ora.code, "IF REGEXP_LIKE(v_text, 'it''s \\d+', 'in') THEN\n  DBMS_OUTPUT.PUT_LINE(REGEXP_SUBSTR(v_text, 'it''s \\d+', 1, 1, 'in'));\nEND IF;");
+  assert.deepEqual(ora.warn, []);
+  assert.match(RX.codeSnippet('plsql', 'a', 'g').code, /^v_count := REGEXP_COUNT\(v_text, 'a', 1, 'c'\);\nIF REGEXP_LIKE\(v_text, 'a'\) THEN/);
+  assert.deepEqual(RX.codeSnippet('plsql', '(?:a)(?=b)\\bc(?<n>d)', '').warn[0].v.t, '(?:  (?=  \\b  (?<n>');
+  assert.throws(() => RX.codeSnippet('cobol', 'a', ''));
+});

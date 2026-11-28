@@ -1152,6 +1152,44 @@ async function newPage(browser, base, opts = {}) {
     await ctx.close();
   });
 
+  await check('regex v1.1: quick reference inserts tokens (free), code snippets (Pro)', async () => {
+    let { ctx, page } = await newPage(browser, base);
+    await page.goto(base + 'regex/');
+    await page.fill('#pattern', 'ab');
+    await page.click('#cheatBox summary');
+    assert.match(await page.textContent('#cheat'), /\\dA digit 0–9/);
+    await page.locator('#pattern').evaluate(e => e.setSelectionRange(1, 1));
+    await page.locator('#cheat button', { hasText: 'A digit 0–9' }).click();
+    await page.click('#cheat button[data-ins="+"]');
+    assert.equal(await page.inputValue('#pattern'), 'a\\d+b');
+    await page.click('#cheat button[data-ins="(?:)"]');
+    await page.keyboard.type('x');
+    assert.equal(await page.inputValue('#pattern'), 'a\\d+(?:x)b', 'cursor placed inside the group');
+    assert.ok(await page.isDisabled('#codeLang'));
+    assert.equal(await page.textContent('#codeOut'), '');
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+    ({ ctx, page } = await newPage(browser, base, { pro: true, locale: 'ru-RU' }));
+    await ctx.grantPermissions(['clipboard-read', 'clipboard-write']);
+    await page.goto(base + 'regex/');
+    await page.waitForFunction(() => !document.getElementById('codeLang').disabled);
+    await page.fill('#pattern', 'it\'s/(?<n>\\w+)');
+    await page.waitForFunction(() => document.getElementById('codeOut').textContent.startsWith('const re = /it\'s\\/(?<n>\\w+)/g;'));
+    await page.selectOption('#codeLang', 'plsql');
+    assert.match(await page.textContent('#codeOut'), /^v_count := REGEXP_COUNT\(v_text, 'it''s\/\(\?<n>\\w\+\)', 1, 'c'\);/);
+    assert.equal(await page.textContent('#codeWarn'), 'PL/SQL не поддерживает: (?<n>');
+    await page.selectOption('#codeLang', 'py');
+    assert.match(await page.textContent('#codeOut'), /re\.compile\(r"it's\/\(\?P<n>\\w\+\)"\)/);
+    assert.match(await page.textContent('#codeWarn'), /^В Python \\d, \\w и \\b/);
+    await page.click('#codeCopy');
+    assert.match(await page.evaluate(() => navigator.clipboard.readText()), /^import re\n/);
+    await page.reload();
+    await page.waitForFunction(() => document.getElementById('codeOut').textContent.startsWith('import re'));
+    assert.equal(await page.inputValue('#codeLang'), 'py', 'language kept');
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
   await check('hash: text hashes, formats, compare; Pro locked', async () => {
     const { ctx, page } = await newPage(browser, base);
     await page.goto(base + 'hash/');

@@ -581,6 +581,19 @@ Pro (cumpărare unică): previzualizarea înlocuirii cu $1 și $<nume>, explica�
 Pro (разовая покупка): предпросмотр замены с $1 и $<имя>, объяснение шаблона простым языком по каждому элементу, библиотека из 34 готовых шаблонов (email, URL, IPv4, даты, время, телефоны, UUID и другие), сохранённые шаблоны, тест-кейсы, которые должны или не должны совпадать, и экспорт совпадений в CSV или JSON.
 **Функция:** Совпадения regex вживую, группы захвата, предпросмотр замены и объяснения простым языком
 
+**Update 1.1 — What's new:**
+EN: New free quick reference: the most used regex tokens with plain-language meanings; click one to insert it into the pattern. Pro: turn the pattern into ready-to-paste code for JavaScript, Python, Java, C# or PL/SQL (REGEXP_LIKE), with correct escaping and a note about anything the language does not support.
+RO: Fișă rapidă nouă, gratuită: cele mai folosite elemente regex, explicate pe înțeles; un clic le inserează în model. Pro: transformi modelul în cod gata de lipit pentru JavaScript, Python, Java, C# sau PL/SQL (REGEXP_LIKE), cu escape corect și o notă despre ce nu suportă limbajul.
+RU: Новая бесплатная шпаргалка: самые нужные элементы regex с объяснением простым языком; щелчок вставляет элемент в шаблон. Pro: готовый к вставке код для JavaScript, Python, Java, C# или PL/SQL (REGEXP_LIKE) с правильным экранированием и пометкой о том, что язык не поддерживает.
+
+**Updated description lines (1.1):**
+EN: • Quick reference of regex tokens; click to insert
+EN: Pro (one-time add-on): replace preview with $1 and $<name>, plain-language explanation of the pattern token by token, code snippets for JavaScript, Python, Java, C# and PL/SQL, a library of 34 ready-made patterns (email, URL, IPv4, dates, times, phone numbers, UUID and more), saved patterns, test cases that must or must not match, and export of matches as CSV or JSON.
+RO: • Fișă rapidă cu elementele regex; un clic le inserează
+RO: Pro (cumpărare unică): previzualizarea înlocuirii cu $1 și $<nume>, explicația pe înțeles a modelului, token cu token, fragmente de cod pentru JavaScript, Python, Java, C# și PL/SQL, bibliotecă de 34 de modele gata făcute (email, URL, IPv4, date, ore, numere de telefon, UUID și altele), modele salvate, cazuri de test care trebuie sau nu trebuie să se potrivească și export al potrivirilor în CSV sau JSON.
+RU: • Шпаргалка по элементам regex; щелчок вставляет элемент
+RU: Pro (разовая покупка): предпросмотр замены с $1 и $<имя>, объяснение шаблона простым языком по каждому элементу, фрагменты кода для JavaScript, Python, Java, C# и PL/SQL, библиотека из 34 готовых шаблонов (email, URL, IPv4, даты, время, телефоны, UUID и другие), сохранённые шаблоны, тест-кейсы, которые должны или не должны совпадать, и экспорт совпадений в CSV или JSON.
+
 **Pro add-on listing:** name „Regex Tester Pro”; EN: One-time purchase: replace preview, plain-language pattern explanation, 34 ready-made patterns, saved patterns, test cases and CSV/JSON export. RO: Cumpărare unică: previzualizare înlocuire, explicația modelului pe înțeles, 34 de modele gata făcute, modele salvate, cazuri de test și export CSV/JSON. RU: Разовая покупка: предпросмотр замены, объяснение шаблона простым языком, 34 готовых шаблона, сохранённые шаблоны, тест-кейсы и экспорт CSV/JSON.
 
 ## 8. Stelar Hash Generator (`hash/`)
