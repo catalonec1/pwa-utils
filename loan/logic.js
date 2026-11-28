@@ -33,6 +33,25 @@
     return c2(r === 0 ? pay * n : pay * (1 - Math.pow(1 + r, -n)) / r);
   }
 
+  /* affordability estimate: payment limit = income × share% − other monthly payments, then the largest principal it repays (equal payments) */
+  function affordable(income, debts, sharePct, rate, n) {
+    const d = Number.isFinite(debts) ? debts : 0;
+    if (!(income > 0 && sharePct > 0 && sharePct <= 100 && d >= 0 && rate >= 0 && n >= 1 && n <= MAX_MONTHS)) return null;
+    const pay = c2(income * sharePct / 100 - d);
+    if (!(pay > 0)) return { payment: 0, principal: 0 };
+    return { payment: pay, principal: principalFor(pay, rate, n) };
+  }
+
+  /* data for the amortization chart: per year principal (incl. extra) and interest, balance at the start and after each year */
+  function chartModel(rows) {
+    if (!rows || !rows.length) return null;
+    const y = yearly(rows), r0 = rows[0], start = c2(r0.balance + r0.principal + r0.extra);
+    return {
+      years: y.map(g => g.year), principal: y.map(g => g.principal), interest: y.map(g => g.interest),
+      balance: [start].concat(y.map(g => g.balance)), maxPaid: Math.max.apply(null, y.map(g => c2(g.principal + g.interest))), start
+    };
+  }
+
   /* Full monthly schedule.
      o = { principal, rate, months, type: 'annuity'|'linear',
            extras: [{ month, amount }], recurring: { amount, from },   // plăți anticipate: scurtează termenul
@@ -120,7 +139,7 @@
     return head + rows.map(r => [r.month, r.rate, r.payment.toFixed(2), r.interest.toFixed(2), r.principal.toFixed(2), r.extra.toFixed(2), r.balance.toFixed(2)].map(cell).join(',')).join('\r\n') + (rows.length ? '\r\n' : '');
   }
 
-  const LoanCalc = { MAX_MONTHS, c2, num, payment, termFor, principalFor, schedule, yearly, effectiveRate, compare, toCsv };
+  const LoanCalc = { MAX_MONTHS, c2, num, payment, termFor, principalFor, affordable, chartModel, schedule, yearly, effectiveRate, compare, toCsv };
   if (typeof module !== 'undefined' && module.exports) module.exports = LoanCalc;
   else global.LoanCalc = LoanCalc;
 })(typeof window !== 'undefined' ? window : globalThis);

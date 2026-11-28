@@ -409,6 +409,19 @@ Pro (разовая покупка): полный помесячный граф�
 
 **Pro add-on listing:** name „Stelar Loan Calculator Pro”; EN: One-time purchase: full monthly schedule with CSV export, extra payments, rate changes, comparing up to 3 offers and saved loans. RO: Cumpărare unică: graficul lunar complet cu export CSV, plăți anticipate, schimbarea dobânzii, comparația a până la 3 oferte și credite salvate. RU: Разовая покупка: полный помесячный график с экспортом CSV, досрочные платежи, изменение ставки, сравнение до 3 предложений и сохранённые кредиты.
 
+**Update 1.1 — What's new:**
+EN: New free “How much can I borrow?” estimate: enter your monthly income, other loan payments and the share of income you allow, and see the payment limit and the loan amount it covers at the rate and term above. Pro: amortization chart with principal and interest paid each year and the remaining balance, including extra payments and rate changes.
+RO: Estimare gratuită nouă „Cât pot împrumuta?”: introdu venitul lunar, celelalte rate și partea din venit pe care o accepți și vezi rata maximă și suma de credit acoperită la dobânda și termenul de mai sus. Pro: graficul amortizării cu principalul și dobânda plătite în fiecare an și soldul rămas, inclusiv plățile anticipate și schimbarea dobânzii.
+RU: Новая бесплатная оценка «Сколько можно занять?»: введите ежемесячный доход, другие платежи по кредитам и допустимую долю дохода и узнайте предельный платёж и сумму кредита при ставке и сроке выше. Pro: график погашения с основным долгом и процентами за каждый год и остатком долга, с учётом досрочных платежей и изменения ставки.
+
+**Updated description lines (1.1):**
+EN: • How much can I borrow: an estimate from your income, other loan payments and the share of income you allow
+EN: Pro (one-time add-on): full monthly payment schedule with CSV export, amortization chart by year, extra payments (one-off and monthly) with interest saved and shorter term, rate change after a chosen month, comparing up to 3 offers including fees, and saved loans.
+RO: • Cât pot împrumuta: o estimare din venit, celelalte rate și partea din venit pe care o accepți
+RO: Pro (cumpărare unică): graficul lunar complet cu export CSV, graficul amortizării pe ani, plăți anticipate (unice și lunare) cu dobânda economisită și termenul scurtat, schimbarea dobânzii după o lună aleasă, comparația a până la 3 oferte cu comisioane și credite salvate.
+RU: • Сколько можно занять: оценка по доходу, другим платежам по кредитам и допустимой доле дохода
+RU: Pro (разовая покупка): полный помесячный график с экспортом CSV, график погашения по годам, досрочные платежи (разовые и ежемесячные) с экономией на процентах и сокращением срока, изменение ставки после выбранного месяца, сравнение до 3 предложений с комиссиями и сохранённые кредиты.
+
 ## 8. Stelar Color Converter
 
 **EN — short description:** Convert HEX, RGB, HSL, HWB and CMYK colors and check WCAG contrast. Works offline.

@@ -1193,3 +1193,17 @@ test('text v1.2: line filters, prefix/suffix (free); regex filter and text diff 
   assert.deepEqual(d.map(x => x.op).join(''), '+ -   +');
   assert.throws(() => T.diffLines('x\n'.repeat(3001), 'y'));
 });
+
+test('loan v1.1: affordability estimate (free) and amortization chart data (Pro)', () => {
+  assert.deepEqual(LN.affordable(3000, 300, 40, 6.5, 300), { payment: 900, principal: 133292.43 });
+  assert.equal(LN.affordable(3000, NaN, 40, 6.5, 300).payment, 1200);
+  assert.deepEqual(LN.affordable(1000, 500, 40, 6.5, 300), { payment: 0, principal: 0 });
+  assert.equal(LN.affordable(0, 0, 40, 6.5, 300), null);
+  assert.equal(LN.affordable(3000, 0, 120, 6.5, 300), null);
+  assert.equal(LN.affordable(3000, 0, 40, 0, 120).principal, 144000);
+  const s = LN.schedule({ principal: 12000, rate: 6, months: 24, type: 'annuity' });
+  assert.deepEqual(LN.chartModel(s.rows), { years: [1, 2], principal: [5820.52, 6179.48], interest: [561.68, 202.69], balance: [12000, 6179.48, 0], maxPaid: 6382.2, start: 12000 });
+  const x = LN.chartModel(LN.schedule({ principal: 12000, rate: 6, months: 24, type: 'annuity', extras: [{ month: 1, amount: 1000 }] }).rows);
+  assert.equal(x.start, 12000);
+  assert.equal(LN.chartModel([]), null);
+});

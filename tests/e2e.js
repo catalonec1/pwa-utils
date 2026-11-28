@@ -783,6 +783,37 @@ async function newPage(browser, base, opts = {}) {
     await ctx.close();
   });
 
+  await check('loan v1.1: affordability estimate (free), amortization chart (Pro)', async () => {
+    let { ctx, page } = await newPage(browser, base);
+    await page.goto(base + 'loan/');
+    assert.equal(await page.textContent('#affOut'), 'Enter your income to see an estimate.');
+    await page.fill('#income', '3000'); await page.fill('#debts', '300');
+    assert.equal(await page.textContent('#affOut'), 'Payment up to 900.00 a month · you could borrow about 133,292.43');
+    await page.fill('#debts', '1500');
+    assert.equal(await page.textContent('#affOut'), 'Your other payments already use the whole share of income.');
+    await page.fill('#debts', '300'); await page.fill('#share', '35');
+    assert.match(await page.textContent('#affOut'), /^Payment up to 750\.00 a month/);
+    assert.equal(await page.textContent('#chartLocked'), 'Available in Pro.');
+    assert.ok(await page.isHidden('#chart'));
+    await page.reload();
+    assert.equal(await page.inputValue('#income'), '3000', 'income not kept');
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+    ({ ctx, page } = await newPage(browser, base, { pro: true, locale: 'ru-RU' }));
+    await page.goto(base + 'loan/');
+    await page.waitForSelector('#chart:not(.hidden)');
+    assert.equal(await page.textContent('#chartLocked'), '');
+    const ink = () => page.evaluate(() => { const c = document.getElementById('chart'), d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 3; i < d.length; i += 4) if (d[i]) n++; return n; });
+    const before = await ink();
+    assert.ok(before > 1000, 'chart is empty');
+    await page.fill('#term', '5');
+    assert.notEqual(await ink(), before, 'chart not redrawn');
+    await page.fill('#income', '2000');
+    assert.match(await page.textContent('#affOut'), /^Платёж до 800,00 в месяц · можно занять примерно 40\s?886,94$/);
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
   await check('color: converts any format, picker, contrast; Pro locked', async () => {
     const { ctx, page } = await newPage(browser, base);
     await page.goto(base + 'color/');
