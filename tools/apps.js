@@ -97,8 +97,8 @@ module.exports = {
     },
     {
       dir: 'loan',
-      storeId: 'TBD',
-      packageId: 'TBD',
+      storeId: '9NTTDMF9RJ6L',
+      packageId: 'catalonec.StelarLoanCalculator',
       id: 'loan-calculator',
       name: 'Stelar Loan Calculator',
       short_name: 'Loans',
