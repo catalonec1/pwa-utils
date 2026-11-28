@@ -1257,3 +1257,23 @@ test('regex v1.1: quick reference (free) and code snippets with correct escaping
   assert.deepEqual(RX.codeSnippet('plsql', '(?:a)(?=b)\\bc(?<n>d)', '').warn[0].v.t, '(?:  (?=  \\b  (?<n>');
   assert.throws(() => RX.codeSnippet('cobol', 'a', ''));
 });
+
+test('hash v1.1: UUID v4 and random tokens (free); compare two files (Pro)', () => {
+  assert.equal(HK.uuid4(new Uint8Array(16).fill(255)), 'ffffffff-ffff-4fff-bfff-ffffffffffff');
+  assert.equal(HK.uuid4(new Uint8Array(16)), '00000000-0000-4000-8000-000000000000');
+  assert.throws(() => HK.uuid4(new Uint8Array(15)));
+  const ids = HK.tokens('uuid', 0, 50);
+  assert.equal(new Set(ids).size, 50);
+  for (const id of ids) assert.match(id, /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+  assert.match(HK.tokens('hex', 32, 1)[0], /^[0-9a-f]{64}$/);
+  const fixed = n => Uint8Array.from({ length: n }, (_, i) => 250 + i);
+  assert.equal(HK.tokens('b64url', 6, 1, fixed)[0], '-vv8_f7_');
+  assert.equal(HK.toBase64Url(Uint8Array.of(251, 255)), '-_8');
+  assert.match(HK.tokens('b64url', 32, 1)[0], /^[A-Za-z0-9_-]{43}$/);
+  assert.throws(() => HK.tokens('pin', 4, 1));
+  const f = (s, alg) => ({ size: s.length, res: { [alg]: HK.hashBytes(alg, HK.utf8(s)) } });
+  assert.deepEqual(HK.compareFiles(f('abc', 'sha256'), f('abc', 'sha256'), 'sha256'), { same: true, sizeDiff: 0 });
+  assert.deepEqual(HK.compareFiles(f('abc', 'md5'), f('abcd', 'md5'), 'md5'), { same: false, sizeDiff: 1 });
+  assert.equal(HK.compareFiles(f('abc', 'md5'), f('abc', 'sha1'), 'md5'), null);
+  assert.equal(HK.compareFiles(null, f('abc', 'md5'), 'md5'), null);
+});

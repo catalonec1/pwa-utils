@@ -632,6 +632,19 @@ Pro (разовая покупка): хеши файлов любого разм
 MD5, SHA-1 и CRC32 подходят для поиска повреждённых файлов, но не для защиты.
 **Функция:** SHA-256, SHA-1, SHA-512, MD5 и CRC32 для текста и файлов, проверка контрольных сумм, HMAC
 
+**Update 1.1 — What's new:**
+EN: New free generator of random UUIDs (version 4) and hex or Base64URL tokens of 128, 256 or 512 bits, made with your device's secure random generator. Pro: compare two files side by side by SHA-256 or another hash and see at once whether they are identical.
+RO: Generator nou, gratuit, de UUID-uri aleatorii (versiunea 4) și token-uri hex sau Base64URL de 128, 256 sau 512 biți, create cu generatorul securizat al dispozitivului. Pro: compari două fișiere unul lângă altul după SHA-256 sau alt hash și vezi imediat dacă sunt identice.
+RU: Новый бесплатный генератор случайных UUID (версия 4) и токенов hex или Base64URL на 128, 256 или 512 бит, созданных защищённым генератором устройства. Pro: сравнение двух файлов рядом по SHA-256 или другому хешу — сразу видно, одинаковые ли они.
+
+**Updated description lines (1.1):**
+EN: • Random UUID v4 and hex or Base64URL tokens (128, 256 or 512 bits)
+EN: Pro (one-time add-on): hash files of any size (drag and drop, read in pieces with progress; files never leave your device), compare two files side by side, verify files against a pasted checksum, a .sha256 file or a SHA256SUMS list, HMAC-SHA-256/384/512 with a secret key, and batch hashing of many lines with CSV export.
+RO: • UUID v4 aleatorii și token-uri hex sau Base64URL (128, 256 sau 512 biți)
+RO: Pro (cumpărare unică): hash pentru fișiere de orice mărime (trage și plasează, citire pe bucăți cu progres; fișierele nu părăsesc dispozitivul), compararea a două fișiere unul lângă altul, verificarea fișierelor cu un checksum lipit, un fișier .sha256 sau o listă SHA256SUMS, HMAC-SHA-256/384/512 cu cheie secretă și hash pe loturi de linii cu export CSV.
+RU: • Случайные UUID v4 и токены hex или Base64URL (128, 256 или 512 бит)
+RU: Pro (разовая покупка): хеши файлов любого размера (перетаскивание, чтение по частям с прогрессом; файлы не покидают устройство), сравнение двух файлов рядом, проверка файлов по вставленной контрольной сумме, файлу .sha256 или списку SHA256SUMS, HMAC-SHA-256/384/512 с секретным ключом и пакетное хеширование строк с экспортом CSV.
+
 **Pro add-on listing:** name „Stelar Hash Generator Pro”; EN: One-time purchase: hash and verify files of any size, SHA256SUMS lists, HMAC with a secret key and batch hashing with CSV export. RO: Cumpărare unică: hash și verificare pentru fișiere de orice mărime, liste SHA256SUMS, HMAC cu cheie secretă și hash pe loturi cu export CSV. RU: Разовая покупка: хеш и проверка файлов любого размера, списки SHA256SUMS, HMAC с секретным ключом и пакетное хеширование с экспортом CSV.
 
 ## 8. Stelar Habit Tracker

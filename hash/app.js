@@ -4,13 +4,13 @@
   const DICT = {
     ro: { appName: 'Generator de hash', textLabel: 'Text pentru hash', textPh: 'Scrie sau lipește text', output: 'Format', upper: 'Majuscule', bytes: '{n} octeți (UTF-8)', cmpTitle: 'Compară cu un hash așteptat', cmpPh: 'Lipește hash-ul pe care îl aștepți', cmpMatch: '✓ Se potrivește: {alg}', cmpNo: '✗ Nu se potrivește (pare {alg})', cmpUnknown: 'Nu arată ca un hash cunoscut (hex sau Base64).',
       fileTitle: 'Hash și verificare pentru fișiere', dropHint: 'Trage fișierele aici sau apasă pentru a alege. Fișierele sunt citite pe acest dispozitiv și nu sunt încărcate nicăieri.', algorithm: 'Algoritm', stop: 'Oprește', csv: 'Salvează CSV', sumsLabel: 'Checksum așteptat (opțional)', sumsPh: 'Lipește un hash, o linie .sha256 sau conținutul SHA256SUMS', hashing: 'Se calculează {name}… {p}%', fileOk: '✓ Se potrivește cu {alg} așteptat', fileBad: '✗ NU se potrivește cu {alg} așteptat', fileNoEntry: 'Nu există checksum așteptat pentru acest fișier', stopped: 'Oprit', readErr: 'Fișierul nu a putut fi citit', sumsLoaded: 'Checksum-uri încărcate din {name}',
-      hmacTitle: 'HMAC', hmacHint: 'Semnează textul de mai sus cu o cheie secretă. Cheia nu este salvată.', key: 'Cheie secretă', keyIs: 'Cheia este', keyText: 'text', badHex: 'Cheia nu este hex valid.', batchTitle: 'Lot: câte un hash pe linie', batchPh: 'O valoare pe linie', batchCount: '{n} linii', proPitch: 'Hash și verificare pentru fișiere de orice mărime, liste de checksum-uri, HMAC cu cheie secretă și hash pe loturi cu export CSV.', note: 'MD5, SHA-1 și CRC32 sunt bune pentru a găsi descărcări deteriorate, nu pentru securitate. Folosește SHA-256 sau mai puternic.' },
+      hmacTitle: 'HMAC', hmacHint: 'Semnează textul de mai sus cu o cheie secretă. Cheia nu este salvată.', key: 'Cheie secretă', keyIs: 'Cheia este', keyText: 'text', badHex: 'Cheia nu este hex valid.', batchTitle: 'Lot: câte un hash pe linie', batchPh: 'O valoare pe linie', batchCount: '{n} linii', proPitch: 'Hash și verificare pentru fișiere de orice mărime, compararea a două fișiere, liste de checksum-uri, HMAC cu cheie secretă și hash pe loturi cu export CSV.', note: 'MD5, SHA-1 și CRC32 sunt bune pentru a găsi descărcări deteriorate, nu pentru securitate. Folosește SHA-256 sau mai puternic.', tokTitle: 'UUID și token-uri aleatorii', tokKind: 'Tip', tokHex: 'Token hex', tokB64: 'Token Base64URL', tokBytes: 'Lungime', tokCount: 'Câte', tokGen: 'Generează', tokCopyAll: 'Copiază tot', tokHint: 'Create cu generatorul securizat de numere aleatorii al dispozitivului. Token-urile nu sunt salvate.', twoTitle: 'Compară două fișiere', twoA: 'Primul fișier: trage-l aici sau apasă', twoB: 'Al doilea fișier: trage-l aici sau apasă', twoSame: '✓ Fișierele sunt identice ({alg} egal)', twoDiff: '✗ Fișierele sunt diferite ({alg} diferit)', twoDiffSize: '✗ Fișierele sunt diferite ({alg} diferit, mărimea diferă cu {n})' },
     en: { appName: 'Hash Generator', textLabel: 'Text to hash', textPh: 'Type or paste text', output: 'Output', upper: 'Uppercase', bytes: '{n} bytes (UTF-8)', cmpTitle: 'Compare with an expected hash', cmpPh: 'Paste the hash you expect', cmpMatch: '✓ Match: {alg}', cmpNo: '✗ No match (looks like {alg})', cmpUnknown: 'Not a recognised hash (hex or Base64).',
       fileTitle: 'Hash and verify files', dropHint: 'Drop files here or click to choose. Files are read on this device and never uploaded.', algorithm: 'Algorithm', stop: 'Stop', csv: 'Save CSV', sumsLabel: 'Expected checksum (optional)', sumsPh: 'Paste a hash, a .sha256 line or SHA256SUMS contents', hashing: 'Hashing {name}… {p}%', fileOk: '✓ Matches the expected {alg}', fileBad: '✗ Does NOT match the expected {alg}', fileNoEntry: 'No expected checksum for this file', stopped: 'Stopped', readErr: 'The file could not be read', sumsLoaded: 'Checksums loaded from {name}',
-      hmacTitle: 'HMAC', hmacHint: 'Signs the text above with a secret key. The key is not saved.', key: 'Secret key', keyIs: 'Key is', keyText: 'text', badHex: 'The key is not valid hex.', batchTitle: 'Batch: one hash per line', batchPh: 'One value per line', batchCount: '{n} lines', proPitch: 'Hash and verify files of any size, checksum lists, HMAC with a secret key and batch hashing with CSV export.', note: 'MD5, SHA-1 and CRC32 are fine for spotting damaged downloads, not for security. Use SHA-256 or stronger.' },
+      hmacTitle: 'HMAC', hmacHint: 'Signs the text above with a secret key. The key is not saved.', key: 'Secret key', keyIs: 'Key is', keyText: 'text', badHex: 'The key is not valid hex.', batchTitle: 'Batch: one hash per line', batchPh: 'One value per line', batchCount: '{n} lines', proPitch: 'Hash and verify files of any size, compare two files side by side, checksum lists, HMAC with a secret key and batch hashing with CSV export.', note: 'MD5, SHA-1 and CRC32 are fine for spotting damaged downloads, not for security. Use SHA-256 or stronger.', tokTitle: 'Random UUID and tokens', tokKind: 'Type', tokHex: 'Hex token', tokB64: 'Base64URL token', tokBytes: 'Length', tokCount: 'How many', tokGen: 'Generate', tokCopyAll: 'Copy all', tokHint: "Made with your device's secure random number generator. Tokens are not saved.", twoTitle: 'Compare two files', twoA: 'First file: drop it here or click', twoB: 'Second file: drop it here or click', twoSame: '✓ The files are identical (same {alg})', twoDiff: '✗ The files are different ({alg} differs)', twoDiffSize: '✗ The files are different ({alg} differs, sizes differ by {n})' },
     ru: { appName: 'Генератор хешей', textLabel: 'Текст для хеширования', textPh: 'Введите или вставьте текст', output: 'Формат', upper: 'Заглавные', bytes: '{n} байт (UTF-8)', cmpTitle: 'Сравнить с ожидаемым хешем', cmpPh: 'Вставьте ожидаемый хеш', cmpMatch: '✓ Совпадает: {alg}', cmpNo: '✗ Не совпадает (похоже на {alg})', cmpUnknown: 'Не похоже на известный хеш (hex или Base64).',
       fileTitle: 'Хеш и проверка файлов', dropHint: 'Перетащите файлы сюда или нажмите, чтобы выбрать. Файлы читаются на этом устройстве и никуда не загружаются.', algorithm: 'Алгоритм', stop: 'Стоп', csv: 'Сохранить CSV', sumsLabel: 'Ожидаемая контрольная сумма (необязательно)', sumsPh: 'Вставьте хеш, строку .sha256 или содержимое SHA256SUMS', hashing: 'Вычисляется {name}… {p}%', fileOk: '✓ Совпадает с ожидаемым {alg}', fileBad: '✗ НЕ совпадает с ожидаемым {alg}', fileNoEntry: 'Нет ожидаемой суммы для этого файла', stopped: 'Остановлено', readErr: 'Не удалось прочитать файл', sumsLoaded: 'Контрольные суммы загружены из {name}',
-      hmacTitle: 'HMAC', hmacHint: 'Подписывает текст выше секретным ключом. Ключ не сохраняется.', key: 'Секретный ключ', keyIs: 'Ключ', keyText: 'текст', badHex: 'Ключ — не корректный hex.', batchTitle: 'Пакет: хеш для каждой строки', batchPh: 'Одно значение на строку', batchCount: 'Строк: {n}', proPitch: 'Хеш и проверка файлов любого размера, списки контрольных сумм, HMAC с секретным ключом и пакетное хеширование с экспортом CSV.', note: 'MD5, SHA-1 и CRC32 подходят для поиска повреждённых загрузок, но не для защиты. Используйте SHA-256 или надёжнее.' }
+      hmacTitle: 'HMAC', hmacHint: 'Подписывает текст выше секретным ключом. Ключ не сохраняется.', key: 'Секретный ключ', keyIs: 'Ключ', keyText: 'текст', badHex: 'Ключ — не корректный hex.', batchTitle: 'Пакет: хеш для каждой строки', batchPh: 'Одно значение на строку', batchCount: 'Строк: {n}', proPitch: 'Хеш и проверка файлов любого размера, сравнение двух файлов, списки контрольных сумм, HMAC с секретным ключом и пакетное хеширование с экспортом CSV.', note: 'MD5, SHA-1 и CRC32 подходят для поиска повреждённых загрузок, но не для защиты. Используйте SHA-256 или надёжнее.', tokTitle: 'Случайные UUID и токены', tokKind: 'Тип', tokHex: 'Hex-токен', tokB64: 'Токен Base64URL', tokBytes: 'Длина', tokCount: 'Сколько', tokGen: 'Сгенерировать', tokCopyAll: 'Копировать все', tokHint: 'Создаются защищённым генератором случайных чисел устройства. Токены не сохраняются.', twoTitle: 'Сравнить два файла', twoA: 'Первый файл: перетащите сюда или нажмите', twoB: 'Второй файл: перетащите сюда или нажмите', twoSame: '✓ Файлы одинаковые ({alg} совпадает)', twoDiff: '✗ Файлы разные ({alg} не совпадает)', twoDiffSize: '✗ Файлы разные ({alg} не совпадает, размер отличается на {n})' }
   };
   const H = HashKit;
   const $ = id => document.getElementById(id);
@@ -151,17 +151,69 @@
     }
   }
 
-  function all() { renderText(); compare(); renderFiles(); hmac(); batch(); }
-  const PRO_IDS = ['files', 'fileAlg', 'fileCsv', 'fileClear', 'fileStop', 'sums', 'hmacKey', 'hmacKeyFmt', 'hmacAlg', 'hmacCopy', 'batch', 'batchAlg', 'batchCsv'];
+  /* ---- UUID și token-uri (gratuit) ---- */
+  let toks = [];
+  function tokUi() { $('tokBytes').disabled = $('tokKind').value === 'uuid'; }
+  function renderToks() {
+    const ul = $('tokOut'); ul.textContent = '';
+    toks.forEach((t, i) => { const li = el('li'); li.append(el('span', 'alg', String(i + 1)), el('code', null, t), copyBtn(() => t)); ul.append(li); });
+  }
+  function genToks() {
+    const n = Math.min(100, Math.max(1, Math.floor(+$('tokCount').value) || 1));
+    $('tokCount').value = n;
+    Core.store('hashTok', JSON.stringify({ k: $('tokKind').value, b: $('tokBytes').value, n }));
+    toks = H.tokens($('tokKind').value, +$('tokBytes').value, n); renderToks();
+  }
+
+  /* ---- două fișiere (Pro) ---- */
+  const two = { A: null, B: null };
+  async function hashTwo(side) {
+    const f = two[side], alg = $('twoAlg').value;
+    if (!f || f.res[alg] || f.busy) return;
+    f.busy = true;
+    const h = H.createHasher(alg), total = f.file.size;
+    try {
+      for (let off = 0; off < total;) {
+        const buf = new Uint8Array(await f.file.slice(off, off + CHUNK).arrayBuffer());
+        if (two[side] !== f) return;
+        h.update(buf); off += buf.length;
+        f.p = Math.floor(off / total * 100); renderTwo();
+      }
+      f.res[alg] = h.digest();
+    } catch (e) { f.err = true; }
+    f.busy = false; renderTwo();
+    if (!f.res[$('twoAlg').value] && !f.err) hashTwo(side);
+  }
+  function renderTwo() {
+    const alg = $('twoAlg').value;
+    for (const side of ['A', 'B']) {
+      const box = $('two' + side), f = two[side]; box.textContent = '';
+      if (!f) continue;
+      box.append(el('div', 'fn', f.file.name + ' · ' + size(f.file.size)));
+      if (f.err) box.append(el('p', 'st bad', Core.t('readErr')));
+      else if (f.res[alg]) { const ul = el('ul', 'hl'); ul.append(hashRow(alg, f.res[alg])); box.append(ul); }
+      else box.append(el('p', 'muted', Core.t('hashing', { name: f.file.name, p: f.p || 0 })));
+    }
+    const r = H.compareFiles(two.A, two.B, alg), st = $('twoSt');
+    st.className = 'st' + (r ? (r.same ? ' ok' : ' bad') : '');
+    st.textContent = !r ? '' : r.same ? Core.t('twoSame', { alg: H.NAMES[alg] }) : r.sizeDiff ? Core.t('twoDiffSize', { alg: H.NAMES[alg], n: size(Math.abs(r.sizeDiff)) }) : Core.t('twoDiff', { alg: H.NAMES[alg] });
+  }
+  function setTwo(side, file) {
+    if (!isPro || !file) return;
+    two[side] = { file, size: file.size, res: {} }; renderTwo(); hashTwo(side);
+  }
+
+  function all() { renderText(); compare(); renderFiles(); hmac(); batch(); renderTwo(); }
+  const PRO_IDS = ['fileA', 'fileB', 'twoAlg', 'files', 'fileAlg', 'fileCsv', 'fileClear', 'fileStop', 'sums', 'hmacKey', 'hmacKeyFmt', 'hmacAlg', 'hmacCopy', 'batch', 'batchAlg', 'batchCsv'];
   function lockPro() {
     PRO_IDS.forEach(id => { $(id).disabled = !isPro; });
-    $('drop').setAttribute('aria-disabled', String(!isPro));
+    for (const id of ['drop', 'dropA', 'dropB']) $(id).setAttribute('aria-disabled', String(!isPro));
     all(); run();
   }
 
   /* ---- pornire ---- */
-  for (const id of ['fileAlg', 'batchAlg']) for (const a of H.ALGS) { const o = el('option', null, H.NAMES[a]); o.value = a; $(id).append(o); }
-  const keep = { text: 'hashText', expected: 'hashCmp', fmt: 'hashFmt', batch: 'hashBatch', fileAlg: 'hashFileAlg', batchAlg: 'hashBatchAlg', hmacAlg: 'hashHmacAlg' };
+  for (const id of ['fileAlg', 'batchAlg', 'twoAlg']) for (const a of H.ALGS) { const o = el('option', null, H.NAMES[a]); o.value = a; $(id).append(o); }
+  const keep = { text: 'hashText', expected: 'hashCmp', fmt: 'hashFmt', batch: 'hashBatch', fileAlg: 'hashFileAlg', batchAlg: 'hashBatchAlg', twoAlg: 'hashTwoAlg', hmacAlg: 'hashHmacAlg' };
   for (const id in keep) {
     const v = Core.store(keep[id]);
     if (v != null) $(id).value = v;
@@ -171,7 +223,26 @@
   const save = id => Core.store(keep[id], $(id).value);
   function upd() { $('upper').disabled = $('fmt').value === 'base64'; }
 
+  if (!Core.store('hashTwoAlg')) $('twoAlg').value = 'sha256';
+  try { const o = JSON.parse(Core.store('hashTok') || '{}'); if (o.k) $('tokKind').value = o.k; if (o.b) $('tokBytes').value = o.b; if (o.n) $('tokCount').value = o.n; } catch (e) { /* ignorat */ }
+  if ($('tokKind').selectedIndex < 0) $('tokKind').selectedIndex = 0;
+  if ($('tokBytes').selectedIndex < 0) $('tokBytes').value = '32';
   Core.init(DICT, all);
+  tokUi(); genToks();
+  $('tokKind').addEventListener('change', () => { tokUi(); genToks(); });
+  $('tokBytes').addEventListener('change', genToks);
+  $('tokGen').addEventListener('click', genToks);
+  $('tokCopy').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(toks.join('\n')); $('tokCopy').textContent = Core.t('copied'); setTimeout(() => { $('tokCopy').textContent = Core.t('tokCopyAll'); }, 1200); } catch (e) { /* fără clipboard */ }
+  });
+  for (const side of ['A', 'B']) {
+    const inp = $('file' + side), d = $('drop' + side);
+    inp.addEventListener('change', e => { setTwo(side, e.target.files[0]); e.target.value = ''; });
+    d.addEventListener('dragover', e => { e.preventDefault(); if (isPro) d.classList.add('over'); });
+    d.addEventListener('dragleave', () => d.classList.remove('over'));
+    d.addEventListener('drop', e => { e.preventDefault(); d.classList.remove('over'); setTwo(side, e.dataTransfer.files[0]); });
+  }
+  $('twoAlg').addEventListener('change', () => { save('twoAlg'); renderTwo(); hashTwo('A'); hashTwo('B'); });
   upd(); lockPro(); hashText();
   $('text').addEventListener('input', () => { save('text'); hashText(); });
   $('expected').addEventListener('input', () => { save('expected'); compare(); });

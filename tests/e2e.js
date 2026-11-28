@@ -1255,6 +1255,47 @@ async function newPage(browser, base, opts = {}) {
     await ctx.close();
   });
 
+  await check('hash v1.1: UUID v4 and tokens (free), compare two files side by side (Pro)', async () => {
+    let { ctx, page } = await newPage(browser, base);
+    await ctx.grantPermissions(['clipboard-read', 'clipboard-write']);
+    await page.goto(base + 'hash/');
+    assert.match(await page.textContent('#tokOut code'), /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+    assert.ok(await page.isDisabled('#tokBytes'));
+    await page.fill('#tokCount', '5'); await page.click('#tokGen');
+    const ids = await page.locator('#tokOut code').allTextContents();
+    assert.equal(new Set(ids).size, 5);
+    await page.click('#tokCopy');
+    assert.equal(await page.evaluate(() => navigator.clipboard.readText()), ids.join('\n'));
+    await page.selectOption('#tokKind', 'b64url'); await page.selectOption('#tokBytes', '16');
+    assert.ok((await page.locator('#tokOut code').allTextContents()).every(t => /^[A-Za-z0-9_-]{22}$/.test(t)));
+    await page.selectOption('#tokKind', 'hex');
+    assert.match(await page.textContent('#tokOut li:first-child code'), /^[0-9a-f]{32}$/);
+    for (const id of ['#fileA', '#fileB', '#twoAlg']) assert.ok(await page.isDisabled(id), id);
+    await page.reload();
+    assert.equal(await page.inputValue('#tokKind'), 'hex');
+    assert.equal(await page.locator('#tokOut li').count(), 5, 'settings kept');
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+    ({ ctx, page } = await newPage(browser, base, { pro: true, locale: 'ro-RO' }));
+    await page.goto(base + 'hash/');
+    await page.waitForFunction(() => !document.getElementById('fileA').disabled);
+    assert.equal(await page.inputValue('#twoAlg'), 'sha256');
+    await page.setInputFiles('#fileA', { name: 'v1.txt', mimeType: 'text/plain', buffer: Buffer.from('abc') });
+    await page.waitForFunction(() => document.getElementById('twoA').textContent.includes('ba7816bf8f01cfea'));
+    assert.equal(await page.textContent('#twoSt'), '');
+    await page.setInputFiles('#fileB', { name: 'v2.txt', mimeType: 'text/plain', buffer: Buffer.from('abc') });
+    await page.waitForFunction(() => document.getElementById('twoSt').textContent !== '');
+    assert.equal(await page.textContent('#twoSt'), '✓ Fișierele sunt identice (SHA-256 egal)');
+    await page.setInputFiles('#fileB', { name: 'v3.txt', mimeType: 'text/plain', buffer: Buffer.from('abcd') });
+    await page.waitForFunction(() => document.getElementById('twoB').textContent.includes('v3.txt') && document.getElementById('twoSt').textContent !== '');
+    assert.match(await page.textContent('#twoSt'), /^✗ Fișierele sunt diferite \(SHA-256 diferit, mărimea diferă cu 1 B\)$/);
+    await page.selectOption('#twoAlg', 'md5');
+    await page.waitForFunction(() => document.getElementById('twoA').textContent.includes('900150983cd24fb0d6963f7d28e17f72'));
+    assert.match(await page.textContent('#twoSt'), /MD5 diferit/);
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
   await check('habit: free check-off, streak, week, heat map, limit of 3 and Pro locked', async () => {
     const { ctx, page } = await newPage(browser, base);
     page.on('dialog', d => d.accept());

@@ -42,6 +42,10 @@
   table.bt td { padding: 4px 6px; border-bottom: 1px solid var(--border); vertical-align: top; overflow-wrap: anywhere; word-break: break-all; }
   table.bt td:first-child { width: 32%; word-break: normal; }
   table.bt td:last-child { font-family: ui-monospace, Consolas, monospace; }
+  .hl.tok li { grid-template-columns: 34px 1fr auto; }
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .two .drop { padding: 14px; }
+  .two .fn { font-weight: 600; overflow-wrap: anywhere; margin-top: 6px; }
 </style>
 </head>
 <body>
@@ -70,6 +74,20 @@
     <p class="st" id="cmpOut" aria-live="polite"></p>
   </section>
   <section class="card">
+    <h2 class="t" data-i18n="tokTitle">Random UUID and tokens</h2>
+    <div class="opts" style="margin-top:0">
+      <label class="chk" for="tokKind"><span data-i18n="tokKind">Type</span>
+        <select id="tokKind"><option value="uuid">UUID v4</option><option value="hex" data-i18n="tokHex">Hex token</option><option value="b64url" data-i18n="tokB64">Base64URL token</option></select></label>
+      <label class="chk" for="tokBytes"><span data-i18n="tokBytes">Length</span>
+        <select id="tokBytes"><option value="16">128 bit</option><option value="32">256 bit</option><option value="64">512 bit</option></select></label>
+      <label class="chk" for="tokCount"><span data-i18n="tokCount">How many</span> <input id="tokCount" type="number" min="1" max="100" value="1" style="width:5em"></label>
+      <button class="primary" id="tokGen" data-i18n="tokGen">Generate</button>
+      <button id="tokCopy" data-i18n="tokCopyAll">Copy all</button>
+    </div>
+    <ul class="hl tok" id="tokOut"></ul>
+    <p class="muted" style="margin:6px 0 0" data-i18n="tokHint">Made with your device's secure random generator. Tokens are not saved.</p>
+  </section>
+  <section class="card">
     <h2 class="t"><span data-i18n="fileTitle">Hash and verify files</span> <span class="pro-badge">PRO</span></h2>
     <label class="drop" id="drop" for="files"><input type="file" id="files" multiple><span data-i18n="dropHint">Drop files here or click to choose. Files are read on this device and never uploaded.</span></label>
     <div class="opts">
@@ -83,6 +101,17 @@
     <textarea id="sums" class="in" spellcheck="false" style="min-height:64px" data-i18n-ph="sumsPh" placeholder="Paste a hash, a .sha256 line or SHA256SUMS contents"></textarea>
     <div id="progBox" class="hidden"><progress id="prog" max="1" value="0"></progress><p class="muted" id="progTxt" style="margin:2px 0 0"></p></div>
     <div id="fileList"></div>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="twoTitle">Compare two files</span> <span class="pro-badge">PRO</span></h2>
+    <div class="opts" style="margin-top:0">
+      <label class="chk" for="twoAlg"><span data-i18n="algorithm">Algorithm</span> <select id="twoAlg"></select></label>
+    </div>
+    <div class="two">
+      <div><label class="drop" id="dropA" for="fileA"><input type="file" id="fileA"><span data-i18n="twoA">First file: drop or click</span></label><div id="twoA"></div></div>
+      <div><label class="drop" id="dropB" for="fileB"><input type="file" id="fileB"><span data-i18n="twoB">Second file: drop or click</span></label><div id="twoB"></div></div>
+    </div>
+    <p class="st" id="twoSt" aria-live="polite"></p>
   </section>
   <section class="card">
     <h2 class="t"><span data-i18n="hmacTitle">HMAC</span> <span class="pro-badge">PRO</span></h2>
@@ -106,7 +135,7 @@
   </section>
   <section class="card pro-box hidden" id="proBox">
     <h2 class="t" style="margin-bottom:6px" data-i18n="proTitle">Pro version</h2>
-    <p class="muted" data-i18n="proPitch">Hash and verify files of any size, checksum lists, HMAC with a secret key and batch hashing with CSV export.</p>
+    <p class="muted" data-i18n="proPitch">Hash and verify files of any size, compare two files side by side, checksum lists, HMAC with a secret key and batch hashing with CSV export.</p>
     <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
     <p class="muted" id="proStatus"></p>
   </section>
