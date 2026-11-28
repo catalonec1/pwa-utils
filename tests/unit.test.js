@@ -1224,3 +1224,21 @@ test('color v1.1: CSS gradient (free) and color from image pixels (Pro)', () => 
   assert.equal(CL.sampleAt(d, 2, 2, 2, 0), null);
   assert.equal(CL.sampleAt(d, 2, 2, -1, 0), null);
 });
+
+test('json v1.1: structure and types (free), TypeScript interfaces (Pro)', () => {
+  const v = { id: 1, tags: ['a'], owner: { email: null }, items: [{ sku: 'A', qty: 3 }, { sku: 'B', qty: 0, note: 'n' }], 'first name': 'z', mixed: [1, 'a', null], empty: [] };
+  assert.deepEqual(JF.typeSummary(v).map(r => r.path + ' ' + r.types.join('|') + (r.optional ? '?' : '')), [
+    '$ object', '$.id number', '$.tags array', '$.tags[*] string', '$.owner object', '$.owner.email null',
+    '$.items array', '$.items[*] object', '$.items[*].sku string', '$.items[*].qty number', '$.items[*].note string?',
+    "$['first name'] string", '$.mixed array', '$.mixed[*] number|string|null', '$.empty array']);
+  assert.deepEqual(JF.typeSummary([1, { a: 1 }, { a: 'x' }]).map(r => r.path + ' ' + r.types.join('|') + (r.optional ? '?' : '')), ['$ array', '$[*] number|object', '$[*].a number|string']);
+  assert.equal(JF.typeSummary(v, 3).length, 3);
+  assert.equal(JF.toTypeScript(v),
+    'export interface Root {\n  id: number;\n  tags: string[];\n  owner: Owner;\n  items: Item[];\n  "first name": string;\n  mixed: (string | number | null)[];\n  empty: unknown[];\n}\n\n' +
+    'export interface Owner {\n  email: null;\n}\n\nexport interface Item {\n  sku: string;\n  qty: number;\n  note?: string;\n}\n');
+  assert.equal(JF.toTypeScript([{ a: 1 }, { a: 2, b: true }], 'order list'), 'export type OrderList = OrderListItem[];\n\nexport interface OrderListItem {\n  a: number;\n  b?: boolean;\n}\n');
+  assert.equal(JF.toTypeScript({ boxes: [{ x: 1 }], categories: [{}], user: { name: 'a' }, users: [{ id: 1 }] }),
+    'export interface Root {\n  boxes: Box[];\n  categories: Category[];\n  user: User;\n  users: User2[];\n}\n\nexport interface Box {\n  x: number;\n}\n\nexport interface Category {}\n\nexport interface User {\n  name: string;\n}\n\nexport interface User2 {\n  id: number;\n}\n');
+  assert.equal(JF.toTypeScript(5), 'export type Root = number;\n');
+  assert.equal(JF.toTypeScript({ '2d': { 'ăb-c': 1 } }), 'export interface Root {\n  "2d": T2d;\n}\n\nexport interface T2d {\n  "ăb-c": number;\n}\n');
+});

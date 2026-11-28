@@ -511,6 +511,19 @@ Pro (разовая покупка): запросы JSONPath с подстано
 
 **Pro add-on listing:** name „JSON Formatter Pro”; EN: One-time purchase: JSONPath queries with filters, JSON ↔ YAML and JSON ↔ CSV conversion, JSON diff, escape and unescape, saved snippets. RO: Cumpărare unică: interogări JSONPath cu filtre, conversie JSON ↔ YAML și JSON ↔ CSV, comparare JSON, escape și unescape, fragmente salvate. RU: Разовая покупка: запросы JSONPath с фильтрами, конвертация JSON ↔ YAML и JSON ↔ CSV, сравнение JSON, экранирование строк, сохранённые фрагменты.
 
+**Update 1.1 — What's new:**
+EN: New free “Structure and types” panel: every path in your JSON with its types, marking keys that are missing in some objects. Pro: convert JSON to TypeScript interfaces, with nested interfaces, optional properties and union types inferred from the data.
+RO: Panou gratuit nou „Structură și tipuri”: fiecare cale din JSON cu tipurile ei, cu marcarea cheilor care lipsesc din unele obiecte. Pro: conversie JSON în interfețe TypeScript, cu interfețe imbricate, proprietăți opționale și tipuri uniune deduse din date.
+RU: Новая бесплатная панель «Структура и типы»: каждый путь в JSON и его типы, с отметкой ключей, которых нет в некоторых объектах. Pro: конвертация JSON в интерфейсы TypeScript с вложенными интерфейсами, необязательными свойствами и объединёнными типами по данным.
+
+**Updated description lines (1.1):**
+EN: • Structure view: every path with its types and optional keys
+EN: Pro (one-time add-on): JSONPath queries with wildcards, recursive search and filters, JSON ↔ YAML and JSON ↔ CSV conversion, JSON to TypeScript interfaces, compare two JSON documents (added, removed and changed paths), escape and unescape JSON strings, saved snippets.
+RO: • Vizualizarea structurii: fiecare cale cu tipurile ei și cheile opționale
+RO: Pro (cumpărare unică): interogări JSONPath cu wildcard, căutare recursivă și filtre, conversie JSON ↔ YAML și JSON ↔ CSV, interfețe TypeScript din JSON, compararea a două documente JSON (căi adăugate, eliminate și modificate), escape și unescape pentru șiruri JSON, fragmente salvate.
+RU: • Структура: каждый путь с типами и необязательными ключами
+RU: Pro (разовая покупка): запросы JSONPath с подстановками, рекурсивным поиском и фильтрами, конвертация JSON ↔ YAML и JSON ↔ CSV, интерфейсы TypeScript из JSON, сравнение двух JSON (добавленные, удалённые и изменённые пути), экранирование строк JSON, сохранённые фрагменты.
+
 ## 8. Stelar Random Picker (`pick/`)
 
 **EN — short description:** Spin a wheel to pick names, shuffle lists, flip a coin, roll dice. Fair and offline.

@@ -1009,6 +1009,39 @@ async function newPage(browser, base, opts = {}) {
     await ctx.close();
   });
 
+  await check('json v1.1: structure and types (free), JSON to TypeScript (Pro)', async () => {
+    let { ctx, page } = await newPage(browser, base);
+    await page.goto(base + 'json/');
+    const ty = async () => (await page.textContent('#tyOut')).split('\n').map(l => l.replace(/\s{2,}/, ' '));
+    assert.deepEqual((await ty()).slice(0, 3), ['$ object', '$.id number', '$.name string']);
+    assert.ok((await ty()).includes('$.owner.email null'));
+    await page.fill('#src', '{"a":[{"x":1},{"x":"s","y":true}]}');
+    await page.waitForFunction(() => /Valid/.test(document.getElementById('status').textContent));
+    assert.deepEqual(await ty(), ['$ object', '$.a array', '$.a[*] object', '$.a[*].x number | string', '$.a[*].y boolean (optional)']);
+    await page.selectOption('#lang', 'ru');
+    assert.equal((await ty())[4], '$.a[*].y логическое (необязательно)');
+    await page.fill('#src', '{"a":');
+    await page.waitForFunction(() => /✗/.test(document.getElementById('status').textContent));
+    assert.equal(await page.textContent('#tyOut'), '');
+    assert.ok(await page.isDisabled('#cvMode'));
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+    ({ ctx, page } = await newPage(browser, base, { pro: true }));
+    await page.goto(base + 'json/');
+    await page.waitForFunction(() => !document.getElementById('cvRun').disabled);
+    await page.fill('#src', '{"order":"SO-1","items":[{"sku":"A","qty":2},{"sku":"B","qty":1,"note":null}]}');
+    await page.waitForFunction(() => /Valid/.test(document.getElementById('status').textContent));
+    await page.selectOption('#cvMode', 'json2ts'); await page.click('#cvRun');
+    assert.equal(await page.textContent('#cvOut'), 'export interface Root {\n  order: string;\n  items: Item[];\n}\n\nexport interface Item {\n  sku: string;\n  qty: number;\n  note?: null;\n}\n');
+    const [dl] = await Promise.all([page.waitForEvent('download'), page.click('#cvDl')]);
+    assert.equal(dl.suggestedFilename(), 'data.ts');
+    await page.fill('#src', '[1,');
+    await page.click('#cvRun');
+    assert.match(await page.textContent('#cvMsg'), /does not hold valid JSON/);
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+  });
+
   await check('pick: list pick, shuffle, coin, dice, number; Pro locked', async () => {
     const { ctx, page } = await newPage(browser, base);
     await page.emulateMedia({ reducedMotion: 'reduce' });
