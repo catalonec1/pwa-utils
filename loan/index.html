@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loan Calculator</title>
+<meta name="description" content="Offline loan and mortgage calculator: monthly payment (annuity or decreasing), total interest, term and payment solving, yearly summary, extra payments, rate changes and offer comparison.">
+<meta name="theme-color" content="#0c8599">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+  :root { --accent: #0c8599; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --accent: #66d9e8; } }
+  :root[data-theme="dark"] { --accent: #66d9e8; }
+  h2.t { font-size: 1rem; margin: 0 0 8px; }
+  .row > div.n { flex: 1 1 120px; }
+  .big { font-size: 1.6rem; font-weight: 700; margin: 10px 0 2px; overflow-wrap: anywhere; word-break: normal; color: var(--accent); }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-top: 10px; }
+  .stats div { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; }
+  .stats b { display: block; font-size: 1.05rem; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .stats span { font-size: .8rem; color: var(--muted); }
+  .scroll { overflow: auto; max-width: 100%; }
+  .scroll.tall { max-height: 420px; }
+  table.tb { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: .92rem; }
+  table.tb td, table.tb th { text-align: right; padding: 4px 6px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  table.tb th { position: sticky; top: 0; background: var(--card); font-weight: 600; }
+  table.tb th:first-child, table.tb td:first-child { text-align: left; }
+  table.tb td.best, table.tb th.best { color: var(--ok); font-weight: 700; }
+  ul.lst { list-style: none; padding: 0; margin: 8px 0 0; }
+  ul.lst li { display: flex; gap: 8px; align-items: center; padding: 5px 0; border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
+  ul.lst li span { flex: 1; min-width: 0; }
+  ul.lst li button { padding: 4px 10px; flex: 0 0 auto; }
+  .offer { flex: 1 1 190px; border: 1px solid var(--border); border-radius: 10px; padding: 10px; display: grid; gap: 6px; }
+  .offer label { margin: 0; }
+  .note { border-left: 3px solid var(--warn); padding: 8px 12px; }
+  .good { color: var(--ok); font-weight: 600; }
+  canvas#chart { width: 100%; height: 260px; display: block; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .85rem; color: var(--muted); margin: 6px 0 0; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+</style>
+</head>
+<body>
+<header class="bar">
+  <h1 data-i18n="appName">Loan Calculator</h1>
+  <select id="lang" data-i18n-aria="language" aria-label="Language">
+    <option value="ro">RO</option><option value="en">EN</option><option value="ru">RU</option>
+  </select>
+  <button id="theme" data-i18n-aria="theme" aria-label="Theme">◐</button>
+</header>
+<main>
+  <section class="card">
+    <h2 class="t" data-i18n="loanTitle">Loan</h2>
+    <div class="row">
+      <div class="n"><label for="amt" data-i18n="amount">Loan amount</label><input id="amt" inputmode="decimal" value="200000"></div>
+      <div class="n"><label for="rate" data-i18n="ratePct">Interest rate, % per year</label><input id="rate" inputmode="decimal" value="6.5"></div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div class="n"><label for="term" data-i18n="term">Term</label><input id="term" inputmode="decimal" value="25"></div>
+      <div class="n"><label for="termUnit" data-i18n="unit">Unit</label>
+        <select id="termUnit"><option value="y" data-i18n="years">years</option><option value="m" data-i18n="months">months</option></select></div>
+      <div class="n"><label for="type" data-i18n="type">Payments</label>
+        <select id="type"><option value="annuity" data-i18n="annuity">Equal (annuity)</option><option value="linear" data-i18n="linear">Decreasing (equal principal)</option></select></div>
+      <div class="n"><label for="cur" data-i18n="currency">Currency (optional)</label><input id="cur" maxlength="6" data-i18n-ph="curPh" placeholder="€, $, lei"></div>
+    </div>
+    <p class="big" id="payOut" aria-live="polite"></p>
+    <p class="muted" id="payNote" style="margin:0"></p>
+    <div class="stats">
+      <div><span data-i18n="totInt">Total interest</span><b id="totInt"></b></div>
+      <div><span data-i18n="totPaid">Total paid</span><b id="totPaid"></b></div>
+      <div><span data-i18n="termLbl">Term</span><b id="termOut"></b></div>
+    </div>
+  </section>
+  <section class="card">
+    <h2 class="t" data-i18n="solveTitle">Payment ↔ term</h2>
+    <div class="row">
+      <div class="n"><label for="solveMode" data-i18n="solveMode">Find</label>
+        <select id="solveMode"><option value="term" data-i18n="solveTerm">term for a monthly payment</option><option value="amount" data-i18n="solveAmt">loan amount for a monthly payment</option></select></div>
+      <div class="n"><label for="solvePay" data-i18n="monthlyPay">Monthly payment</label><input id="solvePay" inputmode="decimal" value="1500"></div>
+    </div>
+    <p class="big" id="solveOut" aria-live="polite" style="font-size:1.2rem"></p>
+    <p class="muted" id="solveHint" style="margin:0" data-i18n="solveHint">Uses the amount, rate and term above (equal payments).</p>
+  </section>
+  <section class="card">
+    <h2 class="t" data-i18n="yearTitle">Summary by year</h2>
+    <p class="muted" id="yearNote" style="margin:0 0 6px"></p>
+    <div class="scroll tall"><table class="tb" id="yearTable"></table></div>
+  </section>
+  <section class="card">
+    <h2 class="t" data-i18n="affTitle">How much can I borrow?</h2>
+    <div class="row">
+      <div class="n"><label for="income" data-i18n="income">Monthly net income</label><input id="income" inputmode="decimal" placeholder="3000"></div>
+      <div class="n"><label for="debts" data-i18n="debts">Other loan payments per month</label><input id="debts" inputmode="decimal" placeholder="0"></div>
+      <div class="n"><label for="share" data-i18n="share">Max share of income for loans, %</label><input id="share" inputmode="decimal" value="40"></div>
+    </div>
+    <p class="big" id="affOut" aria-live="polite" style="font-size:1.2rem"></p>
+    <p class="muted" style="margin:0" data-i18n="affHint">Uses the rate and term above (equal payments). Lenders apply their own rules, so this is only an estimate.</p>
+  </section>
+
+  <section class="card">
+    <h2 class="t"><span data-i18n="extraTitle">Extra payments</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row">
+      <div class="n"><label for="recAmt" data-i18n="recAmt">Extra every month</label><input id="recAmt" inputmode="decimal" placeholder="0"></div>
+      <div class="n"><label for="recFrom" data-i18n="fromMonth">Starting with payment no.</label><input id="recFrom" type="number" min="1" value="1"></div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div class="n"><label for="oneMonth" data-i18n="oneMonth">One-off: payment no.</label><input id="oneMonth" type="number" min="1" value="12"></div>
+      <div class="n"><label for="oneAmt" data-i18n="oneAmt">One-off amount</label><input id="oneAmt" inputmode="decimal" placeholder="0"></div>
+      <div><button id="oneAdd" data-i18n="add">Add</button></div>
+    </div>
+    <ul class="lst" id="oneList"></ul>
+    <p id="extraOut" aria-live="polite" style="margin:10px 0 0"></p>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="rcTitle">Rate change (variable rate)</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row">
+      <div class="n"><label for="rcMonth" data-i18n="rcMonth">After payment no.</label><input id="rcMonth" type="number" min="1" placeholder="60"></div>
+      <div class="n"><label for="rcRate" data-i18n="rcRate">New rate, % per year</label><input id="rcRate" inputmode="decimal" placeholder="8"></div>
+    </div>
+    <p id="rcOut" aria-live="polite" style="margin:10px 0 0"></p>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="schedTitle">Monthly payment schedule</span> <span class="pro-badge">PRO</span></h2>
+    <p style="margin:0 0 8px"><button id="csv" data-i18n="csv">Save CSV</button></p>
+    <div class="scroll tall"><table class="tb" id="schedTable"></table></div>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="chartTitle">Amortization chart</span> <span class="pro-badge">PRO</span></h2>
+    <p class="muted" id="chartLocked" style="margin:0"></p>
+    <canvas id="chart" role="img" data-i18n-aria="chartHint" aria-label="Bars: principal and interest paid each year. Line: remaining balance."></canvas>
+    <p class="legend"><span><i class="lgP"></i><span data-i18n="princCol">Principal</span></span><span><i class="lgI"></i><span data-i18n="intCol">Interest</span></span><span><i class="lgB"></i><span data-i18n="balCol">Balance</span></span></p>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="cmpTitle">Compare offers</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row" style="align-items:stretch">
+      <div class="offer" data-o="1">
+        <input id="cName1" data-i18n-ph="offerName" placeholder="Offer name" value="Bank A">
+        <label for="cAmt1" data-i18n="amount">Loan amount</label><input id="cAmt1" inputmode="decimal" value="200000">
+        <label for="cRate1" data-i18n="ratePct">Interest rate, % per year</label><input id="cRate1" inputmode="decimal" value="6.5">
+        <label for="cYears1" data-i18n="termYears">Term, years</label><input id="cYears1" inputmode="decimal" value="25">
+        <label for="cFee1" data-i18n="fees">Upfront fees</label><input id="cFee1" inputmode="decimal" value="0">
+      </div>
+      <div class="offer" data-o="2">
+        <input id="cName2" data-i18n-ph="offerName" placeholder="Offer name" value="Bank B">
+        <label for="cAmt2" data-i18n="amount">Loan amount</label><input id="cAmt2" inputmode="decimal" value="200000">
+        <label for="cRate2" data-i18n="ratePct">Interest rate, % per year</label><input id="cRate2" inputmode="decimal" value="5.9">
+        <label for="cYears2" data-i18n="termYears">Term, years</label><input id="cYears2" inputmode="decimal" value="25">
+        <label for="cFee2" data-i18n="fees">Upfront fees</label><input id="cFee2" inputmode="decimal" value="4000">
+      </div>
+      <div class="offer" data-o="3">
+        <input id="cName3" data-i18n-ph="offerName" placeholder="Offer name" value="">
+        <label for="cAmt3" data-i18n="amount">Loan amount</label><input id="cAmt3" inputmode="decimal" value="">
+        <label for="cRate3" data-i18n="ratePct">Interest rate, % per year</label><input id="cRate3" inputmode="decimal" value="">
+        <label for="cYears3" data-i18n="termYears">Term, years</label><input id="cYears3" inputmode="decimal" value="">
+        <label for="cFee3" data-i18n="fees">Upfront fees</label><input id="cFee3" inputmode="decimal" value="">
+      </div>
+    </div>
+    <p class="muted" style="margin:8px 0 0" data-i18n="cmpHint">Uses the payment type chosen above. Fill the third offer only if you need it.</p>
+    <div class="scroll" style="margin-top:8px"><table class="tb" id="cmpTable"></table></div>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="savedTitle">Saved loans</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row">
+      <div class="n" style="flex:3 1 180px"><label for="saveName" data-i18n="saveName">Name</label><input id="saveName" maxlength="60" data-i18n-ph="saveNamePh" placeholder="e.g. Apartment, car"></div>
+      <div><button id="saveBtn" class="primary" data-i18n="save">Save current loan</button></div>
+    </div>
+    <ul class="lst" id="savedList"></ul>
+  </section>
+  <section class="card pro-box hidden" id="proBox">
+    <h2 class="t" style="margin-bottom:6px" data-i18n="proTitle">Pro version</h2>
+    <p class="muted" data-i18n="proPitch">Full monthly schedule with CSV export, amortization chart, extra payments, rate changes, comparing up to 3 offers and saved loans.</p>
+    <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
+    <p class="muted" id="proStatus"></p>
+  </section>
+  <p class="muted card note" data-i18n="disclaimer">Estimates only, not financial advice. Real offers can differ because of fees, insurance, rounding and lender rules.</p>
+  <p class="muted" style="text-align:center" data-i18n="offline">Works offline too.</p>
+</main>
+<footer><a href="../privacy.html" data-i18n="privacy">Privacy</a></footer>
+<script src="../shared/core.js"></script>
+<script src="logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

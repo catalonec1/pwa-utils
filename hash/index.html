@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hash Generator</title>
+<meta name="description" content="Offline hash generator: SHA-256, SHA-1, SHA-384, SHA-512, MD5 and CRC32 of text, hex or Base64, compare with an expected hash. Pro: hash and verify files, HMAC, batch and CSV export.">
+<meta name="theme-color" content="#a61e4d">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+  :root { --accent: #a61e4d; --bad: #c92a2a; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --accent: #f783ac; --bad: #ff8787; } }
+  :root[data-theme="dark"] { --accent: #f783ac; --bad: #ff8787; }
+  h2.t { font-size: 1rem; margin: 0 0 8px; }
+  textarea.in { min-height: 90px; }
+  .opts { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; margin: 10px 0 4px; }
+  .opts select { width: auto; }
+  .chk { display: inline-flex; gap: 6px; align-items: center; color: var(--text); font-size: .92rem; margin: 0; }
+  .chk input { width: auto; }
+  .hl { list-style: none; padding: 0; margin: 6px 0 0; }
+  .hl li { display: grid; grid-template-columns: 76px 1fr auto; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .hl li:last-child { border-bottom: 0; }
+  .hl .alg { font-weight: 600; font-size: .85rem; color: var(--muted); }
+  .hl code, code.out { font-family: ui-monospace, Consolas, monospace; font-size: .88rem; overflow-wrap: anywhere; word-break: break-all; }
+  .hl button { padding: 4px 10px; font-size: .85rem; }
+  .st { font-weight: 600; margin: 8px 0 0; min-height: 1.4em; overflow-wrap: anywhere; }
+  .st.ok { color: var(--ok); } .st.bad { color: var(--bad); }
+  .drop { display: block; border: 2px dashed var(--border); border-radius: var(--radius); padding: 18px; text-align: center; color: var(--muted); cursor: pointer; }
+  .drop.over { border-color: var(--accent); color: var(--text); }
+  .drop input { display: none; }
+  .drop[aria-disabled="true"] { cursor: not-allowed; opacity: .6; }
+  progress { width: 100%; height: 10px; accent-color: var(--accent); }
+  .file { padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .file:last-child { border-bottom: 0; }
+  .file .fn { font-weight: 600; overflow-wrap: anywhere; }
+  .file .hl li { padding: 3px 0; border: 0; }
+  .file .st { margin: 2px 0 0; font-size: .92rem; }
+  table.bt { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: .88rem; }
+  table.bt td { padding: 4px 6px; border-bottom: 1px solid var(--border); vertical-align: top; overflow-wrap: anywhere; word-break: break-all; }
+  table.bt td:first-child { width: 32%; word-break: normal; }
+  table.bt td:last-child { font-family: ui-monospace, Consolas, monospace; }
+  .hl.tok li { grid-template-columns: 34px 1fr auto; }
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .two .drop { padding: 14px; }
+  .two .fn { font-weight: 600; overflow-wrap: anywhere; margin-top: 6px; }
+</style>
+</head>
+<body>
+<header class="bar">
+  <h1 data-i18n="appName">Hash Generator</h1>
+  <select id="lang" data-i18n-aria="language" aria-label="Language">
+    <option value="ro">RO</option><option value="en">EN</option><option value="ru">RU</option>
+  </select>
+  <button id="theme" data-i18n-aria="theme" aria-label="Theme">◐</button>
+</header>
+<main>
+  <section class="card">
+    <label for="text" data-i18n="textLabel">Text to hash</label>
+    <textarea id="text" class="in" spellcheck="false" data-i18n-ph="textPh" placeholder="Type or paste text"></textarea>
+    <div class="opts">
+      <label class="chk" for="fmt"><span data-i18n="output">Output</span>
+        <select id="fmt"><option value="hex">Hex</option><option value="base64">Base64</option></select></label>
+      <label class="chk"><input type="checkbox" id="upper"> <span data-i18n="upper">Uppercase</span></label>
+      <span class="muted" id="bytes"></span>
+    </div>
+    <ul class="hl" id="hashes"></ul>
+  </section>
+  <section class="card">
+    <h2 class="t" data-i18n="cmpTitle">Compare with an expected hash</h2>
+    <input id="expected" spellcheck="false" autocomplete="off" data-i18n-ph="cmpPh" placeholder="Paste the hash you expect">
+    <p class="st" id="cmpOut" aria-live="polite"></p>
+  </section>
+  <section class="card">
+    <h2 class="t" data-i18n="tokTitle">Random UUID and tokens</h2>
+    <div class="opts" style="margin-top:0">
+      <label class="chk" for="tokKind"><span data-i18n="tokKind">Type</span>
+        <select id="tokKind"><option value="uuid">UUID v4</option><option value="hex" data-i18n="tokHex">Hex token</option><option value="b64url" data-i18n="tokB64">Base64URL token</option></select></label>
+      <label class="chk" for="tokBytes"><span data-i18n="tokBytes">Length</span>
+        <select id="tokBytes"><option value="16">128 bit</option><option value="32">256 bit</option><option value="64">512 bit</option></select></label>
+      <label class="chk" for="tokCount"><span data-i18n="tokCount">How many</span> <input id="tokCount" type="number" min="1" max="100" value="1" style="width:5em"></label>
+      <button class="primary" id="tokGen" data-i18n="tokGen">Generate</button>
+      <button id="tokCopy" data-i18n="tokCopyAll">Copy all</button>
+    </div>
+    <ul class="hl tok" id="tokOut"></ul>
+    <p class="muted" style="margin:6px 0 0" data-i18n="tokHint">Made with your device's secure random generator. Tokens are not saved.</p>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="fileTitle">Hash and verify files</span> <span class="pro-badge">PRO</span></h2>
+    <label class="drop" id="drop" for="files"><input type="file" id="files" multiple><span data-i18n="dropHint">Drop files here or click to choose. Files are read on this device and never uploaded.</span></label>
+    <div class="opts">
+      <label class="chk" for="fileAlg"><span data-i18n="algorithm">Algorithm</span>
+        <select id="fileAlg"></select></label>
+      <button id="fileStop" data-i18n="stop" class="hidden">Stop</button>
+      <button id="fileCsv" data-i18n="csv">Save CSV</button>
+      <button id="fileClear" data-i18n="clear">Clear</button>
+    </div>
+    <label for="sums" data-i18n="sumsLabel">Expected checksum (optional)</label>
+    <textarea id="sums" class="in" spellcheck="false" style="min-height:64px" data-i18n-ph="sumsPh" placeholder="Paste a hash, a .sha256 line or SHA256SUMS contents"></textarea>
+    <div id="progBox" class="hidden"><progress id="prog" max="1" value="0"></progress><p class="muted" id="progTxt" style="margin:2px 0 0"></p></div>
+    <div id="fileList"></div>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="twoTitle">Compare two files</span> <span class="pro-badge">PRO</span></h2>
+    <div class="opts" style="margin-top:0">
+      <label class="chk" for="twoAlg"><span data-i18n="algorithm">Algorithm</span> <select id="twoAlg"></select></label>
+    </div>
+    <div class="two">
+      <div><label class="drop" id="dropA" for="fileA"><input type="file" id="fileA"><span data-i18n="twoA">First file: drop or click</span></label><div id="twoA"></div></div>
+      <div><label class="drop" id="dropB" for="fileB"><input type="file" id="fileB"><span data-i18n="twoB">Second file: drop or click</span></label><div id="twoB"></div></div>
+    </div>
+    <p class="st" id="twoSt" aria-live="polite"></p>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="hmacTitle">HMAC</span> <span class="pro-badge">PRO</span></h2>
+    <p class="muted" style="margin:0 0 8px" data-i18n="hmacHint">Signs the text above with a secret key. The key is not saved.</p>
+    <div class="row">
+      <div style="flex:2 1 200px"><label for="hmacKey" data-i18n="key">Secret key</label><input id="hmacKey" spellcheck="false" autocomplete="off"></div>
+      <div><label for="hmacKeyFmt" data-i18n="keyIs">Key is</label><select id="hmacKeyFmt"><option value="text" data-i18n="keyText">text</option><option value="hex">hex</option></select></div>
+      <div><label for="hmacAlg" data-i18n="algorithm">Algorithm</label><select id="hmacAlg"><option value="sha256">HMAC-SHA-256</option><option value="sha384">HMAC-SHA-384</option><option value="sha512">HMAC-SHA-512</option></select></div>
+    </div>
+    <ul class="hl"><li><span class="alg" id="hmacName">HMAC</span><code id="hmacOut"></code><button id="hmacCopy" data-i18n="copy">Copy</button></li></ul>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="batchTitle">Batch: one hash per line</span> <span class="pro-badge">PRO</span></h2>
+    <textarea id="batch" class="in" spellcheck="false" data-i18n-ph="batchPh" placeholder="One value per line"></textarea>
+    <div class="opts">
+      <label class="chk" for="batchAlg"><span data-i18n="algorithm">Algorithm</span> <select id="batchAlg"></select></label>
+      <button id="batchCsv" data-i18n="csv">Save CSV</button>
+      <span class="muted" id="batchCount"></span>
+    </div>
+    <table class="bt" id="batchOut"></table>
+  </section>
+  <section class="card pro-box hidden" id="proBox">
+    <h2 class="t" style="margin-bottom:6px" data-i18n="proTitle">Pro version</h2>
+    <p class="muted" data-i18n="proPitch">Hash and verify files of any size, compare two files side by side, checksum lists, HMAC with a secret key and batch hashing with CSV export.</p>
+    <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
+    <p class="muted" id="proStatus"></p>
+  </section>
+  <p class="muted" style="text-align:center" data-i18n="note">MD5, SHA-1 and CRC32 are fine for spotting damaged downloads, not for security. Use SHA-256 or stronger.</p>
+  <p class="muted" style="text-align:center" data-i18n="offline">Works offline too.</p>
+</main>
+<footer><a href="../privacy.html" data-i18n="privacy">Privacy</a></footer>
+<script src="../shared/core.js"></script>
+<script src="logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

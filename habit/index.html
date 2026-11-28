@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Habit Tracker</title>
+<meta name="description" content="Offline habit tracker: daily check-off, streaks, week view and a month heat map. Pro adds unlimited habits, flexible schedules, notes, statistics and backup.">
+<meta name="theme-color" content="#d6336c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+  :root { --accent: #d6336c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --accent: #faa2c1; } }
+  :root[data-theme="dark"] { --accent: #faa2c1; }
+  main { max-width: 1120px; }
+  @media (min-width: 960px) { .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; align-items: start; } }
+  h2.t { font-size: 1rem; margin: 0 0 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  h2.t .sp { flex: 1; }
+  .nav { display: flex; gap: 6px; align-items: center; }
+  .nav button { padding: 4px 10px; }
+  .msg { margin: 0 0 10px; }
+  ul.habs { list-style: none; padding: 0; margin: 0; }
+  ul.habs li { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid var(--border); }
+  ul.habs li:first-child { border-top: 0; }
+  .chk { width: 40px; height: 40px; flex: 0 0 40px; border-radius: 50%; border: 2px solid var(--hc, var(--accent)); background: transparent; color: transparent; font-weight: 700; font-size: 1.1rem; padding: 0; }
+  .chk[aria-pressed="true"] { background: var(--hc, var(--accent)); color: #fff; }
+  .em { width: 28px; flex: 0 0 28px; text-align: center; font-size: 1.3rem; }
+  .dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: var(--hc, var(--accent)); }
+  .nm { flex: 1; min-width: 0; }
+  .nm strong { display: block; overflow-wrap: anywhere; }
+  .nm .muted { font-size: .8rem; }
+  .wk { display: grid; grid-template-columns: minmax(0, 1fr) repeat(7, 32px); gap: 4px; align-items: center; }
+  .wk .hd { text-align: center; font-size: .72rem; color: var(--muted); line-height: 1.15; }
+  .wk .hd.now { color: var(--accent); font-weight: 700; }
+  .wk .nmc { font-size: .88rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .wk button { width: 32px; height: 32px; padding: 0; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: transparent; font-weight: 700; }
+  .wk button.off { opacity: .45; border-style: dashed; }
+  .wk button[aria-pressed="true"] { background: var(--hc, var(--accent)); border-color: var(--hc, var(--accent)); color: #fff; opacity: 1; }
+  .wk button.now { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .hm { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; --hc: var(--accent); }
+  .hm div { aspect-ratio: 1.25; border-radius: 6px; font-size: .75rem; display: flex; align-items: flex-start; justify-content: flex-end; padding: 3px 5px; background: var(--bg); color: var(--muted); }
+  .hm .hd { aspect-ratio: auto; background: none; justify-content: center; padding: 0; }
+  .hm .e { background: none; }
+  .hm .fut { opacity: .45; }
+  .legend { --hc: var(--accent); }
+  .legend .l0 { background: var(--bg); border: 1px solid var(--border); }
+  :is(.hm, .legend) .l1 { background: color-mix(in srgb, var(--hc) 22%, var(--bg)); color: var(--text); }
+  :is(.hm, .legend) .l2 { background: color-mix(in srgb, var(--hc) 45%, var(--bg)); color: var(--text); }
+  :is(.hm, .legend) .l3 { background: color-mix(in srgb, var(--hc) 70%, var(--bg)); color: #fff; text-shadow: 0 0 3px rgba(0,0,0,.6); }
+  :is(.hm, .legend) .l4 { background: var(--hc); color: #fff; text-shadow: 0 0 3px rgba(0,0,0,.6); }
+  .hm .now { outline: 2px solid var(--text); outline-offset: -2px; }
+  .hm.click div[data-k] { cursor: pointer; }
+  .legend { display: flex; gap: 4px; align-items: center; justify-content: flex-end; margin-top: 8px; font-size: .78rem; color: var(--muted); }
+  .legend i { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
+  .days { display: flex; gap: 4px; flex-wrap: wrap; }
+  .days label { display: flex; align-items: center; gap: 3px; margin: 0; padding: 4px 7px; border: 1px solid var(--border); border-radius: 8px; color: var(--text); }
+  .days input { width: auto; }
+  ul.list { list-style: none; padding: 0; margin: 10px 0 0; }
+  ul.list li { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  ul.list li button { padding: 4px 9px; font-size: .85rem; }
+  .row > div.n { flex: 1 1 120px; }
+  .row > div.s { flex: 0 1 90px; }
+  input[type="color"] { padding: 2px; height: 42px; }
+  table.st { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: .9rem; }
+  table.st td, table.st th { text-align: right; padding: 4px 6px; border-bottom: 1px solid var(--border); }
+  table.st th:first-child, table.st td:first-child { text-align: left; overflow-wrap: anywhere; }
+  .bars { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; align-items: end; height: 90px; margin-top: 10px; }
+  .bars div { background: color-mix(in srgb, var(--accent) 35%, var(--bg)); border-radius: 5px 5px 0 0; min-height: 3px; }
+  .bars div.best { background: var(--accent); }
+  .bl { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; font-size: .75rem; color: var(--muted); }
+  .skp { flex: 0 0 auto; padding: 4px 9px; font-size: .8rem; }
+  .skp[aria-pressed="true"] { border-style: dashed; color: var(--muted); }
+  .wk button.sk { color: var(--muted); border-style: dashed; opacity: 1; font-size: 1.1rem; }
+  .yrw { overflow-x: auto; padding-bottom: 4px; }
+  .yr { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 1fr); grid-auto-columns: minmax(7px, 1fr); gap: 2px; min-width: 430px; --hc: var(--accent); }
+  .yr i { aspect-ratio: 1; border-radius: 2px; background: var(--bg); }
+  .yr i.e { background: none; }
+  .yr i.fut { opacity: .45; }
+  .yr i.now { outline: 1px solid var(--text); }
+  .yr i.l1 { background: color-mix(in srgb, var(--hc) 22%, var(--bg)); }
+  .yr i.l2 { background: color-mix(in srgb, var(--hc) 45%, var(--bg)); }
+  .yr i.l3 { background: color-mix(in srgb, var(--hc) 70%, var(--bg)); }
+  .yr i.l4 { background: var(--hc); }
+  @media (max-width: 400px) { .wk { grid-template-columns: minmax(0, 1fr) repeat(7, 28px); gap: 3px; } .wk button { width: 28px; height: 28px; } }
+</style>
+</head>
+<body>
+<header class="bar">
+  <h1 data-i18n="appName">Habit Tracker</h1>
+  <select id="lang" data-i18n-aria="language" aria-label="Language">
+    <option value="ro">RO</option><option value="en">EN</option><option value="ru">RU</option>
+  </select>
+  <button id="theme" data-i18n-aria="theme" aria-label="Theme">◐</button>
+</header>
+<main>
+<div class="cols">
+<div>
+  <section class="card">
+    <h2 class="t"><span data-i18n="todayTitle">Today</span> <span class="muted" id="todayDate"></span></h2>
+    <p class="msg" id="todayMsg" aria-live="polite"></p>
+    <ul class="habs" id="todayList"></ul>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="weekTitle">Week</span> <span class="muted" id="weekLabel"></span><span class="sp"></span>
+      <span class="nav"><button id="wPrev" data-i18n-aria="prev" aria-label="Previous">‹</button><button id="wNext" data-i18n-aria="next" aria-label="Next">›</button></span></h2>
+    <div class="wk" id="week"></div>
+    <p class="muted" style="margin:8px 0 0;font-size:.85rem" data-i18n="skipHint">Tap a day: ✓ done, again: – skipped (keeps the streak), again: empty.</p>
+  </section>
+  <section class="card">
+    <h2 class="t" data-i18n="habitsTitle">Habits</h2>
+    <div class="row">
+      <div class="n"><label for="hName" data-i18n="name">Name</label><input id="hName" maxlength="80" data-i18n-ph="namePh" placeholder="e.g. Read 10 pages"></div>
+      <div class="n"><label for="hSched"><span data-i18n="schedule">Schedule</span> <span class="pro-badge">PRO</span></label>
+        <select id="hSched"><option value="daily" data-i18n="sDaily">Every day</option><option value="days" data-i18n="sDays">On specific weekdays</option><option value="times" data-i18n="sTimes">N times per week</option></select></div>
+    </div>
+    <div class="days hidden" id="hDays" style="margin-top:8px"></div>
+    <div class="row" style="margin-top:8px">
+      <div class="s hidden" id="hTimesBox"><label for="hTimes" data-i18n="timesN">Times per week</label><input id="hTimes" type="number" min="1" max="7" value="3"></div>
+      <div class="s"><label for="hColor"><span data-i18n="color">Color</span> <span class="pro-badge">PRO</span></label><input id="hColor" type="color" value="#d6336c"></div>
+      <div class="s"><label for="hEmoji"><span data-i18n="emoji">Emoji</span> <span class="pro-badge">PRO</span></label><input id="hEmoji" maxlength="8" placeholder="📚"></div>
+      <div class="n"><label for="hGoal"><span data-i18n="goal">Monthly goal</span> <span class="pro-badge">PRO</span></label><input id="hGoal" type="number" min="1" max="31" data-i18n-ph="goalPh" placeholder="times (optional)"></div>
+    </div>
+    <p class="row" style="margin:10px 0 0">
+      <button class="primary" id="hAdd" data-i18n="add">Add habit</button>
+      <button id="hCancel" class="hidden" data-i18n="cancel">Cancel</button>
+    </p>
+    <p class="muted" id="hMsg" style="margin:8px 0 0"></p>
+    <ul class="list" id="hList"></ul>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="notesTitle">Notes</span> <span class="pro-badge">PRO</span></h2>
+    <p class="muted" style="margin:0 0 8px" data-i18n="notesHint">A short note for a day: how it went, what helped.</p>
+    <div class="row">
+      <div class="n"><label for="nHabit" data-i18n="habit">Habit</label><select id="nHabit"></select></div>
+      <div class="n"><label for="nDate" data-i18n="date">Date</label><input id="nDate" type="date"></div>
+    </div>
+    <label for="nText" style="margin-top:8px" data-i18n="note">Note</label>
+    <textarea id="nText" maxlength="1000" style="min-height:70px;font-family:inherit"></textarea>
+    <p class="row" style="margin:8px 0 0"><button id="nSave" data-i18n="saveNote">Save note</button></p>
+    <ul class="list" id="nList"></ul>
+  </section>
+</div>
+<div>
+  <section class="card">
+    <h2 class="t"><span data-i18n="monthTitle">Month</span> <span class="muted" id="monthLabel"></span><span class="sp"></span>
+      <span class="nav"><button id="mPrev" data-i18n-aria="prev" aria-label="Previous">‹</button><button id="mNext" data-i18n-aria="next" aria-label="Next">›</button></span></h2>
+    <select id="heatSel" style="margin-bottom:10px" data-i18n-aria="habit" aria-label="Habit"></select>
+    <div class="hm" id="heat"></div>
+    <div class="legend"><span data-i18n="less">Less</span><i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i><span data-i18n="more">More</span></div>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="statsTitle">Statistics</span> <span class="pro-badge">PRO</span></h2>
+    <p class="muted" style="margin:0 0 8px" data-i18n="statsHint">Completion per habit for the month shown above and your best day of the week (last 12 weeks).</p>
+    <div id="stats"></div>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="yearTitle">Year</span> <span class="pro-badge">PRO</span> <span class="muted" id="yearLabel"></span><span class="sp"></span>
+      <span class="nav"><button id="yPrev" data-i18n-aria="prev" aria-label="Previous">‹</button><button id="yNext" data-i18n-aria="next" aria-label="Next">›</button></span></h2>
+    <div class="yrw"><div class="yr" id="year"></div></div>
+    <p class="muted" id="yearSum" style="margin:8px 0 0"></p>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="backupTitle">Backup</span> <span class="pro-badge">PRO</span></h2>
+    <p class="muted" style="margin:0 0 8px" data-i18n="backupHint">Everything stays on this device. Save a backup file to keep it safe or to move it to another device.</p>
+    <p class="row" style="margin:0">
+      <button id="bJson" data-i18n="exportJson">Save backup (JSON)</button>
+      <button id="bImport" data-i18n="importJson">Restore backup</button>
+      <button id="bCsv" data-i18n="exportCsv">Save CSV</button>
+    </p>
+    <input type="file" id="bFile" accept=".json,application/json" class="hidden">
+    <p class="muted" id="bMsg" style="margin:8px 0 0" aria-live="polite"></p>
+  </section>
+  <section class="card pro-box hidden" id="proBox">
+    <h2 class="t" style="margin-bottom:6px" data-i18n="proTitle">Pro version</h2>
+    <p class="muted" data-i18n="proPitch">Unlimited habits, specific weekdays or N times per week, monthly goals, a year heat map, notes for each day, statistics, backup and CSV export, colors and emoji.</p>
+    <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
+    <p class="muted" id="proStatus"></p>
+  </section>
+</div>
+</div>
+  <p class="muted" style="text-align:center" data-i18n="offline">Works offline too.</p>
+</main>
+<footer><a href="../privacy.html" data-i18n="privacy">Privacy</a></footer>
+<script src="../shared/core.js"></script>
+<script src="logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Password Generator</title>
+<meta name="description" content="Offline password generator: strong random passwords, strength meter, passphrases, PINs and bulk export.">
+<meta name="theme-color" content="#7048e8">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+  :root { --accent: #7048e8; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --accent: #b197fc; } }
+  :root[data-theme="dark"] { --accent: #b197fc; }
+  .pw { font-family: ui-monospace, Consolas, monospace; font-size: 1.35rem; font-weight: 600; word-break: break-all; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; min-height: 56px; }
+  .meter { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; margin: 10px 0 4px; }
+  .meter i { display: block; height: 100%; width: 0; transition: width .2s; background: var(--warn); }
+  .meter i[data-level="strong"], .meter i[data-level="veryStrong"] { background: var(--ok); }
+  .checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px 12px; margin-top: 10px; }
+  .checks label { display: flex; gap: 8px; align-items: center; color: var(--text); font-size: .95rem; margin: 0; }
+  .checks input { width: auto; }
+  .checks label.wide { grid-column: 1 / -1; }
+  input[type=range] { padding: 0; }
+  textarea#list { min-height: 140px; }
+</style>
+</head>
+<body>
+<header class="bar">
+  <h1 data-i18n="appName">Password Generator</h1>
+  <select id="lang" data-i18n-aria="language" aria-label="Language">
+    <option value="ro">RO</option><option value="en">EN</option><option value="ru">RU</option>
+  </select>
+  <button id="theme" data-i18n-aria="theme" aria-label="Theme">◐</button>
+</header>
+<main>
+  <section class="card">
+    <div class="pw" id="out" aria-live="polite"></div>
+    <div class="meter"><i id="bar"></i></div>
+    <p class="muted" id="strength" style="margin:0 0 10px"></p>
+    <p class="row" style="margin:0">
+      <button class="primary" id="gen" data-i18n="generate">Generate</button>
+      <button id="copy" data-i18n="copy">Copy</button>
+    </p>
+  </section>
+  <section class="card">
+    <label for="len"><span data-i18n="length">Length</span>: <strong id="lenVal"></strong></label>
+    <input type="range" id="len" min="6" max="64" value="16">
+    <div class="checks">
+      <label><input type="checkbox" id="lower" checked> <span>a–z</span></label>
+      <label><input type="checkbox" id="upper" checked> <span>A–Z</span></label>
+      <label><input type="checkbox" id="digits" checked> <span>0–9</span></label>
+      <label><input type="checkbox" id="symbols" checked> <span>!#$%&amp;*</span></label>
+      <label class="wide"><input type="checkbox" id="noSimilar"> <span data-i18n="noSimilar">No look-alikes (I l 1 O 0)</span></label>
+      <label class="wide"><input type="checkbox" id="startLetter"> <span data-i18n="startLetter">Start with a letter</span></label>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div><label for="exclude" data-i18n="exclude">Never use these characters</label><input id="exclude" autocomplete="off" spellcheck="false" maxlength="100" placeholder="&quot; ' \ /"></div>
+      <div><label for="symSet"><span data-i18n="symSet">Allowed symbols only</span> <span class="pro-badge">PRO</span></label><input id="symSet" autocomplete="off" spellcheck="false" maxlength="40" placeholder="!#$%&amp;*+-=?@^_~.,:;()[]{}"></div>
+    </div>
+  </section>
+  <section class="card">
+    <label for="check" data-i18n="checkLabel">Check a password (stays on this device)</label>
+    <input id="check" type="password" autocomplete="off" spellcheck="false">
+    <p class="muted" id="checkOut" style="margin:6px 0 0"></p>
+  </section>
+  <section class="card">
+    <h2 style="font-size:1rem;margin:0 0 8px"><span data-i18n="proTools">More generators</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row">
+      <div><label for="kind" data-i18n="kind">Type</label>
+        <select id="kind">
+          <option value="phrase" data-i18n="kindPhrase">Passphrase</option>
+          <option value="pin" data-i18n="kindPin">PIN</option>
+          <option value="pron" data-i18n="kindPron">Easy to say</option>
+          <option value="random" data-i18n="kindRandom">Random (settings above)</option>
+        </select></div>
+      <div style="flex:0 0 110px"><label for="words" data-i18n="words">Words / digits</label><input id="words" type="number" min="3" max="12" value="6"></div>
+      <div style="flex:0 0 130px"><label for="sep" data-i18n="sep">Separator</label>
+        <select id="sep"><option value="-">-</option><option value=" " data-i18n="sepSpace">space</option><option value=".">.</option><option value="_">_</option><option value="" data-i18n="sepNone">none</option></select></div>
+      <div style="flex:0 0 110px"><label for="count" data-i18n="count">How many</label><input id="count" type="number" min="1" max="500" value="10"></div>
+    </div>
+    <div class="checks">
+      <label><input type="checkbox" id="cap" checked> <span data-i18n="capitalize">Capital letters</span></label>
+      <label><input type="checkbox" id="num" checked> <span data-i18n="addNumber">Add a number</span></label>
+    </div>
+    <p class="row" style="margin:10px 0">
+      <button id="bulk" data-i18n="bulk">Generate list</button>
+      <button id="csv" data-i18n="csv">Save CSV</button>
+      <button id="copyList" data-i18n="copyList">Copy list</button>
+    </p>
+    <textarea id="list" readonly spellcheck="false"></textarea>
+    <p class="muted" id="listInfo"></p>
+  </section>
+  <section class="card pro-box hidden" id="proBox">
+    <h2 style="font-size:1rem;margin:0 0 6px" data-i18n="proTitle">Pro version</h2>
+    <p class="muted" data-i18n="proPitch">Passphrases in English, Romanian and Russian with your choice of separator, PINs, easy-to-say passwords, your own allowed symbols, lists of up to 500 and CSV export.</p>
+    <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
+    <p class="muted" id="proStatus"></p>
+  </section>
+  <p class="muted" style="text-align:center" data-i18n="offlineNote">Passwords are created on your device and are never sent or saved. Works offline too.</p>
+</main>
+<footer><a href="../privacy.html" data-i18n="privacy">Privacy</a></footer>
+<script src="../shared/core.js"></script>
+<script src="logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

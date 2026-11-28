@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SQL Formatter</title>
+<meta name="description" content="Offline SQL formatter for Oracle SQL and PL/SQL: clause line breaks, indentation, keyword case, comma style, minify and syntax highlighting.">
+<meta name="theme-color" content="#a61e4d">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+  :root { --accent: #a61e4d; --hk: #a61e4d; --hf: #1864ab; --hs: #2b8a3e; --hn: #c2255c; --hb: #b54708; --hc: #6b7280; --hq: #6741d9; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --accent: #f783ac; --hk: #f783ac; --hf: #74c0fc; --hs: #8ce99a; --hn: #ffa8a8; --hb: #ffc078; --hc: #8b93a5; --hq: #b197fc; } }
+  :root[data-theme="dark"] { --accent: #f783ac; --hk: #f783ac; --hf: #74c0fc; --hs: #8ce99a; --hn: #ffa8a8; --hb: #ffc078; --hc: #8b93a5; --hq: #b197fc; }
+  main { max-width: 1180px; }
+  h2.t { font-size: 1rem; margin: 0 0 8px; }
+  .io { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 12px; }
+  .io > div { min-width: 0; }
+  @media (min-width: 900px) { .io { grid-template-columns: 1fr 1fr; } }
+  textarea#src { min-height: 340px; white-space: pre; overflow-wrap: normal; overflow-x: auto; tab-size: 2; }
+  pre.code { margin: 0; min-height: 340px; max-height: 70vh; overflow: auto; background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+    padding: 9px 11px; font: .92rem/1.45 ui-monospace, Consolas, monospace; white-space: pre; tab-size: 2; }
+  pre.small { min-height: 0; max-height: 360px; }
+  .k { color: var(--hk); font-weight: 600; } .f { color: var(--hf); } .s { color: var(--hs); } .n { color: var(--hn); }
+  .b { color: var(--hb); } .c { color: var(--hc); font-style: italic; } .q { color: var(--hq); } .m { color: var(--hc); }
+  .head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+  .head label { margin: 0; }
+  .btns { display: flex; gap: 6px; flex-wrap: wrap; }
+  .btns button { padding: 5px 10px; }
+  .chk { display: flex; gap: 8px; align-items: center; font-size: .95rem; color: var(--text); margin: 0; }
+  .chk input { width: auto; }
+  #note { margin: 8px 0 0; color: var(--warn); }
+  ol.stm { margin: 0; padding-left: 22px; }
+  ol.stm li { padding: 6px 0; border-bottom: 1px solid var(--border); }
+  ol.stm .row1 { display: flex; gap: 8px; align-items: center; justify-content: space-between; }
+  ol.stm code { font-size: .85rem; overflow-wrap: anywhere; }
+  ol.stm button, ul.plain button { padding: 4px 10px; }
+  ul.plain li span { overflow-wrap: anywhere; }
+  pre .dA { color: var(--ok); background: color-mix(in srgb, var(--ok) 12%, transparent); display: block; }
+  pre .dR { color: var(--warn); background: color-mix(in srgb, var(--warn) 12%, transparent); display: block; }
+  textarea#cmpSrc { min-height: 140px; white-space: pre; overflow-wrap: normal; overflow-x: auto; }
+  .kind { font-size: .72rem; font-weight: 700; padding: 1px 6px; border-radius: 6px; border: 1px solid var(--border); color: var(--muted); }
+</style>
+</head>
+<body>
+<header class="bar">
+  <h1 data-i18n="appName">SQL Formatter</h1>
+  <select id="lang" data-i18n-aria="language" aria-label="Language">
+    <option value="ro">RO</option><option value="en">EN</option><option value="ru">RU</option>
+  </select>
+  <button id="theme" data-i18n-aria="theme" aria-label="Theme">◐</button>
+</header>
+<main>
+  <section class="card">
+    <div class="row">
+      <div><label for="mode" data-i18n="mode">Mode</label>
+        <select id="mode"><option value="format" data-i18n="fmt">Format</option><option value="minify" data-i18n="minify">Minify (one line)</option></select></div>
+      <div><label for="kwCase" data-i18n="kwCase">Keywords</label>
+        <select id="kwCase"><option value="upper">UPPER</option><option value="lower">lower</option><option value="keep" data-i18n="keep">Keep as typed</option></select></div>
+      <div><label for="commas" data-i18n="commas">Commas</label>
+        <select id="commas"><option value="trailing" data-i18n="trailing">Trailing (a,)</option><option value="leading" data-i18n="leading">Leading (, a)</option></select></div>
+      <div><label for="indent" data-i18n="indent">Indent</label>
+        <select id="indent"><option value="2" data-i18n="sp2">2 spaces</option><option value="4" data-i18n="sp4">4 spaces</option></select></div>
+      <div><label for="width" data-i18n="width">Lists (columns, SET, ORDER BY)</label>
+        <select id="width"><option value="0" data-i18n="w0">One item per line</option><option value="80" data-i18n="w80">Fill up to 80 characters</option><option value="100" data-i18n="w100">Fill up to 100 characters</option><option value="120" data-i18n="w120">Fill up to 120 characters</option></select></div>
+    </div>
+    <div class="io">
+      <div>
+        <div class="head"><label for="src" data-i18n="input">SQL to format</label>
+          <span class="btns"><button id="sample" data-i18n="sample">Example</button><button id="clear" data-i18n="clear">Clear</button></span></div>
+        <textarea id="src" spellcheck="false" autocomplete="off" data-i18n-ph="ph" placeholder="Paste SQL here: SELECT, INSERT, UPDATE, DELETE, MERGE…"></textarea>
+      </div>
+      <div>
+        <div class="head"><label data-i18n="output">Result</label>
+          <span class="btns"><button id="copy" data-i18n="copy">Copy</button><button id="dl" data-i18n="dl">Save .sql</button></span></div>
+        <pre class="code" id="out" aria-live="polite"></pre>
+      </div>
+    </div>
+    <p class="muted" id="info" style="margin:8px 0 0"></p>
+    <p class="muted hidden" id="note"></p>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="proOpts">PL/SQL and advanced options</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row">
+      <label class="chk"><input type="checkbox" id="plsql" checked> <span data-i18n="plsqlOpt">Indent PL/SQL blocks</span></label>
+      <label class="chk"><input type="checkbox" id="alignAs"> <span data-i18n="alignOpt">Align AS aliases</span></label>
+      <div><label for="idCase" data-i18n="idCase">Identifiers</label>
+        <select id="idCase"><option value="keep" data-i18n="keep">Keep as typed</option><option value="lower">lower</option><option value="upper">UPPER</option></select></div>
+    </div>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="splitTitle">Statements in the script</span> <span class="pro-badge">PRO</span></h2>
+    <p class="muted" style="margin:0 0 8px" data-i18n="splitHint">Splits on ; and on a / line, keeps PL/SQL blocks whole.</p>
+    <ol class="stm" id="stmts"></ol>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="codeTitle">Copy as a string in code</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row">
+      <div><label for="codeLang" data-i18n="codeLang">Language</label>
+        <select id="codeLang"><option value="java">Java (JDBC)</option><option value="csharp">C# (ODP.NET)</option><option value="python">Python (python-oracledb)</option><option value="plsql">PL/SQL (EXECUTE IMMEDIATE)</option></select></div>
+      <div style="flex:0 0 auto"><button id="codeCopy" data-i18n="copy">Copy</button></div>
+    </div>
+    <pre class="code small" id="code" style="margin-top:10px"></pre>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="cmpTitle">Compare two versions</span> <span class="pro-badge">PRO</span></h2>
+    <label for="cmpSrc" data-i18n="cmpLabel">Second SQL, compared with the input above after formatting both the same way</label>
+    <textarea id="cmpSrc" spellcheck="false" autocomplete="off"></textarea>
+    <p class="muted" id="cmpSum" aria-live="polite" style="margin:8px 0"></p>
+    <pre class="code small" id="cmpOut"></pre>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="snipTitle">Saved snippets</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row">
+      <div><label for="snipName" data-i18n="snipName">Name</label><input id="snipName" maxlength="80"></div>
+      <div style="flex:0 0 auto"><button id="snipSave" data-i18n="snipSave">Save current SQL</button></div>
+    </div>
+    <ul class="plain" id="snips" style="margin-top:8px"></ul>
+  </section>
+  <section class="card pro-box hidden" id="proBox">
+    <h2 class="t" style="margin-bottom:6px" data-i18n="proTitle">Pro version</h2>
+    <p class="muted" data-i18n="proPitch">PL/SQL block indentation, identifier case, aligned aliases, splitting a script into statements, copy as a Java, C#, Python or PL/SQL string with bind hints, comparing two versions, and saved snippets.</p>
+    <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
+    <p class="muted" id="proStatus"></p>
+  </section>
+  <p class="muted" style="text-align:center"><span data-i18n="indep">Your SQL never leaves your device. Independent tool, not affiliated with Oracle.</span> <span data-i18n="offline">Works offline too.</span></p>
+</main>
+<footer><a href="../privacy.html" data-i18n="privacy">Privacy</a></footer>
+<script src="../shared/core.js"></script>
+<script src="logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

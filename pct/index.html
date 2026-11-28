@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Percentage Calculator</title>
+<meta name="description" content="Offline percentage calculator: percent of a number, percent change, increase or decrease, discounts, VAT, tips, margin and compound growth.">
+<meta name="theme-color" content="#2b8a3e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+  :root { --accent: #2b8a3e; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --accent: #8ce99a; } }
+  :root[data-theme="dark"] { --accent: #8ce99a; }
+  .big { font-size: 1.4rem; font-weight: 700; margin: 8px 0 2px; overflow-wrap: anywhere; }
+  .row > div.n { flex: 1 1 120px; }
+  h2.t { font-size: 1rem; margin: 0 0 8px; }
+  table.cg { width: 100%; border-collapse: collapse; margin-top: 8px; font-variant-numeric: tabular-nums; }
+  table.cg td, table.cg th { text-align: right; padding: 3px 6px; border-bottom: 1px solid var(--border); }
+  table.cg th:first-child, table.cg td:first-child { text-align: left; }
+  ul.hist { list-style: none; padding: 0; margin: 10px 0 0; }
+  ul.hist li { padding: 5px 0; border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
+</style>
+</head>
+<body>
+<header class="bar">
+  <h1 data-i18n="appName">Percentage Calculator</h1>
+  <select id="lang" data-i18n-aria="language" aria-label="Language">
+    <option value="ro">RO</option><option value="en">EN</option><option value="ru">RU</option>
+  </select>
+  <button id="theme" data-i18n-aria="theme" aria-label="Theme">◐</button>
+</header>
+<main>
+  <section class="card">
+    <h2 class="t" data-i18n="ofTitle">What is X% of Y?</h2>
+    <div class="row">
+      <div class="n"><label for="ofP">%</label><input id="ofP" inputmode="decimal" value="15"></div>
+      <div class="n"><label for="ofX" data-i18n="ofNum">of number</label><input id="ofX" inputmode="decimal" value="80"></div>
+    </div>
+    <p class="big" id="ofOut" aria-live="polite"></p>
+  </section>
+  <section class="card">
+    <h2 class="t" data-i18n="isTitle">X is what % of Y?</h2>
+    <div class="row">
+      <div class="n"><label for="isA">X</label><input id="isA" inputmode="decimal" value="30"></div>
+      <div class="n"><label for="isB">Y</label><input id="isB" inputmode="decimal" value="120"></div>
+    </div>
+    <p class="big" id="isOut" aria-live="polite"></p>
+  </section>
+  <section class="card">
+    <h2 class="t" data-i18n="chTitle">Percent change</h2>
+    <div class="row">
+      <div class="n"><label for="chA" data-i18n="oldV">Old value</label><input id="chA" inputmode="decimal" value="80"></div>
+      <div class="n"><label for="chB" data-i18n="newV">New value</label><input id="chB" inputmode="decimal" value="100"></div>
+    </div>
+    <p class="big" id="chOut" aria-live="polite"></p>
+  </section>
+  <section class="card">
+    <h2 class="t" data-i18n="ppTitle">Percentage points vs percent</h2>
+    <div class="row">
+      <div class="n"><label for="ppA" data-i18n="oldRate">Old rate %</label><input id="ppA" inputmode="decimal" value="5"></div>
+      <div class="n"><label for="ppB" data-i18n="newRate">New rate %</label><input id="ppB" inputmode="decimal" value="7"></div>
+    </div>
+    <p class="big" id="ppOut" aria-live="polite"></p>
+    <p class="muted" id="ppRel" style="margin:0"></p>
+  </section>
+  <section class="card">
+    <h2 class="t" data-i18n="apTitle">Increase or decrease by %</h2>
+    <div class="row">
+      <div class="n"><label for="apX" data-i18n="value">Value</label><input id="apX" inputmode="decimal" value="250"></div>
+      <div class="n"><label for="apP" data-i18n="pctSigned">% (negative = decrease)</label><input id="apP" inputmode="decimal" value="-20"></div>
+    </div>
+    <p class="big" id="apOut" aria-live="polite"></p>
+    <p class="muted" id="apOrig" style="margin:0"></p>
+  </section>
+  <section class="card">
+    <h2 class="t" data-i18n="dsTitle">Discount</h2>
+    <div class="row">
+      <div class="n"><label for="dsPrice" data-i18n="price">Price</label><input id="dsPrice" inputmode="decimal" value="49.99"></div>
+      <div class="n"><label for="dsP" data-i18n="discountPct">Discount %</label><input id="dsP" inputmode="decimal" value="25"></div>
+    </div>
+    <p class="big" id="dsOut" aria-live="polite"></p>
+    <p class="muted" id="dsSave" style="margin:0"></p>
+  </section>
+  <section class="card">
+    <h2 class="t" data-i18n="prTitle">Proportion (rule of three)</h2>
+    <div class="row">
+      <div class="n"><label for="prA">A</label><input id="prA" inputmode="decimal" value="3"></div>
+      <div class="n"><label for="prB">B</label><input id="prB" inputmode="decimal" value="450"></div>
+      <div class="n"><label for="prC">C</label><input id="prC" inputmode="decimal" value="5"></div>
+    </div>
+    <p class="big" id="prOut" aria-live="polite"></p>
+    <p class="muted" style="margin:0" data-i18n="prHint">If A gives B, then C gives X.</p>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="vatTitle">VAT / sales tax</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row">
+      <div class="n"><label for="vatX" data-i18n="amount">Amount</label><input id="vatX" inputmode="decimal" value="100"></div>
+      <div class="n"><label for="vatR" data-i18n="ratePct">Rate %</label><input id="vatR" inputmode="decimal" value="19"></div>
+      <div class="n"><label for="vatMode" data-i18n="mode">Amount is</label>
+        <select id="vatMode"><option value="net" data-i18n="isNet">without tax</option><option value="gross" data-i18n="isGross">with tax</option></select></div>
+    </div>
+    <p class="big" id="vatOut"></p>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="tipTitle">Tip and split</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row">
+      <div class="n"><label for="tipBill" data-i18n="bill">Bill</label><input id="tipBill" inputmode="decimal" value="87.50"></div>
+      <div class="n"><label for="tipP" data-i18n="tipPct">Tip %</label><input id="tipP" inputmode="decimal" value="10"></div>
+      <div class="n"><label for="tipN" data-i18n="people">People</label><input id="tipN" type="number" min="1" value="3"></div>
+    </div>
+    <p class="big" id="tipOut"></p>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="mgTitle">Margin and markup</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row">
+      <div class="n"><label for="mgCost" data-i18n="cost">Cost</label><input id="mgCost" inputmode="decimal" value="60"></div>
+      <div class="n"><label for="mgPrice" data-i18n="price">Price</label><input id="mgPrice" inputmode="decimal" value="100"></div>
+    </div>
+    <p class="big" id="mgOut"></p>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="cgTitle">Compound growth</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row">
+      <div class="n"><label for="cgP" data-i18n="start">Start amount</label><input id="cgP" inputmode="decimal" value="1000"></div>
+      <div class="n"><label for="cgR" data-i18n="yearPct">% per year</label><input id="cgR" inputmode="decimal" value="5"></div>
+      <div class="n"><label for="cgY" data-i18n="years">Years</label><input id="cgY" type="number" min="1" max="100" value="5"></div>
+      <div class="n"><label for="cgK" data-i18n="perYear">Compounded</label>
+        <select id="cgK"><option value="1" data-i18n="yearly">yearly</option><option value="12" data-i18n="monthly">monthly</option></select></div>
+    </div>
+    <table class="cg" id="cgTable"></table>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="caTitle">Average yearly growth (CAGR)</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row">
+      <div class="n"><label for="caS" data-i18n="startV">Start value</label><input id="caS" inputmode="decimal" value="1000"></div>
+      <div class="n"><label for="caE" data-i18n="endV">End value</label><input id="caE" inputmode="decimal" value="1500"></div>
+      <div class="n"><label for="caY" data-i18n="years">Years</label><input id="caY" inputmode="decimal" value="4"></div>
+    </div>
+    <p class="big" id="caOut"></p>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="histTitle">History</span> <span class="pro-badge">PRO</span></h2>
+    <p class="muted" style="margin:0 0 8px" data-i18n="histHint">Saves the last result you calculated.</p>
+    <p class="row" style="margin:0">
+      <button id="histSave" data-i18n="saveLast">Save last result</button>
+      <button id="histCsv" data-i18n="csv">Save CSV</button>
+      <button id="histClear" data-i18n="clear">Clear</button>
+    </p>
+    <ul class="hist" id="histList"></ul>
+  </section>
+  <section class="card pro-box hidden" id="proBox">
+    <h2 class="t" style="margin-bottom:6px" data-i18n="proTitle">Pro version</h2>
+    <p class="muted" data-i18n="proPitch">VAT and sales tax, tip and bill split, margin and markup, compound growth, average yearly growth (CAGR) and a history with CSV export.</p>
+    <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
+    <p class="muted" id="proStatus"></p>
+  </section>
+  <p class="muted" style="text-align:center" data-i18n="offline">Works offline too.</p>
+</main>
+<footer><a href="../privacy.html" data-i18n="privacy">Privacy</a></footer>
+<script src="../shared/core.js"></script>
+<script src="logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JSON Formatter</title>
+<meta name="description" content="Offline JSON formatter and validator: exact error line and column, pretty-print, minify, sort keys, tree view and stats. Pro: JSONPath query, YAML and CSV conversion, diff, escape and snippets.">
+<meta name="theme-color" content="#d6336c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+  :root { --accent: #d6336c; --k: #a61e4d; --s: #2b8a3e; --n: #1864ab; --b: #9c36b5; --z: #868e96; --err: #c92a2a; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --accent: #faa2c1; --k: #fcc2d7; --s: #8ce99a; --n: #74c0fc; --b: #e599f7; --z: #adb5bd; --err: #ff8787; } }
+  :root[data-theme="dark"] { --accent: #faa2c1; --k: #fcc2d7; --s: #8ce99a; --n: #74c0fc; --b: #e599f7; --z: #adb5bd; --err: #ff8787; }
+  main { max-width: 980px; }
+  h2.t { font-size: 1rem; margin: 0 0 8px; }
+  .mono, textarea, pre { font-family: ui-monospace, Consolas, "DejaVu Sans Mono", monospace; font-size: .88rem; }
+  textarea#src { min-height: 260px; white-space: pre; overflow-wrap: normal; overflow-x: auto; tab-size: 2; }
+  textarea.sm { min-height: 110px; }
+  .tools { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
+  .tools select { width: auto; }
+  .tools label.ck { display: flex; gap: 6px; align-items: center; margin: 0; color: var(--text); font-size: .95rem; }
+  .tools label.ck input { width: auto; }
+  .tools button { padding: 7px 12px; }
+  #status { margin: 10px 0 0; font-weight: 600; overflow-wrap: anywhere; }
+  #status.ok { color: var(--ok); } #status.bad { color: var(--err); }
+  pre { margin: 8px 0 0; padding: 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; overflow: auto; max-height: 420px; white-space: pre; }
+  pre:empty { display: none; }
+  #errCtx { color: var(--text); }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .chips span { border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; font-size: .85rem; background: var(--bg); }
+  .chips b { font-variant-numeric: tabular-nums; }
+  #tree { font-family: ui-monospace, Consolas, "DejaVu Sans Mono", monospace; font-size: .88rem; max-height: 460px; overflow: auto; line-height: 1.55; }
+  #tree details > div, #tree details > details { margin-left: 18px; }
+  #tree summary { cursor: pointer; list-style: none; white-space: nowrap; }
+  #tree summary::-webkit-details-marker { display: none; }
+  #tree summary::before { content: '▸'; display: inline-block; width: 14px; color: var(--muted); }
+  #tree details[open] > summary::before { content: '▾'; }
+  #tree .leaf { padding-left: 14px; white-space: nowrap; }
+  #tree .k { color: var(--k); cursor: pointer; } #tree .k:hover { text-decoration: underline; }
+  #tree .s { color: var(--s); } #tree .n { color: var(--n); } #tree .b { color: var(--b); } #tree .z { color: var(--z); } #tree .c { color: var(--muted); }
+  #pathBar { display: flex; gap: 8px; align-items: center; margin-top: 8px; flex-wrap: wrap; }
+  #pathBar code { overflow-wrap: anywhere; flex: 1 1 200px; }
+  ul.diff { list-style: none; padding: 0; margin: 8px 0 0; font-family: ui-monospace, Consolas, monospace; font-size: .86rem; max-height: 360px; overflow: auto; }
+  ul.diff li { padding: 3px 8px; border-radius: 6px; margin-bottom: 2px; overflow-wrap: anywhere; }
+  ul.diff li.added { background: color-mix(in srgb, var(--ok) 14%, transparent); }
+  ul.diff li.removed { background: color-mix(in srgb, var(--err) 14%, transparent); }
+  ul.diff li.changed { background: color-mix(in srgb, var(--warn) 16%, transparent); }
+  ul.snips { list-style: none; padding: 0; margin: 10px 0 0; }
+  ul.snips li { display: flex; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  ul.snips li span { flex: 1; overflow-wrap: anywhere; }
+  ul.snips li button { padding: 4px 10px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .grid2 > .card { margin-bottom: 0; min-width: 0; }
+  @media (max-width: 760px) { .grid2 { grid-template-columns: 1fr; } }
+  .msg { margin: 8px 0 0; }
+  .msg.bad { color: var(--err); }
+</style>
+</head>
+<body>
+<header class="bar">
+  <h1 data-i18n="appName">JSON Formatter</h1>
+  <select id="lang" data-i18n-aria="language" aria-label="Language">
+    <option value="ro">RO</option><option value="en">EN</option><option value="ru">RU</option>
+  </select>
+  <button id="theme" data-i18n-aria="theme" aria-label="Theme">◐</button>
+</header>
+<main>
+  <section class="card">
+    <label for="src" data-i18n="srcLabel">Paste or type JSON</label>
+    <textarea id="src" spellcheck="false" autocomplete="off" wrap="off" data-i18n-ph="srcPh" placeholder='{"name": "value"}'></textarea>
+    <div class="tools">
+      <select id="indent" data-i18n-aria="indent" aria-label="Indent">
+        <option value="2" data-i18n="sp2">2 spaces</option><option value="4" data-i18n="sp4">4 spaces</option><option value="tab" data-i18n="tabs">Tabs</option>
+      </select>
+      <label class="ck"><input type="checkbox" id="sortKeys"> <span data-i18n="sortKeys">Sort keys</span></label>
+      <button class="primary" id="fmt" data-i18n="format">Format</button>
+      <button id="min" data-i18n="minify">Minify</button>
+      <button id="copySrc" data-i18n="copy">Copy</button>
+      <button id="sample" data-i18n="sample">Example</button>
+      <button id="clearSrc" data-i18n="clear">Clear</button>
+    </div>
+    <p id="status" aria-live="polite"></p>
+    <pre id="errCtx"></pre>
+    <button id="goErr" class="hidden" data-i18n="goErr">Go to error</button>
+    <div class="chips" id="stats"></div>
+  </section>
+
+  <section class="card">
+    <div class="row" style="align-items:center;margin-bottom:6px">
+      <h2 class="t" style="margin:0" data-i18n="treeTitle">Tree</h2>
+      <div style="flex:0 0 auto;display:flex;gap:8px"><button id="expand" data-i18n="expand">Expand all</button><button id="collapse" data-i18n="collapse">Collapse</button></div>
+    </div>
+    <div id="tree"></div>
+    <div id="pathBar"><span class="muted" data-i18n="path">Path:</span> <code id="treePath" class="muted"></code><button id="copyPath" data-i18n="copy">Copy</button></div>
+  </section>
+
+  <section class="card">
+    <div class="row" style="align-items:center;margin-bottom:6px">
+      <h2 class="t" style="margin:0" data-i18n="tyTitle">Structure and types</h2>
+      <div style="flex:0 0 auto"><button id="tyCopy" data-i18n="copy">Copy</button></div>
+    </div>
+    <p class="muted" style="margin:0" data-i18n="tyHint">Every path with its JSON types. [*] means any item of a list; “optional” keys are missing in some objects.</p>
+    <pre id="tyOut"></pre>
+  </section>
+
+  <section class="card">
+    <h2 class="t"><span data-i18n="qTitle">Query (JSONPath)</span> <span class="pro-badge">PRO</span></h2>
+    <input id="qPath" class="mono" spellcheck="false" autocomplete="off" value="$" aria-label="JSONPath">
+    <p class="muted" style="margin:6px 0 0" data-i18n="qHint">Examples: $.items[*].name · $..id · items[0] · items[-1] · $['a key'] · items[?(@.status=='active')]</p>
+    <div class="tools"><label class="ck"><input type="checkbox" id="qWithPaths"> <span data-i18n="qPaths">Show paths</span></label><button id="qCopy" data-i18n="copy">Copy</button></div>
+    <p class="msg muted" id="qMsg" aria-live="polite"></p>
+    <pre id="qOut"></pre>
+  </section>
+
+  <section class="card">
+    <h2 class="t"><span data-i18n="cvTitle">Convert</span> <span class="pro-badge">PRO</span></h2>
+    <p class="muted" style="margin:0 0 8px" data-i18n="cvHint">Uses the text in the editor above. For YAML or CSV to JSON, paste YAML or CSV there. TypeScript interfaces are inferred from the values in the data.</p>
+    <div class="tools" style="margin-top:0">
+      <select id="cvMode" data-i18n-aria="cvTitle" aria-label="Convert">
+        <option value="json2yaml">JSON → YAML</option><option value="yaml2json">YAML → JSON</option><option value="json2csv">JSON → CSV</option><option value="csv2json">CSV → JSON</option><option value="json2ts">JSON → TypeScript</option>
+      </select>
+      <button class="primary" id="cvRun" data-i18n="convert">Convert</button>
+      <button id="cvCopy" data-i18n="copy">Copy</button>
+      <button id="cvDl" data-i18n="download">Download</button>
+      <button id="cvUse" data-i18n="useInput">Put in editor</button>
+    </div>
+    <p class="msg muted" id="cvMsg" aria-live="polite"></p>
+    <pre id="cvOut"></pre>
+  </section>
+
+  <section class="card">
+    <h2 class="t"><span data-i18n="dfTitle">Compare two JSON documents</span> <span class="pro-badge">PRO</span></h2>
+    <label for="diffB" data-i18n="dfLabel">Second JSON, compared with the editor above</label>
+    <textarea id="diffB" class="sm" spellcheck="false" wrap="off"></textarea>
+    <div class="tools"><button class="primary" id="diffRun" data-i18n="compare">Compare</button><button id="diffCopy" data-i18n="copy">Copy</button></div>
+    <p class="msg" id="diffSum" aria-live="polite"></p>
+    <ul class="diff" id="diffOut"></ul>
+  </section>
+
+  <div class="grid2" style="margin-bottom:14px">
+    <section class="card">
+      <h2 class="t"><span data-i18n="escTitle">Escape / unescape</span> <span class="pro-badge">PRO</span></h2>
+      <textarea id="escIn" class="sm" spellcheck="false" data-i18n-ph="escPh" placeholder="Text or an escaped JSON string"></textarea>
+      <div class="tools"><button id="escBtn" data-i18n="escape">Escape</button><button id="unescBtn" data-i18n="unescape">Unescape</button><button id="escCopy" data-i18n="copy">Copy</button></div>
+      <p class="msg bad" id="escMsg"></p>
+      <pre id="escOut"></pre>
+    </section>
+    <section class="card">
+      <h2 class="t"><span data-i18n="snTitle">Saved snippets</span> <span class="pro-badge">PRO</span></h2>
+      <div class="tools" style="margin-top:0">
+        <input id="snipName" data-i18n-ph="snName" placeholder="Name" style="flex:1 1 140px;width:auto">
+        <button class="primary" id="snipSave" data-i18n="snSave">Save editor</button>
+      </div>
+      <ul class="snips" id="snipList"></ul>
+    </section>
+  </div>
+
+  <section class="card pro-box hidden" id="proBox">
+    <h2 class="t" style="margin-bottom:6px" data-i18n="proTitle">Pro version</h2>
+    <p class="muted" data-i18n="proPitch">JSONPath query with filters, JSON ↔ YAML and JSON ↔ CSV, TypeScript interfaces from JSON, compare two documents, escape and unescape strings, saved snippets.</p>
+    <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
+    <p class="muted" id="proStatus"></p>
+  </section>
+  <p class="muted" style="text-align:center"><span data-i18n="local">Your JSON never leaves this device.</span> <span data-i18n="offline">Works offline too.</span></p>
+</main>
+<footer><a href="../privacy.html" data-i18n="privacy">Privacy</a></footer>
+<script src="../shared/core.js"></script>
+<script src="logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
