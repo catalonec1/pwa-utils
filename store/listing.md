@@ -460,6 +460,19 @@ Pro (разовая покупка): генератор палитр (компл
 
 **Pro add-on listing:** name „Color Converter Pro”; EN: One-time purchase: palette generator, nearest CSS color name, OKLCH and LAB, saved palettes with CSS, JSON and Tailwind export, and colorblindness previews. RO: Cumpărare unică: generator de palete, cel mai apropiat nume de culoare CSS, OKLCH și LAB, palete salvate cu export CSS, JSON și Tailwind și previzualizare pentru daltonism. RU: Разовая покупка: генератор палитр, ближайшее имя цвета CSS, OKLCH и LAB, сохранённые палитры с экспортом в CSS, JSON и Tailwind и просмотр для дальтонизма.
 
+**Update 1.1 — What's new:**
+EN: New free CSS gradient maker: linear, radial or conic from the current color to a second one, with an angle, optional smooth OKLab midpoints, a live preview and a copy button. Pro: pick colors from your own image by clicking it; the image is opened only on your device and never uploaded.
+RO: Generator gratuit nou de gradiente CSS: liniar, radial sau conic, de la culoarea curentă la a doua, cu unghi, tranziție netedă OKLab opțională, previzualizare și buton de copiere. Pro: alege culori dintr-o imagine proprie apăsând pe ea; imaginea se deschide doar pe dispozitivul tău și nu se încarcă nicăieri.
+RU: Новый бесплатный генератор CSS-градиентов: линейный, радиальный или конический от текущего цвета ко второму, с углом, необязательным плавным переходом OKLab, предпросмотром и кнопкой копирования. Pro: выбор цвета из своего изображения щелчком; изображение открывается только на вашем устройстве и никуда не загружается.
+
+**Updated description lines (1.1):**
+EN: • CSS gradient maker: linear, radial or conic, with a live preview and copy button
+EN: Pro (one-time add-on): color picker from your own images (processed on your device), palette generator (complementary, analogous, triadic, tetradic, tints and shades), nearest of the 148 CSS named colors, OKLCH and LAB output, saved palettes with export as CSS variables, JSON or Tailwind config, and colorblindness previews (protanopia, deuteranopia, tritanopia).
+RO: • Generator de gradiente CSS: liniar, radial sau conic, cu previzualizare și buton de copiere
+RO: Pro (cumpărare unică): selector de culori din imaginile tale (procesate pe dispozitiv), generator de palete (complementară, analogă, triadică, tetradică, nuanțe deschise și închise), cea mai apropiată dintre cele 148 de culori CSS numite, OKLCH și LAB, palete salvate cu export ca variabile CSS, JSON sau configurație Tailwind și previzualizare pentru daltonism (protanopie, deuteranopie, tritanopie).
+RU: • Генератор CSS-градиентов: линейный, радиальный или конический, с предпросмотром и кнопкой копирования
+RU: Pro (разовая покупка): выбор цвета из ваших изображений (обработка на устройстве), генератор палитр (комплементарная, аналоговая, триада, тетрада, светлые и тёмные оттенки), ближайший из 148 именованных цветов CSS, OKLCH и LAB, сохранённые палитры с экспортом в CSS-переменные, JSON или конфигурацию Tailwind и просмотр для дальтонизма (протанопия, дейтеранопия, тританопия).
+
 ## 8. Stelar JSON Formatter (`json/`)
 
 **EN — short description:** Validate JSON with the exact error line and column, format, minify and browse it as a tree. Offline.

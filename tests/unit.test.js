@@ -1207,3 +1207,20 @@ test('loan v1.1: affordability estimate (free) and amortization chart data (Pro)
   assert.equal(x.start, 12000);
   assert.equal(LN.chartModel([]), null);
 });
+
+test('color v1.1: CSS gradient (free) and color from image pixels (Pro)', () => {
+  const a = CL.parse('#3d5afe'), b = CL.parse('tomato');
+  assert.equal(CL.gradientCss(a, b), 'linear-gradient(90deg, #3d5afe, #ff6347)');
+  assert.equal(CL.gradientCss(a, b, { type: 'radial', angle: 45 }), 'radial-gradient(circle, #3d5afe, #ff6347)');
+  assert.equal(CL.gradientCss(a, b, { type: 'conic', angle: -45 }), 'conic-gradient(from 315deg, #3d5afe, #ff6347)');
+  assert.equal(CL.gradientCss(a, b, { angle: '' }), 'linear-gradient(90deg, #3d5afe, #ff6347)');
+  assert.equal(CL.gradientCss(CL.parse('blue'), CL.parse('yellow'), { smooth: true, angle: '180' }), 'linear-gradient(180deg, #0000ff, #1d77e7, #6cabc7, #b5d797, #ffff00)');
+  assert.deepEqual(CL.blendOklab(CL.parse('#000'), CL.parse('#fff'), 1).map(CL.toHex), ['#636363']);
+  const d = new Uint8ClampedArray([255, 0, 0, 255, 0, 0, 255, 255, 0, 0, 0, 0, 0, 255, 0, 255]);
+  assert.deepEqual(CL.sampleAt(d, 2, 2, 0, 0, 0), { r: 255, g: 0, b: 0 });
+  assert.deepEqual(CL.sampleAt(d, 2, 2, 1.7, 0.2, 0), { r: 0, g: 0, b: 255 });
+  assert.deepEqual(CL.sampleAt(d, 2, 2, 0, 0, 1), { r: 85, g: 85, b: 85 });
+  assert.equal(CL.sampleAt(d, 2, 2, 0, 1, 0), null, 'transparent pixel');
+  assert.equal(CL.sampleAt(d, 2, 2, 2, 0), null);
+  assert.equal(CL.sampleAt(d, 2, 2, -1, 0), null);
+});

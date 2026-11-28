@@ -162,6 +162,37 @@
     return list ? list().map(toHex) : [];
   }
 
+  /* ---- gradient CSS: culori intermediare interpolate în OKLab (fără zona gri din sRGB) ---- */
+  const GRAD_TYPES = ['linear', 'radial', 'conic'];
+  function blendOklab(a, b, n) {
+    const A = toOklab(a), B = toOklab(b), out = [];
+    for (let i = 1; i <= n; i++) { const w = i / (n + 1); out.push(fix(fromOklab({ L: A.L + (B.L - A.L) * w, a: A.a + (B.a - A.a) * w, b: A.b + (B.b - A.b) * w }))); }
+    return out;
+  }
+  function gradientCss(from, to, o) {
+    o = o || {};
+    const type = GRAD_TYPES.includes(o.type) ? o.type : 'linear';
+    const ang = Number.isFinite(+o.angle) && String(o.angle).trim() !== '' ? ((Math.round(+o.angle) % 360) + 360) % 360 : 90;
+    const mid = o.smooth ? blendOklab(from, to, 3) : [];
+    const stops = [from].concat(mid, [to]).map(toHex).join(', ');
+    if (type === 'radial') return 'radial-gradient(circle, ' + stops + ')';
+    if (type === 'conic') return 'conic-gradient(from ' + ang + 'deg, ' + stops + ')';
+    return 'linear-gradient(' + ang + 'deg, ' + stops + ')';
+  }
+
+  /* ---- Pro: culoarea dintr-o imagine (media pe un pătrat de (2r+1)², ignoră pixelii transparenți) ---- */
+  function sampleAt(data, w, h, x, y, r) {
+    x = Math.floor(x); y = Math.floor(y); r = r == null ? 1 : r;
+    if (!(w > 0 && h > 0) || x < 0 || y < 0 || x >= w || y >= h) return null;
+    let R = 0, G = 0, B = 0, A = 0;
+    for (let j = Math.max(0, y - r); j <= Math.min(h - 1, y + r); j++)
+      for (let i = Math.max(0, x - r); i <= Math.min(w - 1, x + r); i++) {
+        const k = (j * w + i) * 4, a = data[k + 3];
+        R += data[k] * a; G += data[k + 1] * a; B += data[k + 2] * a; A += a;
+      }
+    return A ? { r: Math.round(R / A), g: Math.round(G / A), b: Math.round(B / A) } : null;
+  }
+
   /* ---- Pro: simulare daltonism (Machado et al. 2009, severitate 1.0, în RGB liniar) ---- */
   const CVD = {
     protanopia: [[0.152286, 1.052583, -0.204868], [0.114503, 0.786281, 0.099216], [-0.003882, -0.048116, 1.051998]],
@@ -184,7 +215,7 @@
     return `/** tailwind.config.js */\nmodule.exports = {\n  theme: {\n    extend: {\n      colors: {\n${body}${body ? '\n' : ''}      }\n    }\n  }\n};\n`;
   }
 
-  const ColorLogic = { NAMES, parse, format, FREE, PRO, toHex, toHsl, fromHsl, toHwb, fromHwb, toCmyk, fromCmyk, toOklab, toOklch, fromOklch, toLab, fromLab, luminance, contrast, nearestName, SCHEMES, palette, simulate, CVD: Object.keys(CVD), slug, exportCss, exportJson, exportTailwind };
+  const ColorLogic = { NAMES, parse, format, FREE, PRO, toHex, toHsl, fromHsl, toHwb, fromHwb, toCmyk, fromCmyk, toOklab, toOklch, fromOklch, toLab, fromLab, luminance, contrast, nearestName, SCHEMES, palette, simulate, CVD: Object.keys(CVD), slug, exportCss, exportJson, exportTailwind, GRAD_TYPES, blendOklab, gradientCss, sampleAt };
   if (typeof module !== 'undefined' && module.exports) module.exports = ColorLogic;
   else global.ColorLogic = ColorLogic;
 })(typeof window !== 'undefined' ? window : globalThis);

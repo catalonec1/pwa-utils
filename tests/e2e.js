@@ -891,6 +891,45 @@ async function newPage(browser, base, opts = {}) {
     await ctx.close();
   });
 
+  await check('color v1.1: CSS gradient (free), color from a local image (Pro)', async () => {
+    let { ctx, page } = await newPage(browser, base);
+    await page.goto(base + 'color/');
+    assert.equal(await page.textContent('#grCss'), 'background: linear-gradient(90deg, #3d5afe, #ff6347);');
+    assert.match(await page.evaluate(() => getComputedStyle(document.getElementById('grPrev')).backgroundImage), /^linear-gradient/);
+    await page.selectOption('#grType', 'conic'); await page.fill('#grAngle', '45');
+    await page.fill('#color', 'red');
+    assert.equal(await page.textContent('#grCss'), 'background: conic-gradient(from 45deg, #ff0000, #ff6347);');
+    await page.fill('#grTo', 'yellow'); await page.check('#grSmooth'); await page.selectOption('#grType', 'radial');
+    assert.match(await page.textContent('#grCss'), /^background: radial-gradient\(circle, #ff0000, #[0-9a-f]{6}, #[0-9a-f]{6}, #[0-9a-f]{6}, #ffff00\);$/);
+    assert.ok(await page.isDisabled('#grAngle'));
+    assert.ok(await page.isDisabled('#imgFile'));
+    assert.equal(await page.textContent('#imgMsg'), 'Available in Pro.');
+    await page.reload();
+    assert.equal(await page.inputValue('#grType'), 'radial', 'gradient not kept');
+    assert.equal(await page.inputValue('#grTo'), 'yellow');
+    assert.deepEqual(page.errors, []);
+    await ctx.close();
+    ({ ctx, page } = await newPage(browser, base, { pro: true, locale: 'ro-RO' }));
+    await page.goto(base + 'color/');
+    await page.waitForFunction(() => !document.getElementById('imgFile').disabled);
+    assert.equal(await page.textContent('#imgMsg'), '');
+    const png = await page.evaluate(() => { const c = document.createElement('canvas'); c.width = 40; c.height = 20; const g = c.getContext('2d'); g.fillStyle = '#ff0000'; g.fillRect(0, 0, 20, 20); g.fillStyle = '#0000ff'; g.fillRect(20, 0, 20, 20); return c.toDataURL('image/png').split(',')[1]; });
+    await page.setInputFiles('#imgFile', { name: 'test.png', mimeType: 'image/png', buffer: Buffer.from(png, 'base64') });
+    await page.waitForSelector('#imgWrap:not(.hidden)');
+    await page.click('#imgCanvas', { position: { x: 5, y: 10 } });
+    assert.equal(await page.inputValue('#color'), '#ff0000');
+    await page.click('#imgCanvas', { position: { x: 35, y: 10 } });
+    assert.equal(await page.inputValue('#color'), '#0000ff');
+    assert.equal(await page.textContent('#fmts li[data-k="rgb"] code'), 'rgb(0, 0, 255)');
+    assert.deepEqual(await page.locator('#imgPicks code').allTextContents(), ['#0000ff', '#ff0000']);
+    await page.click('#imgPicks .chip >> nth=1');
+    assert.equal(await page.inputValue('#color'), '#ff0000');
+    await page.setInputFiles('#imgFile', { name: 'bad.png', mimeType: 'image/png', buffer: Buffer.from('nope') });
+    await page.waitForFunction(() => /nu poate fi deschisă/.test(document.getElementById('imgMsg').textContent));
+    assert.deepEqual(page.errors.filter(e => !/Failed to load resource/.test(e)), []);
+    await ctx.close();
+  });
+
   await check('json: validates with line/column, formats, minifies, tree; Pro locked', async () => {
     const { ctx, page } = await newPage(browser, base);
     await page.goto(base + 'json/');
