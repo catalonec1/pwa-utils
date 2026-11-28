@@ -137,6 +137,75 @@
     }
     return out;
   }
+  /* ---- fișă rapidă (gratuit): token, cheie de explicație, variabile ---- */
+  const CHEAT = [
+    ['.', 'xAny'], ['\\d', 'xDigit'], ['\\D', 'xNotDigit'], ['\\w', 'xWord'], ['\\W', 'xNotWord'], ['\\s', 'xSpace'], ['\\S', 'xNotSpace'],
+    ['\\b', 'xWordB'], ['^', 'xStart'], ['$', 'xEnd'], ['[abc]', 'xClass', { s: '[abc]' }], ['[^abc]', 'xNotClass', { s: '[^abc]' }], ['[a-z]', 'xClass', { s: '[a-z]' }],
+    ['a|b', 'xAlt'], ['(…)', 'xGroup', { n: 1 }], ['(?<name>…)', 'xNamed', { n: 1, name: 'name' }], ['(?:…)', 'xNonCap'], ['\\1', 'xRef', { n: 1 }],
+    ['(?=…)', 'xLA'], ['(?!…)', 'xNLA'], ['(?<=…)', 'xLB'], ['(?<!…)', 'xNLB'],
+    ['*', 'xRepeat', { q: 'qStar' }], ['+', 'xRepeat', { q: 'qPlus' }], ['?', 'xRepeat', { q: 'qOpt' }], ['{3}', 'xRepeat', { q: 'qN', n: 3 }],
+    ['{2,}', 'xRepeat', { q: 'qMin', n: 2 }], ['{2,5}', 'xRepeat', { q: 'qRange', n: 2, m: 5 }], ['+?', 'xRepeat', { q: 'qPlus', lazy: true }],
+    ['\\.', 'xLit', { t: '.' }], ['\\t', 'xTab'], ['\\n', 'xNl'], ['\\p{L}', 'xProp', { p: 'L' }]
+  ].map(([t, k, v]) => ({ t, k, v: v || {}, ins: t.replace('…', '') }));
+
+  /* ---- Pro: fragment de cod pentru alte limbaje ----
+     Returnează { code, warn: [{ k, v }] }; warn = construcții pe care limbajul nu le suportă sau le tratează altfel. */
+  const LANGS = { js: 'JavaScript', py: 'Python', java: 'Java', cs: 'C#', plsql: 'PL/SQL' };
+  function escSlash(p) {
+    let o = '';
+    for (let i = 0; i < p.length; i++) {
+      if (p[i] === '\\') { o += p.slice(i, i + 2); i++; }
+      else o += p[i] === '/' ? '\\/' : p[i];
+    }
+    return o;
+  }
+  function escQuoteRaw(p) {
+    let o = '';
+    for (let i = 0; i < p.length; i++) {
+      if (p[i] === '\\') { o += p.slice(i, i + 2); i++; }
+      else o += p[i] === '"' ? '\\"' : p[i];
+    }
+    return o;
+  }
+  const lineBreaks = p => p.replace(/\r/g, '\\r').replace(/\n/g, '\\n').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
+  function codeSnippet(lang, pattern, flags) {
+    const f = cleanFlags(flags), g = f.includes('g'), toks = explain(pattern, f), warn = [];
+    const has = (...ks) => toks.filter(x => ks.includes(x.k)).map(x => x.t);
+    const uniq = a => Array.from(new Set(a));
+    const unsupported = list => { const u = uniq(list); if (u.length) warn.push({ k: 'wUnsupported', v: { lang: LANGS[lang], t: u.join('  ') } }); };
+    const bigU = toks.filter(x => x.k === 'xCode' && x.t.startsWith('\\u{')).map(x => x.t);
+    const sticky = f.includes('y') && lang !== 'js' ? ['y'] : [];
+    const uniDigits = () => { if (has('xDigit', 'xNotDigit', 'xWord', 'xNotWord', 'xWordB', 'xNotWordB').length) warn.push({ k: 'wUni', v: { lang: LANGS[lang] } }); };
+    let p = lang === 'plsql' ? String(pattern) : lineBreaks(String(pattern)), code;
+    if (lang === 'js') {
+      code = `const re = /${p === '' ? '(?:)' : escSlash(p)}/${f};\n` + (g ? 'const matches = [...text.matchAll(re)];\nfor (const m of matches) console.log(m.index, m[0]);' : 'const m = re.exec(text);\nif (m) console.log(m.index, m[0]);');
+    } else if (lang === 'py') {
+      /* Python: (?<n>…) → (?P<n>…), \k<n> → (?P=n) */
+      p = toks.map(x => x.k === 'xNamed' ? '(?P<' + x.v.name + '>' : x.k === 'xRef' && x.t.startsWith('\\k<') ? '(?P=' + x.t.slice(3, -1) + ')' : x.t).join('');
+      p = lineBreaks(p);
+      const fl = [['i', 're.IGNORECASE'], ['m', 're.MULTILINE'], ['s', 're.DOTALL']].filter(([c]) => f.includes(c)).map(x => x[1]);
+      code = `import re\n\npattern = re.compile(r"${escQuoteRaw(p)}"${fl.length ? ', ' + fl.join(' | ') : ''})\n` + (g ? 'for m in pattern.finditer(text):\n    print(m.start(), m.group())' : 'm = pattern.search(text)\nif m:\n    print(m.start(), m.group())');
+      unsupported(has('xProp', 'xNotProp', 'xCtrl').concat(bigU, sticky));
+      uniDigits();
+    } else if (lang === 'java') {
+      const fl = [['i', 'Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE'], ['m', 'Pattern.MULTILINE'], ['s', 'Pattern.DOTALL']].filter(([c]) => f.includes(c)).map(x => x[1]);
+      const lit = p.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+      code = `import java.util.regex.*;\n\nPattern p = Pattern.compile("${lit}"${fl.length ? ', ' + fl.join(' | ') : ''});\nMatcher m = p.matcher(text);\n` + (g ? 'while (m.find()) {\n    System.out.println(m.start() + " " + m.group());\n}' : 'if (m.find()) {\n    System.out.println(m.start() + " " + m.group());\n}');
+      unsupported(bigU.concat(sticky));
+      if (toks.some(x => x.k === 'xNamed' && !/^[A-Za-z][A-Za-z0-9]*$/.test(x.v.name))) warn.push({ k: 'wJavaName', v: {} });
+    } else if (lang === 'cs') {
+      const fl = [['i', 'RegexOptions.IgnoreCase'], ['m', 'RegexOptions.Multiline'], ['s', 'RegexOptions.Singleline']].filter(([c]) => f.includes(c)).map(x => x[1]);
+      code = `using System.Text.RegularExpressions;\n\nvar re = new Regex(@"${p.replace(/"/g, '""')}"${fl.length ? ', ' + fl.join(' | ') : ''});\n` + (g ? 'foreach (Match m in re.Matches(text))\n{\n    Console.WriteLine($"{m.Index} {m.Value}");\n}' : 'Match m = re.Match(text);\nif (m.Success)\n{\n    Console.WriteLine($"{m.Index} {m.Value}");\n}');
+      unsupported(bigU.concat(sticky));
+      uniDigits();
+    } else if (lang === 'plsql') {
+      const mp = (f.includes('i') ? 'i' : '') + (f.includes('m') ? 'm' : '') + (f.includes('s') ? 'n' : '');
+      const lit = "'" + p.replace(/'/g, "''") + "'", arg = mp ? `, '${mp}'` : '';
+      code = (g ? `v_count := REGEXP_COUNT(v_text, ${lit}, 1${arg ? arg : ", 'c'"});\n` : '') + `IF REGEXP_LIKE(v_text, ${lit}${arg}) THEN\n  DBMS_OUTPUT.PUT_LINE(REGEXP_SUBSTR(v_text, ${lit}, 1, 1${arg ? arg : ", 'c'"}));\nEND IF;`;
+      unsupported(has('xLA', 'xNLA', 'xLB', 'xNLB', 'xNonCap', 'xMod', 'xNamed', 'xProp', 'xNotProp', 'xWordB', 'xNotWordB', 'xCtrl').concat(toks.filter(x => x.k === 'xRef' && x.t.startsWith('\\k<')).map(x => x.t), toks.filter(x => x.k === 'xCode').map(x => x.t), sticky));
+    } else throw new RangeError('unknown language');
+    return { code, warn };
+  }
   /* nume pentru fiecare grup capturant, în ordine (null = fără nume) */
   function groupNames(pattern) { return explain(pattern, '').filter(x => x.k === 'xGroup' || x.k === 'xNamed').map(x => x.v.name || null); }
 
@@ -200,7 +269,7 @@
     ['keyValue', ['key = value lines', 'Rânduri cheie = valoare', 'Строки ключ = значение'], '^\\s*([\\w.-]+)\\s*=\\s*(.*?)\\s*$', 'gm', 'host = localhost\nport=5432\n# comment\ndb.name = shop']
   ].map(([id, name, p, f, sample]) => ({ id, name: { en: name[0], ro: name[1], ru: name[2] }, p, f, sample }));
 
-  const RegexLogic = { FLAGS, MAX, cleanFlags, compile, findMatches, lines, runTests, run, explain, groupNames, cell, toCsv, toJson, LIB };
+  const RegexLogic = { FLAGS, MAX, cleanFlags, compile, findMatches, lines, runTests, run, explain, groupNames, cell, toCsv, toJson, LIB, CHEAT, LANGS, codeSnippet };
   if (typeof module !== 'undefined' && module.exports) module.exports = RegexLogic;
   else global.RegexLogic = RegexLogic;
 })(typeof window !== 'undefined' ? window : globalThis);

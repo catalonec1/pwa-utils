@@ -42,6 +42,17 @@
   ul.hist li { padding: 5px 0; border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
   .btns { display: flex; gap: 8px; flex-wrap: wrap; }
   .btns > button { flex: 1 1 auto; }
+  .rpsb { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
+  .rpsb button { flex: 1 1 0; min-width: 0; padding-left: 4px; padding-right: 4px; }
+  .bracket { display: flex; gap: 14px; overflow-x: auto; margin-top: 10px; padding-bottom: 6px; }
+  .bracket .rd { flex: 0 0 150px; display: flex; flex-direction: column; justify-content: space-around; gap: 10px; }
+  .bracket .rd h3 { font-size: .85rem; margin: 0; color: var(--muted); font-weight: 600; }
+  .bracket .m { display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--bg); }
+  .bracket .m button { border: 0; border-radius: 0; background: transparent; text-align: left; padding: 6px 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text); }
+  .bracket .m button + button { border-top: 1px solid var(--border); }
+  .bracket .m button.w { background: var(--accent); color: #fff; font-weight: 700; }
+  .bracket .m button.lost { opacity: .5; text-decoration: line-through; }
+  .bracket .m button:disabled { cursor: default; }
 </style>
 </head>
 <body>
@@ -102,6 +113,17 @@
     <div class="teams" id="teamsOut" aria-live="polite"></div>
   </section>
 
+  <section class="card">
+    <h2 class="t"><span data-i18n="brTitle">Tournament bracket</span> <span class="pro-badge">PRO</span></h2>
+    <p class="muted" style="margin:0 0 8px" data-i18n="brHint">Pairs everyone from the list at random. Tap a name to send it to the next round.</p>
+    <div class="btns">
+      <button class="primary" id="brNew" data-i18n="brNew">Make bracket</button>
+      <button id="brRand" data-i18n="brRand">Decide the rest randomly</button>
+    </div>
+    <p class="res" id="brChamp" aria-live="polite"></p>
+    <div class="bracket" id="brOut"></div>
+  </section>
+
   <div class="grid3">
     <section class="card center">
       <h2 class="t" data-i18n="coinTitle">Coin flip</h2>
@@ -129,6 +151,17 @@
       <p style="margin:10px 0 0"><button class="primary" id="numBtn" data-i18n="generate">Generate</button></p>
       <p class="res" id="numOut" aria-live="polite"></p>
     </section>
+    <section class="card center">
+      <h2 class="t" data-i18n="quickTitle">Quick decision</h2>
+      <button class="primary" id="ynBtn" data-i18n="yesNo">Yes or no?</button>
+      <p class="res" id="ynOut" aria-live="polite"></p>
+      <p class="muted" style="margin:0" data-i18n="rpsTitle">Rock, paper, scissors against the app</p>
+      <div class="rpsb">
+        <button data-move="rock" data-i18n="rock">Rock</button><button data-move="paper" data-i18n="paper">Paper</button><button data-move="scissors" data-i18n="scissors">Scissors</button>
+      </div>
+      <p class="res" id="rpsOut" aria-live="polite" style="font-size:1rem"></p>
+      <p class="muted" id="rpsScore" style="margin:0"></p>
+    </section>
   </div>
 
   <section class="card">
@@ -143,7 +176,7 @@
 
   <section class="card pro-box hidden" id="proBox">
     <h2 class="t" style="margin-bottom:6px" data-i18n="proTitle">Pro version</h2>
-    <p class="muted" data-i18n="proPitch">Teams and groups, weighted picks, remove picked names (classrooms and raffles), saved lists and a history with CSV export.</p>
+    <p class="muted" data-i18n="proPitch">Teams and groups, tournament brackets, weighted picks, remove picked names (for classrooms and raffles), saved lists and a history with CSV export.</p>
     <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
     <p class="muted" id="proStatus"></p>
   </section>

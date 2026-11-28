@@ -1258,3 +1258,130 @@ test('sql v1.1: fill lists up to a line width (free), compare two versions (Pro)
   assert.deepEqual(SQ.diffLines('a', 'a\nb'), [{ op: ' ', line: 'a' }, { op: '+', line: 'b' }]);
   assert.throws(() => SQ.diffLines('x\n'.repeat(3001), 'y'));
 });
+
+test('pick v1.1: yes/no and rock-paper-scissors (free); tournament bracket (Pro)', () => {
+  assert.equal(RP.yesNo(seqSrc([0])), 'yes'); assert.equal(RP.yesNo(seqSrc([1])), 'no');
+  assert.deepEqual([0, 1, 2].map(v => RP.rps(seqSrc([v]))), ['rock', 'paper', 'scissors']);
+  assert.equal(RP.rpsWinner('rock', 'scissors'), 1); assert.equal(RP.rpsWinner('rock', 'paper'), 2);
+  assert.equal(RP.rpsWinner('paper', 'rock'), 1); assert.equal(RP.rpsWinner('scissors', 'paper'), 1);
+  assert.equal(RP.rpsWinner('paper', 'paper'), 0);
+  assert.throws(() => RP.rpsWinner('lizard', 'rock'));
+  assert.equal(RP.bracket(['solo']), null);
+  for (let n = 2; n <= 33; n++) {
+    const names = Array.from({ length: n }, (_, i) => 'p' + i), b = RP.bracket(names);
+    const size = b.slots.length;
+    assert.ok(size >= n && size < 2 * n && (size & (size - 1)) === 0, 'power of two');
+    assert.deepEqual(b.slots.filter(x => x !== null).sort(), names.slice().sort());
+    for (let m = 0; m < size / 2; m++) assert.notEqual(b.slots[2 * m], null, 'at most one bye per match');
+    assert.equal(b.picks.length, Math.log2(size));
+    const done = RP.bracketRandom(b);
+    assert.ok(names.includes(RP.champion(done)));
+    assert.equal(RP.champion(b), null, 'input not changed');
+  }
+  let b = { slots: ['A', 'B', 'C', null], picks: [[null, null], [null]] };
+  let rs = RP.bracketRounds(b);
+  assert.deepEqual(rs[0], [{ a: 'A', b: 'B', w: null }, { a: 'C', b: null, w: 'C' }]);
+  assert.deepEqual(rs[1][0], { a: null, b: 'C', w: null });
+  assert.equal(RP.bracketPick(b, 1, 0, 0), b, 'final not ready yet');
+  b = RP.bracketPick(b, 0, 0, 1);
+  b = RP.bracketPick(b, 1, 0, 0);
+  assert.equal(RP.champion(b), 'B');
+  b = RP.bracketPick(b, 0, 0, 0);
+  assert.deepEqual(RP.bracketRounds(b)[1][0], { a: 'A', b: 'C', w: null }, 'changing a result resets the next rounds');
+  assert.equal(RP.champion(RP.bracketRandom(b, seqSrc([1]))), 'C');
+});
+
+test('regex v1.1: quick reference (free) and code snippets with correct escaping (Pro)', () => {
+  assert.ok(RX.CHEAT.length >= 30);
+  for (const c of RX.CHEAT) {
+    const tok = RX.explain(c.t.replace('…', 'x'), 'u').find(x => x.k !== 'xLit' || c.k === 'xLit');
+    assert.equal(tok.k, c.k, c.t);
+    const ins = /^[{*+?]/.test(c.ins) ? 'a' + c.ins : c.ins === '\\1' ? '(a)\\1' : c.ins;
+    assert.ok(!RX.compile(ins, 'u').error, c.ins);
+  }
+  const p = '(?<y>\\d{4})/"x"\'\\k<y>';
+  const js = RX.codeSnippet('js', p, 'gi').code;
+  assert.match(js, /^const re = \/\(\?<y>\\d\{4\}\)\\\/"x"'\\k<y>\/gi;\nconst matches = \[\.\.\.text\.matchAll\(re\)\];/);
+  const re = eval(js.split('\n')[0].replace('const re = ', '').replace(/;$/, ''));
+  assert.equal(re.source, new RegExp(p).source); assert.equal(re.flags, 'gi');
+  assert.equal(RX.codeSnippet('js', 'a\\/b', '').code.split('\n')[0], 'const re = /a\\/b/;', 'already escaped slash kept');
+  assert.equal(RX.codeSnippet('js', '', 'g').code.split('\n')[0], 'const re = /(?:)/g;');
+  const py = RX.codeSnippet('py', p, 'gims');
+  assert.match(py.code, /^import re\n\npattern = re\.compile\(r"\(\?P<y>\\d\{4\}\)\/\\"x\\"'\(\?P=y\)", re\.IGNORECASE \| re\.MULTILINE \| re\.DOTALL\)\nfor m in pattern\.finditer\(text\):/);
+  assert.deepEqual(py.warn.map(w => w.k), ['wUni']);
+  assert.deepEqual(RX.codeSnippet('py', '\\p{L}+', 'uy').warn, [{ k: 'wUnsupported', v: { lang: 'Python', t: '\\p{L}  y' } }]);
+  const java = RX.codeSnippet('java', p, 'i').code;
+  assert.ok(java.includes('Pattern.compile("(?<y>\\\\d{4})/\\"x\\"\'\\\\k<y>", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);\nMatcher m = p.matcher(text);\nif (m.find()) {'));
+  assert.deepEqual(RX.codeSnippet('java', '(?<first_name>\\w+)', '').warn, [{ k: 'wJavaName', v: {} }]);
+  const cs = RX.codeSnippet('cs', p, 'gm').code;
+  assert.ok(cs.includes('new Regex(@"(?<y>\\d{4})/""x""\'\\k<y>", RegexOptions.Multiline);\nforeach (Match m in re.Matches(text))'));
+  const ora = RX.codeSnippet('plsql', "it's \\d+", 'is');
+  assert.equal(ora.code, "IF REGEXP_LIKE(v_text, 'it''s \\d+', 'in') THEN\n  DBMS_OUTPUT.PUT_LINE(REGEXP_SUBSTR(v_text, 'it''s \\d+', 1, 1, 'in'));\nEND IF;");
+  assert.deepEqual(ora.warn, []);
+  assert.match(RX.codeSnippet('plsql', 'a', 'g').code, /^v_count := REGEXP_COUNT\(v_text, 'a', 1, 'c'\);\nIF REGEXP_LIKE\(v_text, 'a'\) THEN/);
+  assert.deepEqual(RX.codeSnippet('plsql', '(?:a)(?=b)\\bc(?<n>d)', '').warn[0].v.t, '(?:  (?=  \\b  (?<n>');
+  assert.throws(() => RX.codeSnippet('cobol', 'a', ''));
+});
+
+test('hash v1.1: UUID v4 and random tokens (free); compare two files (Pro)', () => {
+  assert.equal(HK.uuid4(new Uint8Array(16).fill(255)), 'ffffffff-ffff-4fff-bfff-ffffffffffff');
+  assert.equal(HK.uuid4(new Uint8Array(16)), '00000000-0000-4000-8000-000000000000');
+  assert.throws(() => HK.uuid4(new Uint8Array(15)));
+  const ids = HK.tokens('uuid', 0, 50);
+  assert.equal(new Set(ids).size, 50);
+  for (const id of ids) assert.match(id, /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+  assert.match(HK.tokens('hex', 32, 1)[0], /^[0-9a-f]{64}$/);
+  const fixed = n => Uint8Array.from({ length: n }, (_, i) => 250 + i);
+  assert.equal(HK.tokens('b64url', 6, 1, fixed)[0], '-vv8_f7_');
+  assert.equal(HK.toBase64Url(Uint8Array.of(251, 255)), '-_8');
+  assert.match(HK.tokens('b64url', 32, 1)[0], /^[A-Za-z0-9_-]{43}$/);
+  assert.throws(() => HK.tokens('pin', 4, 1));
+  const f = (s, alg) => ({ size: s.length, res: { [alg]: HK.hashBytes(alg, HK.utf8(s)) } });
+  assert.deepEqual(HK.compareFiles(f('abc', 'sha256'), f('abc', 'sha256'), 'sha256'), { same: true, sizeDiff: 0 });
+  assert.deepEqual(HK.compareFiles(f('abc', 'md5'), f('abcd', 'md5'), 'md5'), { same: false, sizeDiff: 1 });
+  assert.equal(HK.compareFiles(f('abc', 'md5'), f('abc', 'sha1'), 'md5'), null);
+  assert.equal(HK.compareFiles(null, f('abc', 'md5'), 'md5'), null);
+});
+
+test('habit v1.1: skipped days keep the streak (free); monthly goal and year map (Pro)', () => {
+  const today = '2026-11-20';
+  const h = { id: 'a', name: 'Run', created: '2026-11-10', done: {}, sched: { t: 'daily' } };
+  for (const k of ['2026-11-15', '2026-11-16', '2026-11-18', '2026-11-19']) H.toggle(h, k);
+  assert.deepEqual(H.streaks(h, today), { current: 2, best: 2, unit: 'd' });
+  assert.equal(H.toggleSkip(h, '2026-11-17'), true);
+  assert.deepEqual(H.streaks(h, today), { current: 4, best: 4, unit: 'd' }, 'a skipped day bridges the streak');
+  assert.equal(H.isSkip(h, '2026-11-17'), true);
+  assert.equal(H.dayRate([h], '2026-11-17', today), null, 'skipped day is not planned');
+  assert.equal(H.monthStats(h, 2026, 11, today).due, 10);
+  H.toggleSkip(h, today);
+  assert.equal(H.dueToday(h, today), false);
+  assert.deepEqual(H.summary([h], today), { due: 0, done: 0, left: [] });
+  H.toggle(h, today);
+  assert.equal(H.isSkip(h, today), false, 'done wins over skip');
+  assert.equal(h.skip[today], undefined);
+  const c = { done: {} }, k = '2026-11-01';
+  assert.deepEqual([H.cycle(c, k), H.cycle(c, k), H.cycle(c, k)], ['done', 'skip', 'none']);
+  assert.deepEqual([H.isDone(c, k), H.isSkip(c, k)], [false, false]);
+  // N ori pe săptămână: o săptămână cu zile sărite nu rupe seria
+  const t = { id: 't', name: 'Gym', created: '2026-11-02', done: {}, sched: { t: 'times', n: 2 } };
+  ['2026-11-02', '2026-11-04', '2026-11-16', '2026-11-18'].forEach(x => H.toggle(t, x));
+  assert.equal(H.streaks(t, today).current, 1);
+  H.toggleSkip(t, '2026-11-10');
+  assert.deepEqual(H.streaks(t, today), { current: 2, best: 2, unit: 'w' });
+  const n = H.normalize({ habits: [{ name: 'X', done: { '2026-11-01': 1 }, skip: { '2026-11-01': 1, '2026-11-02': 1, bad: 1 }, goal: 20 }, { name: 'Y', goal: 40 }] });
+  assert.deepEqual(n.habits[0].skip, { '2026-11-02': 1 });
+  assert.equal(n.habits[0].goal, 20);
+  assert.equal('goal' in n.habits[1], false);
+  const g = { done: { '2026-11-01': 1, '2026-11-03': 1, '2026-10-31': 1 }, goal: 2 };
+  assert.equal(H.monthCount(g, 2026, 11), 2);
+  assert.deepEqual(H.goalProgress(g, today), { done: 2, n: 2, pct: 100, met: true });
+  assert.equal(H.goalProgress({ done: {} }, today), null);
+  assert.deepEqual(H.goalProgress({ done: { '2026-11-05': 1 }, goal: 20 }, today), { done: 1, n: 20, pct: 5, met: false });
+  const y = H.yearGrid(2026), days = y.flat().filter(Boolean);
+  assert.equal(days.length, 365);
+  assert.equal(days[0], '2026-01-01'); assert.equal(days[364], '2026-12-31');
+  assert.equal(y[0].indexOf('2026-01-01'), 3, '1 Jan 2026 is a Thursday');
+  assert.ok(y.every(col => col.length === 7));
+  assert.equal(H.yearGrid(2028).flat().filter(Boolean).length, 366);
+  assert.deepEqual(H.yearSummary([h], 2026, today), { active: 5, perfect: 5 });
+});

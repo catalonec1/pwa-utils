@@ -284,7 +284,38 @@
     return [header].concat(rows).map(r => r.map(cell).join(',')).join('\r\n') + '\r\n';
   }
 
-  const HashKit = { ALGS, NAMES, SIZE, createHasher, hashBytes, digest, hmac, hmacSync, utf8, toHex, toBase64, fromHex, format, algOfHex, parseSums, entryFor, compare, batch, toCsv };
+  /* ---- UUID v4 și token-uri aleatorii (gratuit) ---- */
+  function randomBytes(n) { const b = new Uint8Array(n); global.crypto.getRandomValues(b); return b; }
+  /* UUID versiunea 4 (RFC 9562) din 16 octeți aleatorii. */
+  function uuid4(bytes) {
+    const b = Uint8Array.from(bytes || randomBytes(16));
+    if (b.length !== 16) throw new RangeError('16 bytes needed');
+    b[6] = (b[6] & 0x0f) | 0x40; b[8] = (b[8] & 0x3f) | 0x80;
+    const h = toHex(b);
+    return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
+  }
+  const toBase64Url = b => toBase64(b).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  /* kind: uuid | hex | b64url; n = octeți aleatorii pentru token-uri. */
+  function tokens(kind, n, count, src) {
+    src = src || randomBytes;
+    const out = [];
+    for (let i = 0; i < count; i++) {
+      if (kind === 'uuid') out.push(uuid4(src(16)));
+      else if (kind === 'hex') out.push(toHex(src(n)));
+      else if (kind === 'b64url') out.push(toBase64Url(src(n)));
+      else throw new RangeError('unknown kind');
+    }
+    return out;
+  }
+
+  /* ---- Pro: două fișiere comparate după hash ---- */
+  /* a, b: { size, res: {alg: bytes} }. same: true/false sau null dacă încă nu e calculat. */
+  function compareFiles(a, b, alg) {
+    if (!a || !b || !a.res[alg] || !b.res[alg]) return null;
+    return { same: toHex(a.res[alg]) === toHex(b.res[alg]), sizeDiff: b.size - a.size };
+  }
+
+  const HashKit = { ALGS, NAMES, SIZE, createHasher, hashBytes, digest, hmac, hmacSync, utf8, toHex, toBase64, fromHex, format, algOfHex, parseSums, entryFor, compare, batch, toCsv, randomBytes, uuid4, toBase64Url, tokens, compareFiles };
   if (typeof module !== 'undefined' && module.exports) module.exports = HashKit;
   else global.HashKit = HashKit;
 })(typeof window !== 'undefined' ? window : globalThis);

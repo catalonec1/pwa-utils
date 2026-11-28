@@ -2,18 +2,18 @@
   'use strict';
   const SKU = 'pro';
   const DICT = {
-    ro: { appName: 'Obiceiuri zilnice', todayTitle: 'Azi', weekTitle: 'Săptămâna', monthTitle: 'Luna', habitsTitle: 'Obiceiuri', prev: 'Înapoi', next: 'Înainte', allHabits: 'Toate obiceiurile', less: 'Mai puțin', more: 'Mai mult', name: 'Nume', namePh: 'ex. Citesc 10 pagini', schedule: 'Program', sDaily: 'În fiecare zi', sDays: 'În anumite zile', sTimes: 'De N ori pe săptămână', timesN: 'Ori pe săpt.', color: 'Culoare', emoji: 'Emoji', add: 'Adaugă obiceiul', save: 'Salvează', cancel: 'Renunță', edit: 'Editează', del: 'Șterge', notesTitle: 'Notițe', notesHint: 'O notiță scurtă pentru o zi: cum a mers, ce a ajutat.', habit: 'Obicei', date: 'Data', note: 'Notiță', saveNote: 'Salvează notița', statsTitle: 'Statistici', statsHint: 'Cât ai bifat la fiecare obicei în luna de mai sus și cea mai bună zi a săptămânii (ultimele 12 săptămâni).', backupTitle: 'Copie de siguranță', backupHint: 'Totul rămâne pe acest dispozitiv. Salvează o copie ca să nu pierzi datele sau ca să le muți pe alt dispozitiv.', exportJson: 'Salvează copia (JSON)', importJson: 'Restaurează copia', exportCsv: 'Salvează CSV', proPitch: 'Obiceiuri nelimitate, anumite zile sau de N ori pe săptămână, notițe pentru fiecare zi, statistici, copie de siguranță și export CSV, culori și emoji.',
-      msgEmpty: 'Adaugă mai jos primul obicei. Începe cu ceva mic.', msgRest: 'Nimic planificat azi. Bucură-te de pauză.', msgAll: 'Gata pe azi. Bravo!', msgNone: 'O zi nouă: {n} de bifat. Un pas mic e de ajuns ca să începi.', msgSome: '{d} din {n} gata. Mai ai: {left}.', streakD: 'serie {n} zile · record {b}', streakW: 'serie {n} săpt. · record {b}', everyDay: 'în fiecare zi', timesWeek: 'de {n} ori pe săptămână · {c}/{n} acum', notToday: 'nu azi', markDone: 'Bifează: {name}', limit: 'Versiunea gratuită păstrează până la 3 obiceiuri. Cu Pro: nelimitat.', nameNeeded: 'Scrie mai întâi un nume.', pickDays: 'Alege cel puțin o zi.', confirmDel: 'Ștergi „{name}” cu tot istoricul?', noHabits: 'Niciun obicei încă.', noNotes: 'Nicio notiță încă.', noteSaved: 'Notiță salvată.', colHabit: 'Obicei', colPct: 'Bifat', colDays: 'Zile', colStreak: 'Serie', colBest: 'Record', bestDay: 'Cea mai bună zi: {d} ({p}%)', noData: 'Încă nu sunt destule date.', confirmImport: 'Înlocuiești obiceiurile actuale cu cele {n} din copie?', imported: 'Copie restaurată: {n} obiceiuri.', badFile: 'Fișierul nu este o copie validă.' },
-    en: { appName: 'Habit Tracker', todayTitle: 'Today', weekTitle: 'Week', monthTitle: 'Month', habitsTitle: 'Habits', prev: 'Previous', next: 'Next', allHabits: 'All habits', less: 'Less', more: 'More', name: 'Name', namePh: 'e.g. Read 10 pages', schedule: 'Schedule', sDaily: 'Every day', sDays: 'On specific weekdays', sTimes: 'N times per week', timesN: 'Times a week', color: 'Color', emoji: 'Emoji', add: 'Add habit', save: 'Save', cancel: 'Cancel', edit: 'Edit', del: 'Delete', notesTitle: 'Notes', notesHint: 'A short note for a day: how it went, what helped.', habit: 'Habit', date: 'Date', note: 'Note', saveNote: 'Save note', statsTitle: 'Statistics', statsHint: 'Completion per habit for the month shown above and your best day of the week (last 12 weeks).', backupTitle: 'Backup', backupHint: 'Everything stays on this device. Save a backup file to keep it safe or to move it to another device.', exportJson: 'Save backup (JSON)', importJson: 'Restore backup', exportCsv: 'Save CSV', proPitch: 'Unlimited habits, specific weekdays or N times per week, notes for each day, statistics, backup and CSV export, colors and emoji.',
-      msgEmpty: 'Add your first habit below. Start small.', msgRest: 'Nothing planned for today. Enjoy the break.', msgAll: 'All done for today. Nice work!', msgNone: 'A fresh day: {n} to go. One small step is enough to start.', msgSome: '{d} of {n} done. Still to do: {left}.', streakD: '{n}-day streak · best {b}', streakW: '{n}-week streak · best {b}', everyDay: 'every day', timesWeek: '{n} times a week · {c}/{n} so far', notToday: 'not today', markDone: 'Mark done: {name}', limit: 'The free version keeps up to 3 habits. With Pro: unlimited.', nameNeeded: 'Write a name first.', pickDays: 'Pick at least one day.', confirmDel: 'Delete “{name}” and all its history?', noHabits: 'No habits yet.', noNotes: 'No notes yet.', noteSaved: 'Note saved.', colHabit: 'Habit', colPct: 'Done', colDays: 'Days', colStreak: 'Streak', colBest: 'Best', bestDay: 'Best day: {d} ({p}%)', noData: 'Not enough data yet.', confirmImport: 'Replace your current habits with the {n} habits from the backup?', imported: 'Backup restored: {n} habits.', badFile: 'This file is not a valid backup.' },
-    ru: { appName: 'Трекер привычек', todayTitle: 'Сегодня', weekTitle: 'Неделя', monthTitle: 'Месяц', habitsTitle: 'Привычки', prev: 'Назад', next: 'Вперёд', allHabits: 'Все привычки', less: 'Меньше', more: 'Больше', name: 'Название', namePh: 'напр. Читать 10 страниц', schedule: 'Расписание', sDaily: 'Каждый день', sDays: 'В определённые дни', sTimes: 'N раз в неделю', timesN: 'Раз в неделю', color: 'Цвет', emoji: 'Эмодзи', add: 'Добавить привычку', save: 'Сохранить', cancel: 'Отмена', edit: 'Изменить', del: 'Удалить', notesTitle: 'Заметки', notesHint: 'Короткая заметка на день: как прошло, что помогло.', habit: 'Привычка', date: 'Дата', note: 'Заметка', saveNote: 'Сохранить заметку', statsTitle: 'Статистика', statsHint: 'Выполнение каждой привычки за месяц выше и ваш лучший день недели (последние 12 недель).', backupTitle: 'Резервная копия', backupHint: 'Все данные хранятся на этом устройстве. Сохраните копию, чтобы не потерять их или перенести на другое устройство.', exportJson: 'Сохранить копию (JSON)', importJson: 'Восстановить копию', exportCsv: 'Сохранить CSV', proPitch: 'Неограниченное число привычек, определённые дни или N раз в неделю, заметки на каждый день, статистика, резервная копия и экспорт CSV, цвета и эмодзи.',
-      msgEmpty: 'Добавьте первую привычку ниже. Начните с малого.', msgRest: 'На сегодня ничего не запланировано. Отдыхайте.', msgAll: 'На сегодня всё сделано. Отлично!', msgNone: 'Новый день: осталось {n}. Для начала достаточно одного шага.', msgSome: 'Сделано {d} из {n}. Осталось: {left}.', streakD: 'серия {n} дн. · рекорд {b}', streakW: 'серия {n} нед. · рекорд {b}', everyDay: 'каждый день', timesWeek: '{n} раз в неделю · {c}/{n} сейчас', notToday: 'не сегодня', markDone: 'Отметить: {name}', limit: 'В бесплатной версии — до 3 привычек. С Pro — без ограничений.', nameNeeded: 'Сначала введите название.', pickDays: 'Выберите хотя бы один день.', confirmDel: 'Удалить «{name}» со всей историей?', noHabits: 'Привычек пока нет.', noNotes: 'Заметок пока нет.', noteSaved: 'Заметка сохранена.', colHabit: 'Привычка', colPct: 'Выполнено', colDays: 'Дни', colStreak: 'Серия', colBest: 'Рекорд', bestDay: 'Лучший день: {d} ({p}%)', noData: 'Пока недостаточно данных.', confirmImport: 'Заменить текущие привычки на {n} из копии?', imported: 'Копия восстановлена, привычек: {n}.', badFile: 'Этот файл не является резервной копией.' }
+    ro: { appName: 'Obiceiuri zilnice', todayTitle: 'Azi', weekTitle: 'Săptămâna', monthTitle: 'Luna', habitsTitle: 'Obiceiuri', prev: 'Înapoi', next: 'Înainte', allHabits: 'Toate obiceiurile', less: 'Mai puțin', more: 'Mai mult', name: 'Nume', namePh: 'ex. Citesc 10 pagini', schedule: 'Program', sDaily: 'În fiecare zi', sDays: 'În anumite zile', sTimes: 'De N ori pe săptămână', timesN: 'Ori pe săpt.', color: 'Culoare', emoji: 'Emoji', add: 'Adaugă obiceiul', save: 'Salvează', cancel: 'Renunță', edit: 'Editează', del: 'Șterge', notesTitle: 'Notițe', notesHint: 'O notiță scurtă pentru o zi: cum a mers, ce a ajutat.', habit: 'Obicei', date: 'Data', note: 'Notiță', saveNote: 'Salvează notița', statsTitle: 'Statistici', statsHint: 'Cât ai bifat la fiecare obicei în luna de mai sus și cea mai bună zi a săptămânii (ultimele 12 săptămâni).', backupTitle: 'Copie de siguranță', backupHint: 'Totul rămâne pe acest dispozitiv. Salvează o copie ca să nu pierzi datele sau ca să le muți pe alt dispozitiv.', exportJson: 'Salvează copia (JSON)', importJson: 'Restaurează copia', exportCsv: 'Salvează CSV', proPitch: 'Obiceiuri nelimitate, anumite zile sau de N ori pe săptămână, obiectiv lunar, harta anului, notițe pentru fiecare zi, statistici, copie de siguranță și export CSV, culori și emoji.',
+      msgEmpty: 'Adaugă mai jos primul obicei. Începe cu ceva mic.', msgRest: 'Nimic planificat azi. Bucură-te de pauză.', msgAll: 'Gata pe azi. Bravo!', msgNone: 'O zi nouă: {n} de bifat. Un pas mic e de ajuns ca să începi.', msgSome: '{d} din {n} gata. Mai ai: {left}.', streakD: 'serie {n} zile · record {b}', streakW: 'serie {n} săpt. · record {b}', everyDay: 'în fiecare zi', timesWeek: 'de {n} ori pe săptămână · {c}/{n} acum', notToday: 'nu azi', markDone: 'Bifează: {name}', limit: 'Versiunea gratuită păstrează până la 3 obiceiuri. Cu Pro: nelimitat.', nameNeeded: 'Scrie mai întâi un nume.', pickDays: 'Alege cel puțin o zi.', confirmDel: 'Ștergi „{name}” cu tot istoricul?', noHabits: 'Niciun obicei încă.', noNotes: 'Nicio notiță încă.', noteSaved: 'Notiță salvată.', colHabit: 'Obicei', colPct: 'Bifat', colDays: 'Zile', colStreak: 'Serie', colBest: 'Record', skip: 'Sari azi', skipped: 'Sărit', skipAria: 'Sari ziua de azi: {name}', skippedToday: 'sărit azi', skipHint: 'Atinge o zi: ✓ făcut, încă o dată: – sărit (seria rămâne), încă o dată: gol.', goal: 'Obiectiv pe lună', goalPh: 'de câte ori (opțional)', goalText: 'obiectiv {d}/{n} luna asta', goalMet: 'obiectiv atins: {d}/{n} luna asta', colGoal: 'Obiectiv', yearTitle: 'Anul', yearSum: 'Zile cu cel puțin o bifă: {a} · zile cu tot planul făcut: {p}', bestDay: 'Cea mai bună zi: {d} ({p}%)', noData: 'Încă nu sunt destule date.', confirmImport: 'Înlocuiești obiceiurile actuale cu cele {n} din copie?', imported: 'Copie restaurată: {n} obiceiuri.', badFile: 'Fișierul nu este o copie validă.' },
+    en: { appName: 'Habit Tracker', todayTitle: 'Today', weekTitle: 'Week', monthTitle: 'Month', habitsTitle: 'Habits', prev: 'Previous', next: 'Next', allHabits: 'All habits', less: 'Less', more: 'More', name: 'Name', namePh: 'e.g. Read 10 pages', schedule: 'Schedule', sDaily: 'Every day', sDays: 'On specific weekdays', sTimes: 'N times per week', timesN: 'Times a week', color: 'Color', emoji: 'Emoji', add: 'Add habit', save: 'Save', cancel: 'Cancel', edit: 'Edit', del: 'Delete', notesTitle: 'Notes', notesHint: 'A short note for a day: how it went, what helped.', habit: 'Habit', date: 'Date', note: 'Note', saveNote: 'Save note', statsTitle: 'Statistics', statsHint: 'Completion per habit for the month shown above and your best day of the week (last 12 weeks).', backupTitle: 'Backup', backupHint: 'Everything stays on this device. Save a backup file to keep it safe or to move it to another device.', exportJson: 'Save backup (JSON)', importJson: 'Restore backup', exportCsv: 'Save CSV', proPitch: 'Unlimited habits, specific weekdays or N times per week, monthly goals, a year heat map, notes for each day, statistics, backup and CSV export, colors and emoji.',
+      msgEmpty: 'Add your first habit below. Start small.', msgRest: 'Nothing planned for today. Enjoy the break.', msgAll: 'All done for today. Nice work!', msgNone: 'A fresh day: {n} to go. One small step is enough to start.', msgSome: '{d} of {n} done. Still to do: {left}.', streakD: '{n}-day streak · best {b}', streakW: '{n}-week streak · best {b}', everyDay: 'every day', timesWeek: '{n} times a week · {c}/{n} so far', notToday: 'not today', markDone: 'Mark done: {name}', limit: 'The free version keeps up to 3 habits. With Pro: unlimited.', nameNeeded: 'Write a name first.', pickDays: 'Pick at least one day.', confirmDel: 'Delete “{name}” and all its history?', noHabits: 'No habits yet.', noNotes: 'No notes yet.', noteSaved: 'Note saved.', colHabit: 'Habit', colPct: 'Done', colDays: 'Days', colStreak: 'Streak', colBest: 'Best', skip: 'Skip today', skipped: 'Skipped', skipAria: 'Skip today: {name}', skippedToday: 'skipped today', skipHint: 'Tap a day: ✓ done, again: – skipped (keeps the streak), again: empty.', goal: 'Monthly goal', goalPh: 'times (optional)', goalText: 'goal {d}/{n} this month', goalMet: 'goal reached: {d}/{n} this month', colGoal: 'Goal', yearTitle: 'Year', yearSum: 'Days with a check-off: {a} · days with everything done: {p}', bestDay: 'Best day: {d} ({p}%)', noData: 'Not enough data yet.', confirmImport: 'Replace your current habits with the {n} habits from the backup?', imported: 'Backup restored: {n} habits.', badFile: 'This file is not a valid backup.' },
+    ru: { appName: 'Трекер привычек', todayTitle: 'Сегодня', weekTitle: 'Неделя', monthTitle: 'Месяц', habitsTitle: 'Привычки', prev: 'Назад', next: 'Вперёд', allHabits: 'Все привычки', less: 'Меньше', more: 'Больше', name: 'Название', namePh: 'напр. Читать 10 страниц', schedule: 'Расписание', sDaily: 'Каждый день', sDays: 'В определённые дни', sTimes: 'N раз в неделю', timesN: 'Раз в неделю', color: 'Цвет', emoji: 'Эмодзи', add: 'Добавить привычку', save: 'Сохранить', cancel: 'Отмена', edit: 'Изменить', del: 'Удалить', notesTitle: 'Заметки', notesHint: 'Короткая заметка на день: как прошло, что помогло.', habit: 'Привычка', date: 'Дата', note: 'Заметка', saveNote: 'Сохранить заметку', statsTitle: 'Статистика', statsHint: 'Выполнение каждой привычки за месяц выше и ваш лучший день недели (последние 12 недель).', backupTitle: 'Резервная копия', backupHint: 'Все данные хранятся на этом устройстве. Сохраните копию, чтобы не потерять их или перенести на другое устройство.', exportJson: 'Сохранить копию (JSON)', importJson: 'Восстановить копию', exportCsv: 'Сохранить CSV', proPitch: 'Неограниченное число привычек, определённые дни или N раз в неделю, цель на месяц, тепловая карта года, заметки на каждый день, статистика, резервная копия и экспорт CSV, цвета и эмодзи.',
+      msgEmpty: 'Добавьте первую привычку ниже. Начните с малого.', msgRest: 'На сегодня ничего не запланировано. Отдыхайте.', msgAll: 'На сегодня всё сделано. Отлично!', msgNone: 'Новый день: осталось {n}. Для начала достаточно одного шага.', msgSome: 'Сделано {d} из {n}. Осталось: {left}.', streakD: 'серия {n} дн. · рекорд {b}', streakW: 'серия {n} нед. · рекорд {b}', everyDay: 'каждый день', timesWeek: '{n} раз в неделю · {c}/{n} сейчас', notToday: 'не сегодня', markDone: 'Отметить: {name}', limit: 'В бесплатной версии — до 3 привычек. С Pro — без ограничений.', nameNeeded: 'Сначала введите название.', pickDays: 'Выберите хотя бы один день.', confirmDel: 'Удалить «{name}» со всей историей?', noHabits: 'Привычек пока нет.', noNotes: 'Заметок пока нет.', noteSaved: 'Заметка сохранена.', colHabit: 'Привычка', colPct: 'Выполнено', colDays: 'Дни', colStreak: 'Серия', colBest: 'Рекорд', skip: 'Пропустить', skipped: 'Пропущено', skipAria: 'Пропустить сегодня: {name}', skippedToday: 'пропуск сегодня', skipHint: 'Нажмите на день: ✓ сделано, ещё раз: – пропуск (серия сохраняется), ещё раз: пусто.', goal: 'Цель на месяц', goalPh: 'сколько раз (необязательно)', goalText: 'цель {d}/{n} в этом месяце', goalMet: 'цель достигнута: {d}/{n} в этом месяце', colGoal: 'Цель', yearTitle: 'Год', yearSum: 'Дней хотя бы с одной отметкой: {a} · дней, когда всё выполнено: {p}', bestDay: 'Лучший день: {d} ({p}%)', noData: 'Пока недостаточно данных.', confirmImport: 'Заменить текущие привычки на {n} из копии?', imported: 'Копия восстановлена, привычек: {n}.', badFile: 'Этот файл не является резервной копией.' }
   };
   const L = HabitLogic;
   const $ = id => document.getElementById(id);
   const PALETTE = ['#d6336c', '#1971c2', '#2b8a3e', '#e8590c', '#7048e8', '#0b7a75', '#c92a2a', '#5c940d'];
   const KEY = 'hbData';
-  let isPro = false, weekOff = 0, editId = null, today = L.key(), month = curMonth(), heatSel = 'all';
+  let isPro = false, year = +L.key().slice(0, 4), weekOff = 0, editId = null, today = L.key(), month = curMonth(), heatSel = 'all';
   let data;
   try { data = L.normalize(JSON.parse(Core.store(KEY) || '{"habits":[]}')); } catch (e) { data = { v: 1, habits: [] }; }
   const habits = () => data.habits;
@@ -49,9 +49,13 @@
       mark(h, b);
       b.setAttribute('aria-pressed', done); b.setAttribute('aria-label', Core.t('markDone', { name: h.name }));
       b.addEventListener('click', () => toggle(h, today));
-      const due = L.dueToday(h, today);
-      nm.append(el('strong', '', h.name), el('span', 'muted', (due ? '' : Core.t('notToday') + ' · ') + schedText(h) + ' · ' + streakText(h)));
-      li.append(b, badge(h), nm); ul.append(li);
+      const due = L.dueToday(h, today), sk = L.isSkip(h, today), g = isPro && L.goalProgress(h, today);
+      const sb = el('button', 'skp', Core.t(sk ? 'skipped' : 'skip'));
+      sb.setAttribute('aria-pressed', sk); sb.setAttribute('aria-label', Core.t('skipAria', { name: h.name }));
+      sb.hidden = done || (!due && !sk);
+      sb.addEventListener('click', () => { L.toggleSkip(h, today); save(); render(); });
+      nm.append(el('strong', '', h.name), el('span', 'muted', (sk ? Core.t('skippedToday') + ' · ' : due ? '' : Core.t('notToday') + ' · ') + schedText(h) + ' · ' + streakText(h) + (g ? ' · ' + Core.t(g.met ? 'goalMet' : 'goalText', { d: g.done, n: g.n }) : '')));
+      li.append(b, badge(h), nm, sb); ul.append(li);
     }
   }
 
@@ -75,10 +79,11 @@
         if (k === today) b.classList.add('now');
         mark(h, b);
         b.setAttribute('aria-pressed', L.isDone(h, k));
+        if (L.isSkip(h, k)) { b.classList.add('sk'); b.textContent = '–'; }
         b.setAttribute('aria-label', h.name + ' · ' + fmt(k, { weekday: 'long', day: 'numeric', month: 'long' }));
         b.dataset.k = k;
         b.disabled = k > today;
-        b.addEventListener('click', () => toggle(h, k));
+        b.addEventListener('click', () => { L.cycle(h, k); save(); render(); });
         g.append(b);
       }
     }
@@ -138,13 +143,13 @@
       }
     }
     for (const i of days.querySelectorAll('input')) i.disabled = !isPro;
-    ['hSched', 'hTimes', 'hColor', 'hEmoji'].forEach(id => { $(id).disabled = !isPro; });
+    ['hSched', 'hTimes', 'hColor', 'hEmoji', 'hGoal'].forEach(id => { $(id).disabled = !isPro; });
     if (!isPro) $('hSched').value = 'daily';
     schedUi();
   }
   function schedUi() { const v = $('hSched').value; $('hDays').classList.toggle('hidden', v !== 'days'); $('hTimesBox').classList.toggle('hidden', v !== 'times'); }
   function resetForm() {
-    editId = null; $('hName').value = ''; $('hSched').value = 'daily'; $('hTimes').value = 3; $('hEmoji').value = '';
+    editId = null; $('hName').value = ''; $('hSched').value = 'daily'; $('hTimes').value = 3; $('hEmoji').value = ''; $('hGoal').value = '';
     $('hColor').value = PALETTE[habits().length % PALETTE.length];
     $('hDays').querySelectorAll('input').forEach(i => { i.checked = false; });
   }
@@ -152,7 +157,7 @@
     editId = h.id; const s = L.sched(h);
     $('hName').value = h.name; $('hSched').value = s.t; $('hTimes').value = s.n || 3;
     $('hDays').querySelectorAll('input').forEach(i => { i.checked = s.t === 'days' && s.d.includes(+i.value); });
-    $('hColor').value = h.color || PALETTE[0]; $('hEmoji').value = h.emoji || '';
+    $('hColor').value = h.color || PALETTE[0]; $('hEmoji').value = h.emoji || ''; $('hGoal').value = h.goal || '';
     $('hMsg').textContent = ''; renderHabits(); $('hName').focus();
   }
   function submit() {
@@ -165,6 +170,8 @@
       const t = $('hSched').value, d = [...$('hDays').querySelectorAll('input:checked')].map(i => +i.value);
       if (t === 'days' && !d.length) { $('hMsg').textContent = Core.t('pickDays'); return; }
       h.sched = t === 'days' ? { t, d } : t === 'times' ? { t, n: Math.min(7, Math.max(1, Math.round(+$('hTimes').value) || 1)) } : { t: 'daily' };
+      const gv = Math.round(+$('hGoal').value);
+      h.goal = $('hGoal').value.trim() && gv >= 1 ? Math.min(31, gv) : null;
       h.color = $('hColor').value; h.emoji = Array.from($('hEmoji').value.trim()).slice(0, 2).join('');
     }
     h.name = name.slice(0, 80);
@@ -198,11 +205,11 @@
     if (!isPro) return;
     if (!habits().length) { box.append(el('p', 'muted', Core.t('noData'))); return; }
     const t = el('table', 'st'), hr = el('tr');
-    for (const k of ['colHabit', 'colPct', 'colDays', 'colStreak', 'colBest']) hr.append(el('th', '', Core.t(k)));
+    for (const k of ['colHabit', 'colPct', 'colDays', 'colGoal', 'colStreak', 'colBest']) hr.append(el('th', '', Core.t(k)));
     t.append(hr);
     for (const h of habits()) {
-      const m = L.monthStats(h, month.y, month.m, today), s = L.streaks(h, today), tr = el('tr');
-      for (const c of [(h.emoji ? h.emoji + ' ' : '') + h.name, m.pct == null ? '—' : m.pct + '%', m.done + ' / ' + m.due, s.current, s.best]) tr.append(el('td', '', String(c)));
+      const m = L.monthStats(h, month.y, month.m, today), s = L.streaks(h, today), tr = el('tr'), gl = L.goal(h);
+      for (const c of [(h.emoji ? h.emoji + ' ' : '') + h.name, m.pct == null ? '—' : m.pct + '%', m.done + ' / ' + m.due, gl ? L.monthCount(h, month.y, month.m) + ' / ' + gl : '—', s.current, s.best]) tr.append(el('td', '', String(c)));
       t.append(tr);
     }
     box.append(t);
@@ -217,6 +224,26 @@
     box.append(bars, bl);
   }
 
+  function renderYear() {
+    $('yearLabel').textContent = String(year);
+    const g = $('year'), sum = $('yearSum'); g.textContent = ''; sum.textContent = '';
+    ['yPrev', 'yNext'].forEach(id => { $(id).disabled = !isPro || (id === 'yNext' && year >= +today.slice(0, 4)); });
+    if (!isPro) return;
+    const list = heatSel === 'all' ? habits() : habits().filter(h => h.id === heatSel);
+    g.style.removeProperty('--hc');
+    if (heatSel !== 'all' && list[0]) mark(list[0], g);
+    for (const col of L.yearGrid(year)) for (const k of col) {
+      if (!k) { g.append(el('i', 'e')); continue; }
+      const r = L.dayRate(list, k, today), c = el('i', k > today ? 'fut' : 'l' + L.level(r));
+      if (k === today) c.classList.add('now');
+      c.dataset.k = k;
+      c.title = fmt(k, { day: 'numeric', month: 'long' }) + (r == null ? '' : ' · ' + Math.round(r * 100) + '%');
+      g.append(c);
+    }
+    const y = L.yearSummary(list, year, today);
+    sum.textContent = Core.t('yearSum', { a: y.active, p: y.perfect });
+  }
+
   function download(name, text, type) {
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name;
     document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
@@ -226,7 +253,7 @@
     const k = L.key();
     if (k !== today) { today = k; }
     ['bJson', 'bImport', 'bCsv'].forEach(id => { $(id).disabled = !isPro; });
-    renderToday(); renderWeek(); renderMonth(); renderHabits(); renderNotes(); renderStats();
+    renderToday(); renderWeek(); renderMonth(); renderHabits(); renderNotes(); renderStats(); renderYear();
   }
 
   Core.init(DICT, render);
@@ -236,7 +263,9 @@
   $('wNext').addEventListener('click', () => { if (weekOff < 0) weekOff++; renderWeek(); });
   $('mPrev').addEventListener('click', () => { month = L.addMonths(month.y, month.m, -1); renderMonth(); renderStats(); });
   $('mNext').addEventListener('click', () => { month = L.addMonths(month.y, month.m, 1); renderMonth(); renderStats(); });
-  $('heatSel').addEventListener('change', () => { heatSel = $('heatSel').value; renderMonth(); });
+  $('heatSel').addEventListener('change', () => { heatSel = $('heatSel').value; renderMonth(); renderYear(); });
+  $('yPrev').addEventListener('click', () => { year--; renderYear(); });
+  $('yNext').addEventListener('click', () => { if (year < +today.slice(0, 4)) year++; renderYear(); });
   $('heat').addEventListener('click', e => {
     const k = e.target.dataset && e.target.dataset.k;
     if (!isPro || !k || k > today || !habits().length) return;

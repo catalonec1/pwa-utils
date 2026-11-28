@@ -41,7 +41,13 @@
   }
   function scheduled(h, k) { const s = sched(h); return s.t !== 'days' || s.d.includes(dow(k)); }
   function isDone(h, k) { return !!(h.done && h.done[k]); }
-  function toggle(h, k) { h.done = h.done || {}; if (h.done[k]) delete h.done[k]; else h.done[k] = 1; return !!h.done[k]; }
+  /* zi sărită (pauză, boală, concediu): nu se cere și nu strică seria */
+  function isSkip(h, k) { return !!(h.skip && h.skip[k]) && !isDone(h, k); }
+  function toggle(h, k) { h.done = h.done || {}; if (h.done[k]) delete h.done[k]; else { h.done[k] = 1; if (h.skip) delete h.skip[k]; } return !!h.done[k]; }
+  function toggleSkip(h, k) { h.skip = h.skip || {}; if (h.skip[k]) delete h.skip[k]; else { h.skip[k] = 1; if (h.done) delete h.done[k]; } return !!h.skip[k]; }
+  /* vederea săptămânii: gol → bifat → sărit → gol */
+  function cycle(h, k) { if (isDone(h, k)) { toggleSkip(h, k); return 'skip'; } if (isSkip(h, k)) { toggleSkip(h, k); return 'none'; } toggle(h, k); return 'done'; }
+  function weekSkips(h, k) { const w = weekStart(k); let c = 0; for (let i = 0; i < 7; i++) if (isSkip(h, addDays(w, i))) c++; return c; }
   /* first day the habit counts: creation day or an earlier check-off */
   function start(h, today) {
     let s = valid(h.created) && h.created < today ? h.created : today;
@@ -57,12 +63,12 @@
     if (s.t === 'times') {
       const last = weekStart(today);
       for (let w = weekStart(from); w <= last; w = addDays(w, 7)) {
-        if (weekCount(h, w) >= s.n) { run++; if (run > best) best = run; } else if (w !== last) run = 0;
+        if (weekCount(h, w) >= s.n) { run++; if (run > best) best = run; } else if (w !== last && !weekSkips(h, w)) run = 0;
       }
       return { current: run, best, unit: 'w' };
     }
     for (let k = from; k <= today; k = addDays(k, 1)) {
-      if (!scheduled(h, k)) continue;
+      if (!scheduled(h, k) || isSkip(h, k)) continue;
       if (isDone(h, k)) { run++; if (run > best) best = run; } else if (k !== today) run = 0;
     }
     return { current: run, best, unit: 'd' };
@@ -70,6 +76,7 @@
 
   function dueToday(h, today) {
     const s = sched(h);
+    if (isSkip(h, today)) return false;
     if (s.t === 'times') return isDone(h, today) || weekCount(h, today) < s.n;
     return scheduled(h, today);
   }
@@ -82,7 +89,7 @@
   function dayRate(habits, k, today) {
     let due = 0, done = 0;
     for (const h of habits) {
-      if (k < start(h, today) || k > today) continue;
+      if (k < start(h, today) || k > today || isSkip(h, k)) continue;
       const d = isDone(h, k), s = sched(h);
       if (s.t === 'times' ? d : (scheduled(h, k) || d)) { due++; if (d) done++; }
     }
@@ -96,7 +103,7 @@
     let due = 0, done = 0, days = 0;
     for (let i = 0; i < monthDays(y, m); i++) {
       const k = addDays(first, i);
-      if (k < from || k > today) continue;
+      if (k < from || k > today || isSkip(h, k)) continue;
       days++;
       if (s.t === 'times') { if (isDone(h, k)) done++; } else if (scheduled(h, k)) { due++; if (isDone(h, k)) done++; }
     }
@@ -109,7 +116,7 @@
     for (const h of habits) {
       const s = sched(h), st = start(h, to);
       for (let k = st > from ? st : from; k <= to; k = addDays(k, 1)) {
-        if (s.t !== 'times' && !scheduled(h, k)) continue;
+        if ((s.t !== 'times' && !scheduled(h, k)) || isSkip(h, k)) continue;
         const d = dow(k); due[d]++; if (isDone(h, k)) done[d]++;
       }
     }
@@ -117,6 +124,36 @@
     let best = null;
     rates.forEach((r, i) => { if (r != null && r > 0 && (best == null || r > rates[best])) best = i; });
     return { rates, best };
+  }
+
+  /* Pro: obiectiv lunar (de N ori pe lună) */
+  function goal(h) { const n = h && h.goal; return Number.isInteger(n) && n >= 1 && n <= 31 ? n : null; }
+  function monthCount(h, y, m) { const pre = y + '-' + p2(m) + '-'; let c = 0; for (const k in h.done || {}) if (h.done[k] && k.startsWith(pre)) c++; return c; }
+  function goalProgress(h, today) {
+    const n = goal(h);
+    if (!n) return null;
+    const [y, m] = today.split('-').map(Number), done = monthCount(h, y, m);
+    return { done, n, pct: Math.min(100, Math.round(done / n * 100)), met: done >= n };
+  }
+  /* Pro: anul ca hartă — săptămâni (coloane) de la luni la duminică, null în afara anului */
+  function yearGrid(y) {
+    const first = y + '-01-01', last = y + '-12-31', weeks = [];
+    for (let w = weekStart(first); w <= last; w = addDays(w, 7)) {
+      const col = [];
+      for (let i = 0; i < 7; i++) { const k = addDays(w, i); col.push(k < first || k > last ? null : k); }
+      weeks.push(col);
+    }
+    return weeks;
+  }
+  /* zile cu cel puțin o bifă și zile cu tot planul făcut, în anul y, până azi */
+  function yearSummary(habits, y, today) {
+    let active = 0, perfect = 0;
+    for (const col of yearGrid(y)) for (const k of col) {
+      if (!k || k > today) continue;
+      if (habits.some(h => isDone(h, k))) active++;
+      if (dayRate(habits, k, today) >= 1) perfect++;
+    }
+    return { active, perfect };
   }
 
   function canAdd(habits, pro) { return !!pro || habits.length < FREE_LIMIT; }
@@ -133,18 +170,22 @@
     const out = [];
     for (const h of data.habits) {
       if (!h || typeof h.name !== 'string' || !h.name.trim()) continue;
-      const done = {}, notes = {};
+      const done = {}, notes = {}, skip = {};
       if (h.done && typeof h.done === 'object') for (const k in h.done) if (h.done[k] && valid(k)) done[k] = 1;
+      if (h.skip && typeof h.skip === 'object') for (const k in h.skip) if (h.skip[k] && valid(k) && !done[k]) skip[k] = 1;
       if (h.notes && typeof h.notes === 'object') for (const k in h.notes) if (valid(k) && typeof h.notes[k] === 'string' && h.notes[k].trim()) notes[k] = h.notes[k].trim().slice(0, 1000);
       const id = typeof h.id === 'string' && /^[\w-]{1,40}$/.test(h.id) && !out.some(o => o.id === h.id) ? h.id : newId(out);
-      out.push({
+      const o = {
         id, name: h.name.trim().slice(0, 80),
         sched: sched(h),
         color: typeof h.color === 'string' && /^#[0-9a-f]{6}$/i.test(h.color) ? h.color.toLowerCase() : null,
         emoji: typeof h.emoji === 'string' ? Array.from(h.emoji.trim()).slice(0, 2).join('') : '',
         created: valid(h.created) ? h.created : null,
         done, notes
-      });
+      };
+      if (goal(h)) o.goal = goal(h);
+      if (Object.keys(skip).length) o.skip = skip;
+      out.push(o);
     }
     return { v: 1, habits: out };
   }
@@ -165,7 +206,7 @@
     return ['date,habit,done,note'].concat(rows.map(r => [r[0], r[2], r[3], r[4]].map(csvCell).join(','))).join('\r\n') + '\r\n';
   }
 
-  const HabitLogic = { FREE_LIMIT, key, dayNum, fromDay, valid, addDays, diff, dow, weekStart, monthDays, addMonths, monthGrid, sched, scheduled, isDone, toggle, start, weekCount, streaks, dueToday, summary, dayRate, level, monthStats, weekdayRates, canAdd, newId, normalize, exportJson, importJson, toCsv };
+  const HabitLogic = { FREE_LIMIT, key, dayNum, fromDay, valid, addDays, diff, dow, weekStart, monthDays, addMonths, monthGrid, sched, scheduled, isDone, isSkip, toggle, toggleSkip, cycle, weekSkips, start, weekCount, streaks, dueToday, summary, dayRate, level, monthStats, weekdayRates, goal, monthCount, goalProgress, yearGrid, yearSummary, canAdd, newId, normalize, exportJson, importJson, toCsv };
   if (typeof module !== 'undefined' && module.exports) module.exports = HabitLogic;
   else global.HabitLogic = HabitLogic;
 })(typeof window !== 'undefined' ? window : globalThis);
