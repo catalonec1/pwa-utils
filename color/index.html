@@ -51,6 +51,13 @@
   .cvd .tx { border-radius: 8px; padding: 6px 8px; font-weight: 700; }
   .cvd h3 { font-size: .88rem; margin: 0; }
   textarea#expOut { min-height: 140px; margin-top: 8px; }
+  .ck { display: flex; gap: 6px; align-items: center; margin: 10px 0 0; color: var(--text); font-size: .95rem; }
+  .ck input { width: auto; }
+  .gradPrev { height: 90px; border-radius: 12px; border: 1px solid var(--border); margin-top: 12px; }
+  .grOut { display: flex; gap: 10px; align-items: center; margin-top: 8px; }
+  .grOut code { flex: 1; min-width: 0; overflow-wrap: anywhere; font-size: .9rem; }
+  #imgWrap canvas { max-width: 100%; height: auto; cursor: crosshair; border-radius: 8px; border: 1px solid var(--border); margin-top: 10px; }
+  input[type="file"] { padding: 6px; }
 </style>
 </head>
 <body>
@@ -87,6 +94,26 @@
     <div class="badges" id="badges"></div>
   </section>
   <section class="card">
+    <h2 class="t" data-i18n="grTitle">CSS gradient</h2>
+    <div class="row">
+      <div class="pick"><div><label for="grTo" data-i18n="grTo">To color (starts from the current color)</label><input id="grTo" spellcheck="false" autocomplete="off" value="#ff6347"></div><input type="color" id="grToPick" value="#ff6347" data-i18n-aria="grTo" aria-label="To color"></div>
+      <div><label for="grType" data-i18n="grType">Type</label>
+        <select id="grType"><option value="linear" data-i18n="grLinear">Linear</option><option value="radial" data-i18n="grRadial">Radial</option><option value="conic" data-i18n="grConic">Conic</option></select></div>
+      <div><label for="grAngle" data-i18n="grAngle">Angle, °</label><input id="grAngle" type="number" min="0" max="359" step="15" value="90"></div>
+    </div>
+    <label class="ck"><input type="checkbox" id="grSmooth"> <span data-i18n="grSmooth">Smooth midpoints (OKLab), no gray middle</span></label>
+    <div class="gradPrev" id="grPrev"></div>
+    <div class="grOut"><code id="grCss"></code><button id="grCopy" class="sm" data-i18n="copy">Copy</button></div>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="imgTitle">Pick a color from an image</span> <span class="pro-badge">PRO</span></h2>
+    <input type="file" id="imgFile" accept="image/*" data-i18n-aria="imgTitle" aria-label="Pick a color from an image">
+    <p class="muted" style="margin:6px 0 0" data-i18n="imgHint">Click the image to take the color under the pointer (average of 3×3 pixels). The image is opened only on this device and is never uploaded.</p>
+    <p class="locked" id="imgMsg" style="margin:6px 0 0"></p>
+    <div id="imgWrap" class="hidden"><canvas id="imgCanvas"></canvas></div>
+    <div class="chips" id="imgPicks"></div>
+  </section>
+  <section class="card">
     <h2 class="t"><span data-i18n="nameTitle">Nearest CSS color name</span> <span class="pro-badge">PRO</span></h2>
     <div id="nameOut"></div>
   </section>
@@ -118,7 +145,7 @@
   </section>
   <section class="card pro-box hidden" id="proBox">
     <h2 class="t" style="margin-bottom:6px" data-i18n="proTitle">Pro version</h2>
-    <p class="muted" data-i18n="proPitch">Palette generator, nearest CSS color name, OKLCH and LAB, saved palettes with CSS, JSON and Tailwind export, and colorblindness previews.</p>
+    <p class="muted" data-i18n="proPitch">Color picker from your own images, palette generator, nearest CSS color name, OKLCH and LAB, saved palettes with CSS, JSON and Tailwind export, and colorblindness previews.</p>
     <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
     <p class="muted" id="proStatus"></p>
   </section>

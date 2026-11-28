@@ -409,6 +409,19 @@ Pro (разовая покупка): полный помесячный граф�
 
 **Pro add-on listing:** name „Stelar Loan Calculator Pro”; EN: One-time purchase: full monthly schedule with CSV export, extra payments, rate changes, comparing up to 3 offers and saved loans. RO: Cumpărare unică: graficul lunar complet cu export CSV, plăți anticipate, schimbarea dobânzii, comparația a până la 3 oferte și credite salvate. RU: Разовая покупка: полный помесячный график с экспортом CSV, досрочные платежи, изменение ставки, сравнение до 3 предложений и сохранённые кредиты.
 
+**Update 1.1 — What's new:**
+EN: New free “How much can I borrow?” estimate: enter your monthly income, other loan payments and the share of income you allow, and see the payment limit and the loan amount it covers at the rate and term above. Pro: amortization chart with principal and interest paid each year and the remaining balance, including extra payments and rate changes.
+RO: Estimare gratuită nouă „Cât pot împrumuta?”: introdu venitul lunar, celelalte rate și partea din venit pe care o accepți și vezi rata maximă și suma de credit acoperită la dobânda și termenul de mai sus. Pro: graficul amortizării cu principalul și dobânda plătite în fiecare an și soldul rămas, inclusiv plățile anticipate și schimbarea dobânzii.
+RU: Новая бесплатная оценка «Сколько можно занять?»: введите ежемесячный доход, другие платежи по кредитам и допустимую долю дохода и узнайте предельный платёж и сумму кредита при ставке и сроке выше. Pro: график погашения с основным долгом и процентами за каждый год и остатком долга, с учётом досрочных платежей и изменения ставки.
+
+**Updated description lines (1.1):**
+EN: • How much can I borrow: an estimate from your income, other loan payments and the share of income you allow
+EN: Pro (one-time add-on): full monthly payment schedule with CSV export, amortization chart by year, extra payments (one-off and monthly) with interest saved and shorter term, rate change after a chosen month, comparing up to 3 offers including fees, and saved loans.
+RO: • Cât pot împrumuta: o estimare din venit, celelalte rate și partea din venit pe care o accepți
+RO: Pro (cumpărare unică): graficul lunar complet cu export CSV, graficul amortizării pe ani, plăți anticipate (unice și lunare) cu dobânda economisită și termenul scurtat, schimbarea dobânzii după o lună aleasă, comparația a până la 3 oferte cu comisioane și credite salvate.
+RU: • Сколько можно занять: оценка по доходу, другим платежам по кредитам и допустимой доле дохода
+RU: Pro (разовая покупка): полный помесячный график с экспортом CSV, график погашения по годам, досрочные платежи (разовые и ежемесячные) с экономией на процентах и сокращением срока, изменение ставки после выбранного месяца, сравнение до 3 предложений с комиссиями и сохранённые кредиты.
+
 ## 8. Stelar Color Converter
 
 **EN — short description:** Convert HEX, RGB, HSL, HWB and CMYK colors and check WCAG contrast. Works offline.
@@ -447,6 +460,19 @@ Pro (разовая покупка): генератор палитр (компл
 
 **Pro add-on listing:** name „Color Converter Pro”; EN: One-time purchase: palette generator, nearest CSS color name, OKLCH and LAB, saved palettes with CSS, JSON and Tailwind export, and colorblindness previews. RO: Cumpărare unică: generator de palete, cel mai apropiat nume de culoare CSS, OKLCH și LAB, palete salvate cu export CSS, JSON și Tailwind și previzualizare pentru daltonism. RU: Разовая покупка: генератор палитр, ближайшее имя цвета CSS, OKLCH и LAB, сохранённые палитры с экспортом в CSS, JSON и Tailwind и просмотр для дальтонизма.
 
+**Update 1.1 — What's new:**
+EN: New free CSS gradient maker: linear, radial or conic from the current color to a second one, with an angle, optional smooth OKLab midpoints, a live preview and a copy button. Pro: pick colors from your own image by clicking it; the image is opened only on your device and never uploaded.
+RO: Generator gratuit nou de gradiente CSS: liniar, radial sau conic, de la culoarea curentă la a doua, cu unghi, tranziție netedă OKLab opțională, previzualizare și buton de copiere. Pro: alege culori dintr-o imagine proprie apăsând pe ea; imaginea se deschide doar pe dispozitivul tău și nu se încarcă nicăieri.
+RU: Новый бесплатный генератор CSS-градиентов: линейный, радиальный или конический от текущего цвета ко второму, с углом, необязательным плавным переходом OKLab, предпросмотром и кнопкой копирования. Pro: выбор цвета из своего изображения щелчком; изображение открывается только на вашем устройстве и никуда не загружается.
+
+**Updated description lines (1.1):**
+EN: • CSS gradient maker: linear, radial or conic, with a live preview and copy button
+EN: Pro (one-time add-on): color picker from your own images (processed on your device), palette generator (complementary, analogous, triadic, tetradic, tints and shades), nearest of the 148 CSS named colors, OKLCH and LAB output, saved palettes with export as CSS variables, JSON or Tailwind config, and colorblindness previews (protanopia, deuteranopia, tritanopia).
+RO: • Generator de gradiente CSS: liniar, radial sau conic, cu previzualizare și buton de copiere
+RO: Pro (cumpărare unică): selector de culori din imaginile tale (procesate pe dispozitiv), generator de palete (complementară, analogă, triadică, tetradică, nuanțe deschise și închise), cea mai apropiată dintre cele 148 de culori CSS numite, OKLCH și LAB, palete salvate cu export ca variabile CSS, JSON sau configurație Tailwind și previzualizare pentru daltonism (protanopie, deuteranopie, tritanopie).
+RU: • Генератор CSS-градиентов: линейный, радиальный или конический, с предпросмотром и кнопкой копирования
+RU: Pro (разовая покупка): выбор цвета из ваших изображений (обработка на устройстве), генератор палитр (комплементарная, аналоговая, триада, тетрада, светлые и тёмные оттенки), ближайший из 148 именованных цветов CSS, OKLCH и LAB, сохранённые палитры с экспортом в CSS-переменные, JSON или конфигурацию Tailwind и просмотр для дальтонизма (протанопия, дейтеранопия, тританопия).
+
 ## 8. Stelar JSON Formatter (`json/`)
 
 **EN — short description:** Validate JSON with the exact error line and column, format, minify and browse it as a tree. Offline.
@@ -484,6 +510,19 @@ Pro (разовая покупка): запросы JSONPath с подстано
 **Функция:** Валидатор JSON с точной позицией ошибки, форматирование, сжатие и дерево
 
 **Pro add-on listing:** name „JSON Formatter Pro”; EN: One-time purchase: JSONPath queries with filters, JSON ↔ YAML and JSON ↔ CSV conversion, JSON diff, escape and unescape, saved snippets. RO: Cumpărare unică: interogări JSONPath cu filtre, conversie JSON ↔ YAML și JSON ↔ CSV, comparare JSON, escape și unescape, fragmente salvate. RU: Разовая покупка: запросы JSONPath с фильтрами, конвертация JSON ↔ YAML и JSON ↔ CSV, сравнение JSON, экранирование строк, сохранённые фрагменты.
+
+**Update 1.1 — What's new:**
+EN: New free “Structure and types” panel: every path in your JSON with its types, marking keys that are missing in some objects. Pro: convert JSON to TypeScript interfaces, with nested interfaces, optional properties and union types inferred from the data.
+RO: Panou gratuit nou „Structură și tipuri”: fiecare cale din JSON cu tipurile ei, cu marcarea cheilor care lipsesc din unele obiecte. Pro: conversie JSON în interfețe TypeScript, cu interfețe imbricate, proprietăți opționale și tipuri uniune deduse din date.
+RU: Новая бесплатная панель «Структура и типы»: каждый путь в JSON и его типы, с отметкой ключей, которых нет в некоторых объектах. Pro: конвертация JSON в интерфейсы TypeScript с вложенными интерфейсами, необязательными свойствами и объединёнными типами по данным.
+
+**Updated description lines (1.1):**
+EN: • Structure view: every path with its types and optional keys
+EN: Pro (one-time add-on): JSONPath queries with wildcards, recursive search and filters, JSON ↔ YAML and JSON ↔ CSV conversion, JSON to TypeScript interfaces, compare two JSON documents (added, removed and changed paths), escape and unescape JSON strings, saved snippets.
+RO: • Vizualizarea structurii: fiecare cale cu tipurile ei și cheile opționale
+RO: Pro (cumpărare unică): interogări JSONPath cu wildcard, căutare recursivă și filtre, conversie JSON ↔ YAML și JSON ↔ CSV, interfețe TypeScript din JSON, compararea a două documente JSON (căi adăugate, eliminate și modificate), escape și unescape pentru șiruri JSON, fragmente salvate.
+RU: • Структура: каждый путь с типами и необязательными ключами
+RU: Pro (разовая покупка): запросы JSONPath с подстановками, рекурсивным поиском и фильтрами, конвертация JSON ↔ YAML и JSON ↔ CSV, интерфейсы TypeScript из JSON, сравнение двух JSON (добавленные, удалённые и изменённые пути), экранирование строк JSON, сохранённые фрагменты.
 
 ## 8. Stelar Random Picker (`pick/`)
 
@@ -527,6 +566,19 @@ Pro (cumpărare unică): împărțire în echipe sau grupe echilibrate, alegere 
 Pro (разовая покупка): деление списка на равные команды или группы, выбор с весами, удаление выбранных (для класса и розыгрышей), сохранённые списки и история результатов с экспортом CSV.
 **Функция:** Колесо для выбора имён, монетка, кубики, случайные числа, команды
 
+**Update 1.1 — What's new:**
+EN: New free quick decisions: a yes-or-no answer and rock, paper, scissors against the app with a running score. Pro: tournament brackets that pair everyone from your list at random; tap the winner of each match or let the rest be decided randomly.
+RO: Decizii rapide noi, gratuite: un răspuns da sau nu și piatră, foarfecă, hârtie cu aplicația, cu scor. Pro: turnee eliminatorii care formează perechi la întâmplare din toată lista; atingi câștigătorul fiecărui meci sau lași restul la voia întâmplării.
+RU: Новые бесплатные быстрые решения: ответ «да или нет» и «камень, ножницы, бумага» с приложением со счётом. Pro: турнирные сетки, которые случайно разбивают весь список на пары; отмечайте победителя каждой встречи или доверьте остальное случаю.
+
+**Updated description lines (1.1):**
+EN: • Quick decisions: yes or no, and rock, paper, scissors against the app
+EN: Pro (one-time add-on): split a list into balanced teams or groups, tournament brackets, weighted picks, remove picked names (for classrooms and raffles), saved lists and a history of results with CSV export.
+RO: • Decizii rapide: da sau nu și piatră, foarfecă, hârtie cu aplicația
+RO: Pro (cumpărare unică): împărțire în echipe sau grupe echilibrate, turnee eliminatorii, alegere cu ponderi, scoaterea numelor alese (pentru clase și tombole), liste salvate și istoric al rezultatelor cu export CSV.
+RU: • Быстрые решения: да или нет и «камень, ножницы, бумага» с приложением
+RU: Pro (разовая покупка): деление списка на равные команды или группы, турнирные сетки, выбор с весами, удаление выбранных (для класса и розыгрышей), сохранённые списки и история результатов с экспортом CSV.
+
 **Pro add-on listing:** name „Random Picker Pro”; EN: One-time purchase: balanced teams and groups, weighted picks, remove picked names, saved lists and a history with CSV export. RO: Cumpărare unică: echipe și grupe echilibrate, alegere cu ponderi, scoaterea numelor alese, liste salvate și istoric cu export CSV. RU: Разовая покупка: равные команды и группы, выбор с весами, удаление выбранных, сохранённые списки и история с экспортом CSV.
 
 ## 8. Stelar Regex Tester (`regex/`)
@@ -568,6 +620,19 @@ Pro (cumpărare unică): previzualizarea înlocuirii cu $1 și $<nume>, explica�
 Pro (разовая покупка): предпросмотр замены с $1 и $<имя>, объяснение шаблона простым языком по каждому элементу, библиотека из 34 готовых шаблонов (email, URL, IPv4, даты, время, телефоны, UUID и другие), сохранённые шаблоны, тест-кейсы, которые должны или не должны совпадать, и экспорт совпадений в CSV или JSON.
 **Функция:** Совпадения regex вживую, группы захвата, предпросмотр замены и объяснения простым языком
 
+**Update 1.1 — What's new:**
+EN: New free quick reference: the most used regex tokens with plain-language meanings; click one to insert it into the pattern. Pro: turn the pattern into ready-to-paste code for JavaScript, Python, Java, C# or PL/SQL (REGEXP_LIKE), with correct escaping and a note about anything the language does not support.
+RO: Fișă rapidă nouă, gratuită: cele mai folosite elemente regex, explicate pe înțeles; un clic le inserează în model. Pro: transformi modelul în cod gata de lipit pentru JavaScript, Python, Java, C# sau PL/SQL (REGEXP_LIKE), cu escape corect și o notă despre ce nu suportă limbajul.
+RU: Новая бесплатная шпаргалка: самые нужные элементы regex с объяснением простым языком; щелчок вставляет элемент в шаблон. Pro: готовый к вставке код для JavaScript, Python, Java, C# или PL/SQL (REGEXP_LIKE) с правильным экранированием и пометкой о том, что язык не поддерживает.
+
+**Updated description lines (1.1):**
+EN: • Quick reference of regex tokens; click to insert
+EN: Pro (one-time add-on): replace preview with $1 and $<name>, plain-language explanation of the pattern token by token, code snippets for JavaScript, Python, Java, C# and PL/SQL, a library of 34 ready-made patterns (email, URL, IPv4, dates, times, phone numbers, UUID and more), saved patterns, test cases that must or must not match, and export of matches as CSV or JSON.
+RO: • Fișă rapidă cu elementele regex; un clic le inserează
+RO: Pro (cumpărare unică): previzualizarea înlocuirii cu $1 și $<nume>, explicația pe înțeles a modelului, token cu token, fragmente de cod pentru JavaScript, Python, Java, C# și PL/SQL, bibliotecă de 34 de modele gata făcute (email, URL, IPv4, date, ore, numere de telefon, UUID și altele), modele salvate, cazuri de test care trebuie sau nu trebuie să se potrivească și export al potrivirilor în CSV sau JSON.
+RU: • Шпаргалка по элементам regex; щелчок вставляет элемент
+RU: Pro (разовая покупка): предпросмотр замены с $1 и $<имя>, объяснение шаблона простым языком по каждому элементу, фрагменты кода для JavaScript, Python, Java, C# и PL/SQL, библиотека из 34 готовых шаблонов (email, URL, IPv4, даты, время, телефоны, UUID и другие), сохранённые шаблоны, тест-кейсы, которые должны или не должны совпадать, и экспорт совпадений в CSV или JSON.
+
 **Pro add-on listing:** name „Regex Tester Pro”; EN: One-time purchase: replace preview, plain-language pattern explanation, 34 ready-made patterns, saved patterns, test cases and CSV/JSON export. RO: Cumpărare unică: previzualizare înlocuire, explicația modelului pe înțeles, 34 de modele gata făcute, modele salvate, cazuri de test și export CSV/JSON. RU: Разовая покупка: предпросмотр замены, объяснение шаблона простым языком, 34 готовых шаблона, сохранённые шаблоны, тест-кейсы и экспорт CSV/JSON.
 
 ## 8. Stelar Hash Generator (`hash/`)
@@ -605,6 +670,19 @@ MD5, SHA-1 și CRC32 sunt potrivite pentru a găsi fișiere deteriorate, nu pent
 Pro (разовая покупка): хеши файлов любого размера (перетаскивание, чтение по частям с прогрессом; файлы не покидают устройство), проверка файлов по вставленной контрольной сумме, файлу .sha256 или списку SHA256SUMS, HMAC-SHA-256/384/512 с секретным ключом и пакетное хеширование строк с экспортом CSV.
 MD5, SHA-1 и CRC32 подходят для поиска повреждённых файлов, но не для защиты.
 **Функция:** SHA-256, SHA-1, SHA-512, MD5 и CRC32 для текста и файлов, проверка контрольных сумм, HMAC
+
+**Update 1.1 — What's new:**
+EN: New free generator of random UUIDs (version 4) and hex or Base64URL tokens of 128, 256 or 512 bits, made with your device's secure random generator. Pro: compare two files side by side by SHA-256 or another hash and see at once whether they are identical.
+RO: Generator nou, gratuit, de UUID-uri aleatorii (versiunea 4) și token-uri hex sau Base64URL de 128, 256 sau 512 biți, create cu generatorul securizat al dispozitivului. Pro: compari două fișiere unul lângă altul după SHA-256 sau alt hash și vezi imediat dacă sunt identice.
+RU: Новый бесплатный генератор случайных UUID (версия 4) и токенов hex или Base64URL на 128, 256 или 512 бит, созданных защищённым генератором устройства. Pro: сравнение двух файлов рядом по SHA-256 или другому хешу — сразу видно, одинаковые ли они.
+
+**Updated description lines (1.1):**
+EN: • Random UUID v4 and hex or Base64URL tokens (128, 256 or 512 bits)
+EN: Pro (one-time add-on): hash files of any size (drag and drop, read in pieces with progress; files never leave your device), compare two files side by side, verify files against a pasted checksum, a .sha256 file or a SHA256SUMS list, HMAC-SHA-256/384/512 with a secret key, and batch hashing of many lines with CSV export.
+RO: • UUID v4 aleatorii și token-uri hex sau Base64URL (128, 256 sau 512 biți)
+RO: Pro (cumpărare unică): hash pentru fișiere de orice mărime (trage și plasează, citire pe bucăți cu progres; fișierele nu părăsesc dispozitivul), compararea a două fișiere unul lângă altul, verificarea fișierelor cu un checksum lipit, un fișier .sha256 sau o listă SHA256SUMS, HMAC-SHA-256/384/512 cu cheie secretă și hash pe loturi de linii cu export CSV.
+RU: • Случайные UUID v4 и токены hex или Base64URL (128, 256 или 512 бит)
+RU: Pro (разовая покупка): хеши файлов любого размера (перетаскивание, чтение по частям с прогрессом; файлы не покидают устройство), сравнение двух файлов рядом, проверка файлов по вставленной контрольной сумме, файлу .sha256 или списку SHA256SUMS, HMAC-SHA-256/384/512 с секретным ключом и пакетное хеширование строк с экспортом CSV.
 
 **Pro add-on listing:** name „Stelar Hash Generator Pro”; EN: One-time purchase: hash and verify files of any size, SHA256SUMS lists, HMAC with a secret key and batch hashing with CSV export. RO: Cumpărare unică: hash și verificare pentru fișiere de orice mărime, liste SHA256SUMS, HMAC cu cheie secretă și hash pe loturi cu export CSV. RU: Разовая покупка: хеш и проверка файлов любого размера, списки SHA256SUMS, HMAC с секретным ключом и пакетное хеширование с экспортом CSV.
 
@@ -644,4 +722,68 @@ Pro (cumpărare unică): obiceiuri nelimitate, obiceiuri în anumite zile sau de
 Pro (разовая покупка): неограниченное число привычек, привычки в определённые дни или N раз в неделю, заметка на каждый день, статистика (процент выполнения по месяцам, лучший день недели), резервная копия JSON и восстановление, экспорт CSV, цвет и эмодзи для каждой привычки.
 **Функция:** Отметки за день, серии, вид недели и тепловая карта месяца, офлайн
 
+**Update 1.1 — What's new:**
+EN: New free skip days: mark a day as skipped (rest, illness, travel) and your streak is kept; tap a day in the week view to cycle done, skipped and empty. Pro: a monthly goal for each habit (for example 20 times a month) with progress, and a year heat map of every day.
+RO: Zile sărite noi, gratuite: marchezi o zi ca sărită (odihnă, boală, drum) și seria rămâne; în vederea săptămânii, atingi o zi ca să treci prin făcut, sărit și gol. Pro: obiectiv lunar pentru fiecare obicei (de exemplu de 20 de ori pe lună) cu progres și harta anului, zi cu zi.
+RU: Новые бесплатные дни пропуска: отметьте день как пропущенный (отдых, болезнь, поездка), и серия сохранится; в виде недели нажатие на день переключает «сделано», «пропуск» и «пусто». Pro: цель на месяц для каждой привычки (например, 20 раз в месяц) с прогрессом и тепловая карта года по дням.
+
+**Updated description lines (1.1):**
+EN: • Skip days (rest, illness, travel) that keep your streak
+EN: Pro (one-time add-on): unlimited habits, habits on specific weekdays or N times per week, a monthly goal for each habit, a year heat map, a note for each day, statistics (completion per habit per month, best day of the week), backup to a JSON file and restore, CSV export, a color and an emoji for each habit.
+RO: • Zile sărite (odihnă, boală, drum) care îți păstrează seria
+RO: Pro (cumpărare unică): obiceiuri nelimitate, obiceiuri în anumite zile sau de N ori pe săptămână, obiectiv lunar pentru fiecare obicei, harta anului, o notiță pentru fiecare zi, statistici (procent pe obicei pe lună, cea mai bună zi a săptămânii), copie de siguranță JSON și restaurare, export CSV, culoare și emoji pentru fiecare obicei.
+RU: • Дни пропуска (отдых, болезнь, поездка), которые сохраняют серию
+RU: Pro (разовая покупка): неограниченное число привычек, привычки в определённые дни или N раз в неделю, цель на месяц для каждой привычки, тепловая карта года, заметка на каждый день, статистика (процент выполнения по месяцам, лучший день недели), резервная копия JSON и восстановление, экспорт CSV, цвет и эмодзи для каждой привычки.
+
 **Pro add-on listing:** name „Habit Tracker Pro”; EN: One-time purchase: unlimited habits, weekday or N-per-week schedules, daily notes, statistics, backup, CSV export, colors and emoji. RO: Cumpărare unică: obiceiuri nelimitate, anumite zile sau de N ori pe săptămână, notițe zilnice, statistici, copie de siguranță, export CSV, culori și emoji. RU: Разовая покупка: неограниченные привычки, дни недели или N раз в неделю, заметки, статистика, резервная копия, экспорт CSV, цвета и эмодзи.
+
+---
+
+## 15. Stelar SQL Formatter (`sql/`)
+
+**EN — short description:** Format Oracle SQL and PL/SQL offline: line breaks, indentation, keyword case, minify.
+**EN — description:**
+A fast, private formatter for Oracle SQL. Your SQL never leaves your device.
+• Formats SELECT, INSERT, UPDATE, DELETE and MERGE: clauses on their own lines, indented lists, joins, AND/OR conditions, CASE and subqueries
+• Keywords in UPPER, lower or as typed; trailing or leading commas; 2 or 4 spaces
+• Minify a statement to one line
+• Comments, optimizer hints and string literals (including q'[...]' quoting) are kept exactly
+• Syntax highlighting, copy and save as .sql
+• Light and dark theme, interface in English, Romanian and Russian. No account, ads or tracking, works offline
+Pro (one-time add-on): PL/SQL block indentation (DECLARE/BEGIN/EXCEPTION/END, IF, loops, CASE, procedures, functions, packages, triggers), identifier case, aligned AS aliases, split a script into statements (; and / terminators), copy as a Java, C#, Python or PL/SQL string with bind-variable hints, and saved snippets.
+Independent tool, not affiliated with or endorsed by Oracle.
+**Feature:** Oracle SQL and PL/SQL formatter that keeps comments and q-quoted strings, offline
+**Keywords:** SQL formatter, Oracle, PL/SQL, SQL beautifier, pretty print, minify SQL, developer tools, DBA
+
+**RO — descriere scurtă:** Formatează offline SQL și PL/SQL Oracle: rânduri, indentare, majuscule, minificare.
+**RO — descriere:**
+Un formatator rapid și privat pentru SQL Oracle. SQL-ul tău nu părăsește dispozitivul.
+• Formatează SELECT, INSERT, UPDATE, DELETE și MERGE: clauze pe rânduri separate, liste indentate, join-uri, condiții AND/OR, CASE și subinterogări
+• Cuvinte cheie cu MAJUSCULE, minuscule sau cum sunt scrise; virgule la final sau la început; 2 sau 4 spații
+• Minificare: o instrucțiune pe un singur rând
+• Comentariile, hint-urile și șirurile (inclusiv q'[...]') rămân exact cum sunt
+• Colorare de sintaxă, copiere și salvare ca .sql
+• Temă luminoasă și întunecată, interfață în română, engleză și rusă. Fără cont, reclame sau urmărire, funcționează offline
+Pro (cumpărare unică): indentarea blocurilor PL/SQL (DECLARE/BEGIN/EXCEPTION/END, IF, bucle, CASE, proceduri, funcții, pachete, triggere), majuscule pentru identificatori, aliasuri AS aliniate, împărțirea scriptului în instrucțiuni (; și /), copiere ca șir Java, C#, Python sau PL/SQL cu indicii pentru variabilele bind și fragmente salvate.
+Unealtă independentă, fără legătură cu Oracle.
+**Funcție:** Formatator SQL și PL/SQL Oracle care păstrează comentariile și șirurile q'[...]', offline
+
+**RU — краткое описание:** Форматирование Oracle SQL и PL/SQL офлайн: переносы, отступы, регистр, в одну строку.
+**RU — описание:**
+Быстрое и приватное форматирование Oracle SQL. Ваш SQL не покидает устройство.
+• Форматирует SELECT, INSERT, UPDATE, DELETE и MERGE: предложения с новой строки, списки с отступом, JOIN, условия AND/OR, CASE и подзапросы
+• Ключевые слова ПРОПИСНЫМИ, строчными или как написано; запятые в конце или в начале; 2 или 4 пробела
+• Сжатие команды в одну строку
+• Комментарии, хинты и строки (включая q'[...]') сохраняются без изменений
+• Подсветка синтаксиса, копирование и сохранение в .sql
+• Светлая и тёмная тема, интерфейс на русском, английском и румынском. Без аккаунта, рекламы и слежки, работает офлайн
+Pro (разовая покупка): отступы в блоках PL/SQL (DECLARE/BEGIN/EXCEPTION/END, IF, циклы, CASE, процедуры, функции, пакеты, триггеры), регистр идентификаторов, выравнивание псевдонимов AS, разбиение скрипта на команды (; и /), копирование строкой для Java, C#, Python или PL/SQL с подсказками по bind-переменным и сохранённые фрагменты.
+Независимый инструмент, не связан с Oracle.
+**Функция:** Форматирование Oracle SQL и PL/SQL с сохранением комментариев и строк q'[...]', офлайн
+
+**Pro add-on listing:** name „Stelar SQL Formatter Pro”; EN: One-time purchase: PL/SQL indentation, identifier case, aligned aliases, script splitting, code strings with bind hints and saved snippets. RO: Cumpărare unică: indentare PL/SQL, majuscule pentru identificatori, aliasuri aliniate, împărțirea scriptului, șiruri pentru cod cu indicii bind și fragmente salvate. RU: Разовая покупка: отступы PL/SQL, регистр идентификаторов, выравнивание псевдонимов, разбиение скрипта, строки для кода с подсказками bind и сохранённые фрагменты.
+
+**Update 1.1 — What's new:**
+EN: New free option for long lists (columns, SET, ORDER BY): fill each line up to 80, 100 or 120 characters instead of one item per line. Pro: compare two versions of a statement; both are formatted the same way first, so only real changes are shown.
+RO: Opțiune gratuită nouă pentru liste lungi (coloane, SET, ORDER BY): umple fiecare rând până la 80, 100 sau 120 de caractere în loc de un element pe rând. Pro: compară două variante ale unei instrucțiuni; ambele sunt formatate la fel înainte, deci se văd doar schimbările reale.
+RU: Новая бесплатная настройка для длинных списков (столбцы, SET, ORDER BY): заполнять строку до 80, 100 или 120 символов вместо одного элемента на строку. Pro: сравнение двух версий запроса; обе сначала форматируются одинаково, поэтому видны только реальные изменения.

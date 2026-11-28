@@ -559,7 +559,61 @@
     return s.split('\n').map(l => l.replace(/\s+$/, '')).join('\n');
   }
 
-  const DEF = { keywordCase: 'upper', identCase: 'keep', commaStyle: 'trailing', indent: 2, alignAs: false, plsql: true, minify: false };
+  /* Liste lungi (coloane, SET, ORDER BY…): pune mai multe elemente pe un rând, până la `width` caractere.
+     Se unesc doar elemente scrise pe un singur rând, fără comentarii și fără șiruri deschise. */
+  function wrapLists(text, width, commaStyle) {
+    width = Math.floor(+width);
+    if (!(width >= 20)) return text;
+    const L = String(text).split('\n'), lead = commaStyle === 'leading';
+    const ind = l => l.length - l.trimStart().length;
+    const safe = l => l.trim() && !/--|\/\*/.test(l) && ((l.match(/'/g) || []).length % 2 === 0) && !/"/.test(l.replace(/"[^"]*"/g, ''));
+    const single = i => i + 1 >= L.length || !L[i + 1].trim() || ind(L[i + 1]) <= ind(L[i]);
+    const out = [];
+    let i = 0;
+    while (i < L.length) {
+      const d = ind(L[i]), prev = out.length ? out[out.length - 1] : '';
+      const starts = L[i].trim() && (!prev.trim() || ind(prev) < d) && !(lead && L[i].trim().startsWith(','));
+      let j = i;
+      if (starts && safe(L[i]) && single(i)) {
+        // elementele următoare din aceeași listă
+        while (j + 1 < L.length && ind(L[j + 1]) === d && safe(L[j + 1]) && single(j + 1) &&
+          (lead ? L[j + 1].trim().startsWith(', ') : /,$/.test(L[j]))) j++;
+      }
+      if (j === i) { out.push(L[i]); i++; continue; }
+      const pad = L[i].slice(0, d);
+      let line = pad + L[i].trim();
+      for (let k = i + 1; k <= j; k++) {
+        const item = L[k].trim(), piece = lead ? item.replace(/^,\s*/, '') : item;
+        const next = line + (lead ? ', ' : ' ') + piece;
+        if (next.length <= width) line = next;
+        else { out.push(line); line = pad + (lead ? ', ' + piece : piece); }
+      }
+      out.push(line); i = j + 1;
+    }
+    return out.join('\n');
+  }
+
+  /* Pro: compară două variante după formatare (diferențele de spații și majuscule dispar) */
+  function diffLines(a, b) {
+    const A = a.split('\n'), B = b.split('\n');
+    if (A.length > 3000 || B.length > 3000) throw new Error('too long');
+    let p = 0; while (p < A.length && p < B.length && A[p] === B[p]) p++;
+    let q = 0; while (q < A.length - p && q < B.length - p && A[A.length - 1 - q] === B[B.length - 1 - q]) q++;
+    const a2 = A.slice(p, A.length - q), b2 = B.slice(p, B.length - q), n = a2.length, m = b2.length;
+    const dp = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));
+    for (let x = n - 1; x >= 0; x--) for (let y = m - 1; y >= 0; y--) dp[x][y] = a2[x] === b2[y] ? dp[x + 1][y + 1] + 1 : Math.max(dp[x + 1][y], dp[x][y + 1]);
+    const out = A.slice(0, p).map(line => ({ op: ' ', line }));
+    let x = 0, y = 0;
+    while (x < n || y < m) {
+      if (x < n && y < m && a2[x] === b2[y]) { out.push({ op: ' ', line: a2[x] }); x++; y++; }
+      else if (x < n && (y >= m || dp[x + 1][y] >= dp[x][y + 1])) out.push({ op: '-', line: a2[x++] });
+      else out.push({ op: '+', line: b2[y++] });
+    }
+    return out.concat(A.slice(A.length - q).map(line => ({ op: ' ', line })));
+  }
+  function compare(a, b, opts) { return diffLines(format(a, opts), format(b, opts)); }
+
+  const DEF = { keywordCase: 'upper', identCase: 'keep', commaStyle: 'trailing', indent: 2, alignAs: false, plsql: true, minify: false, width: 0 };
   function format(src, opts) {
     src = String(src == null ? '' : src);
     const o = Object.assign({}, DEF, opts);
@@ -586,7 +640,7 @@
       if (u.slash) { out.nl(0); out.put('/'); }
       prev = u;
     }
-    return out.text(o.alignAs);
+    return wrapLists(out.text(o.alignAs), o.width, o.commaStyle);
   }
 
   /* Pro: lista instrucțiunilor dintr-un script */
@@ -660,7 +714,7 @@
     return parts.join('\n\n');
   }
 
-  const SqlFormatter = { tokenize, lex, split, statements, classify, format, highlight, toCode, KW, FN };
+  const SqlFormatter = { tokenize, lex, split, statements, classify, format, wrapLists, diffLines, compare, highlight, toCode, KW, FN };
   if (typeof module !== 'undefined' && module.exports) module.exports = SqlFormatter;
   else global.SqlFormatter = SqlFormatter;
 })(typeof window !== 'undefined' ? window : globalThis);

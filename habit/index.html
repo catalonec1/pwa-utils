@@ -70,6 +70,19 @@
   .bars div { background: color-mix(in srgb, var(--accent) 35%, var(--bg)); border-radius: 5px 5px 0 0; min-height: 3px; }
   .bars div.best { background: var(--accent); }
   .bl { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; font-size: .75rem; color: var(--muted); }
+  .skp { flex: 0 0 auto; padding: 4px 9px; font-size: .8rem; }
+  .skp[aria-pressed="true"] { border-style: dashed; color: var(--muted); }
+  .wk button.sk { color: var(--muted); border-style: dashed; opacity: 1; font-size: 1.1rem; }
+  .yrw { overflow-x: auto; padding-bottom: 4px; }
+  .yr { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 1fr); grid-auto-columns: minmax(7px, 1fr); gap: 2px; min-width: 430px; --hc: var(--accent); }
+  .yr i { aspect-ratio: 1; border-radius: 2px; background: var(--bg); }
+  .yr i.e { background: none; }
+  .yr i.fut { opacity: .45; }
+  .yr i.now { outline: 1px solid var(--text); }
+  .yr i.l1 { background: color-mix(in srgb, var(--hc) 22%, var(--bg)); }
+  .yr i.l2 { background: color-mix(in srgb, var(--hc) 45%, var(--bg)); }
+  .yr i.l3 { background: color-mix(in srgb, var(--hc) 70%, var(--bg)); }
+  .yr i.l4 { background: var(--hc); }
   @media (max-width: 400px) { .wk { grid-template-columns: minmax(0, 1fr) repeat(7, 28px); gap: 3px; } .wk button { width: 28px; height: 28px; } }
 </style>
 </head>
@@ -93,6 +106,7 @@
     <h2 class="t"><span data-i18n="weekTitle">Week</span> <span class="muted" id="weekLabel"></span><span class="sp"></span>
       <span class="nav"><button id="wPrev" data-i18n-aria="prev" aria-label="Previous">‹</button><button id="wNext" data-i18n-aria="next" aria-label="Next">›</button></span></h2>
     <div class="wk" id="week"></div>
+    <p class="muted" style="margin:8px 0 0;font-size:.85rem" data-i18n="skipHint">Tap a day: ✓ done, again: – skipped (keeps the streak), again: empty.</p>
   </section>
   <section class="card">
     <h2 class="t" data-i18n="habitsTitle">Habits</h2>
@@ -106,6 +120,7 @@
       <div class="s hidden" id="hTimesBox"><label for="hTimes" data-i18n="timesN">Times per week</label><input id="hTimes" type="number" min="1" max="7" value="3"></div>
       <div class="s"><label for="hColor"><span data-i18n="color">Color</span> <span class="pro-badge">PRO</span></label><input id="hColor" type="color" value="#d6336c"></div>
       <div class="s"><label for="hEmoji"><span data-i18n="emoji">Emoji</span> <span class="pro-badge">PRO</span></label><input id="hEmoji" maxlength="8" placeholder="📚"></div>
+      <div class="n"><label for="hGoal"><span data-i18n="goal">Monthly goal</span> <span class="pro-badge">PRO</span></label><input id="hGoal" type="number" min="1" max="31" data-i18n-ph="goalPh" placeholder="times (optional)"></div>
     </div>
     <p class="row" style="margin:10px 0 0">
       <button class="primary" id="hAdd" data-i18n="add">Add habit</button>
@@ -141,6 +156,12 @@
     <div id="stats"></div>
   </section>
   <section class="card">
+    <h2 class="t"><span data-i18n="yearTitle">Year</span> <span class="pro-badge">PRO</span> <span class="muted" id="yearLabel"></span><span class="sp"></span>
+      <span class="nav"><button id="yPrev" data-i18n-aria="prev" aria-label="Previous">‹</button><button id="yNext" data-i18n-aria="next" aria-label="Next">›</button></span></h2>
+    <div class="yrw"><div class="yr" id="year"></div></div>
+    <p class="muted" id="yearSum" style="margin:8px 0 0"></p>
+  </section>
+  <section class="card">
     <h2 class="t"><span data-i18n="backupTitle">Backup</span> <span class="pro-badge">PRO</span></h2>
     <p class="muted" style="margin:0 0 8px" data-i18n="backupHint">Everything stays on this device. Save a backup file to keep it safe or to move it to another device.</p>
     <p class="row" style="margin:0">
@@ -153,7 +174,7 @@
   </section>
   <section class="card pro-box hidden" id="proBox">
     <h2 class="t" style="margin-bottom:6px" data-i18n="proTitle">Pro version</h2>
-    <p class="muted" data-i18n="proPitch">Unlimited habits, specific weekdays or N times per week, notes for each day, statistics, backup and CSV export, colors and emoji.</p>
+    <p class="muted" data-i18n="proPitch">Unlimited habits, specific weekdays or N times per week, monthly goals, a year heat map, notes for each day, statistics, backup and CSV export, colors and emoji.</p>
     <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
     <p class="muted" id="proStatus"></p>
   </section>

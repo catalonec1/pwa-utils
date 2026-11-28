@@ -510,6 +510,64 @@
     return JSON.stringify(v, null, 2);
   }
 
+  /* ---- structură: tipurile pentru fiecare cale ([*] = orice element din listă) ---- */
+  const kindOf = v => v === null ? 'null' : Array.isArray(v) ? 'array' : typeof v === 'object' ? 'object' : typeof v;
+  function typeSummary(root, limit) {
+    const map = new Map(), objs = new Map();
+    const at = p => { let e = map.get(p); if (!e) { e = { path: p, types: [], seen: 0, optional: false, parent: null }; map.set(p, e); } return e; };
+    (function walk(v, p, parent) {
+      const e = at(p), k = kindOf(v);
+      if (!e.types.includes(k)) e.types.push(k);
+      e.seen++; if (parent != null) e.parent = parent;
+      if (k === 'array') v.forEach(x => walk(x, p + '[*]', null));
+      else if (k === 'object') { objs.set(p, (objs.get(p) || 0) + 1); Object.keys(v).forEach(n => walk(v[n], pathKey(p, n), p)); }
+    })(root, '$', null);
+    const out = [];
+    for (const e of map.values()) {
+      if (e.parent != null && e.seen < objs.get(e.parent)) e.optional = true;
+      out.push({ path: e.path, types: e.types, optional: e.optional });
+    }
+    return limit && out.length > limit ? out.slice(0, limit) : out;
+  }
+
+  /* ---- Pro: interfețe TypeScript deduse din date ---- */
+  function toTypeScript(root, rootName) {
+    const decls = [], used = new Set();
+    const pascal = k => {
+      const t = String(k).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z0-9]+(.)?/g, (m, c) => (c ? c.toUpperCase() : '')).replace(/^[a-z]/, c => c.toUpperCase());
+      return !t ? '' : /^\d/.test(t) ? 'T' + t : t;
+    };
+    const single = n => /ies$/.test(n) ? n.slice(0, -3) + 'y' : /(s|x|ch|sh)es$/.test(n) ? n.slice(0, -2) : /(ss|us|is)$/.test(n) || !/s$/.test(n) ? n + 'Item' : n.slice(0, -1);
+    const unique = n => { const b = n || 'Item'; let x = b, i = 2; while (used.has(x)) x = b + i++; used.add(x); return x; };
+    function typeOf(vals, name) {
+      const by = { object: [], array: [], string: 0, number: 0, boolean: 0, null: 0 };
+      for (const v of vals) { const k = kindOf(v); if (k === 'object' || k === 'array') by[k].push(v); else by[k]++; }
+      const parts = [];
+      if (by.object.length) parts.push(iface(by.object, name));
+      if (by.array.length) {
+        const items = [].concat(...by.array), inner = items.length ? typeOf(items, single(name)) : 'unknown';
+        parts.push(/ \| /.test(inner) ? '(' + inner + ')[]' : inner + '[]');
+      }
+      for (const k of ['string', 'number', 'boolean', 'null']) if (by[k]) parts.push(k);
+      return parts.join(' | ') || 'unknown';
+    }
+    function iface(list, name) {
+      const nm = unique(name), slot = decls.length, keys = [];
+      decls.push('');
+      for (const o of list) for (const k of Object.keys(o)) if (!keys.includes(k)) keys.push(k);
+      const lines = keys.map(k => {
+        const has = list.filter(o => Object.prototype.hasOwnProperty.call(o, k));
+        return '  ' + (IDENT.test(k) ? k : JSON.stringify(k)) + (has.length < list.length ? '?' : '') + ': ' + typeOf(has.map(o => o[k]), pascal(k)) + ';';
+      });
+      decls[slot] = 'export interface ' + nm + (lines.length ? ' {\n' + lines.join('\n') + '\n}' : ' {}');
+      return nm;
+    }
+    const name = pascal(rootName || 'Root') || 'Root';
+    if (kindOf(root) === 'object') iface([root], name);
+    else { used.add(name); decls.push(''); decls[0] = 'export type ' + name + ' = ' + typeOf([root], name) + ';'; }
+    return decls.join('\n\n') + '\n';
+  }
+
   /* ---- Pro: escape ---- */
   const escapeString = t => JSON.stringify(String(t));
   function unescapeString(t) {
@@ -518,7 +576,7 @@
     return JSON.parse(s);
   }
 
-  const api = { check, lineCol, format, minify, sortDeep, stats, pathKey, tokens, query, queryValue, diff, diffText, flatten, toCSV, fromCSV, parseCSV, toYAML, fromYAML, escapeString, unescapeString };
+  const api = { check, lineCol, format, minify, sortDeep, stats, pathKey, tokens, query, queryValue, diff, diffText, flatten, toCSV, fromCSV, parseCSV, toYAML, fromYAML, escapeString, unescapeString, typeSummary, toTypeScript };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else global.JsonFmt = api;
 })(typeof window !== 'undefined' ? window : globalThis);

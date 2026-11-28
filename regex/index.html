@@ -52,6 +52,13 @@
   ul.plain li span { overflow-wrap: anywhere; min-width: 0; }
   ul.plain li code { color: var(--muted); font-size: .85rem; }
   ul.plain li button { padding: 4px 10px; flex: 0 0 auto; }
+  details.card summary { cursor: pointer; font-weight: 700; }
+  .cheat { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 4px 14px; margin-top: 8px; }
+  .cheat button { display: flex; gap: 10px; align-items: baseline; text-align: left; background: transparent; border: 0; border-bottom: 1px solid var(--border); border-radius: 0; padding: 5px 2px; color: var(--text); font-size: .88rem; min-width: 0; }
+  .cheat button:hover { background: var(--bg); }
+  .cheat code { flex: 0 0 auto; min-width: 6.5em; color: var(--accent); font-weight: 600; }
+  #codeOut { white-space: pre; overflow: auto; border: 1px solid var(--border); border-radius: 10px; padding: 9px 11px; background: var(--bg); margin: 8px 0 0; font: .88rem ui-monospace, Consolas, monospace; min-height: 44px; }
+  ul.warn { margin: 6px 0 0; padding-left: 20px; color: var(--warn); font-size: .9rem; }
 </style>
 </head>
 <body>
@@ -86,6 +93,11 @@
       <span class="pro-badge" style="align-self:center">PRO</span>
     </div>
   </section>
+  <details class="card" id="cheatBox">
+    <summary data-i18n="cheatTitle">Quick reference</summary>
+    <p class="muted" style="margin:6px 0 0" data-i18n="cheatHint">Click an item to insert it into the expression at the cursor.</p>
+    <div class="cheat" id="cheat"></div>
+  </details>
   <section class="card">
     <h2 class="t"><span data-i18n="replTitle">Replace preview</span> <span class="pro-badge">PRO</span></h2>
     <label for="repl" data-i18n="replLabel">Replace with ($1, $&lt;name&gt;, $&amp; = whole match)</label>
@@ -95,6 +107,16 @@
   <section class="card">
     <h2 class="t"><span data-i18n="exTitle">Explanation</span> <span class="pro-badge">PRO</span></h2>
     <ol class="ex" id="explain"></ol>
+  </section>
+  <section class="card">
+    <h2 class="t"><span data-i18n="codeTitle">Code snippet</span> <span class="pro-badge">PRO</span></h2>
+    <div class="row" style="align-items:flex-end">
+      <div><label for="codeLang" data-i18n="codeLang">Language</label>
+        <select id="codeLang"><option value="js">JavaScript</option><option value="py">Python</option><option value="java">Java</option><option value="cs">C#</option><option value="plsql">PL/SQL (REGEXP_LIKE)</option></select></div>
+      <div style="flex:0 1 auto"><button id="codeCopy" data-i18n="copy">Copy</button></div>
+    </div>
+    <pre id="codeOut"></pre>
+    <ul class="warn" id="codeWarn"></ul>
   </section>
   <section class="card">
     <h2 class="t"><span data-i18n="tTitle">Test cases</span> <span class="pro-badge">PRO</span></h2>
@@ -126,7 +148,7 @@
   </section>
   <section class="card pro-box hidden" id="proBox">
     <h2 class="t" style="margin-bottom:6px" data-i18n="proTitle">Pro version</h2>
-    <p class="muted" data-i18n="proPitch">Replace preview, plain-language explanation, 34 ready-made patterns, saved patterns, test cases and CSV/JSON export.</p>
+    <p class="muted" data-i18n="proPitch">Replace preview, plain-language explanation, code snippets for JavaScript, Python, Java, C# and PL/SQL, 34 ready-made patterns, saved patterns, test cases and CSV/JSON export.</p>
     <button class="primary" id="proBuy" data-i18n="proBuy">Unlock Pro</button>
     <p class="muted" id="proStatus"></p>
   </section>
